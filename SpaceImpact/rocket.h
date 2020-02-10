@@ -8,7 +8,8 @@ public:
 	void Update(float dt)
 	{
 
-		go->horizontalPosition += ROCKET_SPEED * dt; // rocket_speed * time. When testing we can add "* 5"	
+		go->horizontalPosition += ROCKET_SPEED * dt; // rocket_speed * time. When testing we can add "* 5"
+		
 		if (go->horizontalPosition > 600) // When the rocket reaches the edge of the screen, it disappears.
 			go->enabled = false;
 
