@@ -11,10 +11,13 @@ class Game : public GameObject
 
 	ObjectPool<Rocket> rockets_pool;	// used to instantiate rockets
 	ObjectPool<Bomb> bombs_pool;
+	ObjectPool<AlienG> alien_g_pool;
 	
 	
 	Player * player;
-	Alien* alien;
+	//Alien* alien;
+	AlienG* alien_g;
+	AlienGGrid* alien_g_grid;
 	
 	//AlienGrid* alien_grid;
 
@@ -66,18 +69,19 @@ public:
 		player_render->Create(engine, player, &game_objects, "data/player.png", 35, 35);
 		CollideComponent * player_bomb_collide = new CollideComponent();
 		player_bomb_collide->Create(engine, player, &game_objects, (ObjectPool<GameObject>*) & bombs_pool);
-		CollideComponent* player_alien_collide = new CollideComponent();
-		player_alien_collide->Create(engine, player, &game_objects, (ObjectPool<GameObject>*) & alien);
+		//CollideComponent* player_alien_collide = new CollideComponent();
+		//player_alien_collide->Create(engine, player, &game_objects, (ObjectPool<GameObject>*) & alien);
 
 		player->Create();
 		player->AddComponent(player_behaviour);
 		player->AddComponent(player_render);
 		player->AddComponent(player_bomb_collide);
-		player->AddComponent(player_alien_collide);
+		//player->AddComponent(player_alien_collide);
 		player->AddReceiver(this);
 		game_objects.insert(player);
 
 
+		/*
 		// *******************ENEMYS SINGLE ************************
 		
 		alien = new Alien();
@@ -94,13 +98,71 @@ public:
 		player->AddComponent(alien_bullet_collide);
 		alien->AddReceiver(this);
 		game_objects.insert(alien);
-	
-}
+		*/
+
+		/*
+		// **********************ALIEN G****************************
+		alien_g = new AlienG();
+		AlienGBehaviourComponent* alien_g_behaviour = new AlienGBehaviourComponent();
+		alien_g_behaviour->Create(engine, alien_g, &game_objects);
+		RenderComponent* alien_g_render = new RenderComponent();
+		alien_g_render->Create(engine, alien_g, &game_objects, "data/enemyGroup.png", 64, 64);
+		alien_g->Create();
+		alien_g->AddComponent(alien_g_behaviour);
+		alien_g->AddComponent(alien_g_render);
+		alien_g->AddReceiver(this);
+		game_objects.insert(alien_g);
+		*/
+
+		////************** ALIEN G GRID ******************* 
+		alien_g_grid = new AlienGGrid();
+		AlienGGridBehaviourComponent* alien_grid_behaviour = new AlienGGridBehaviourComponent();
+		alien_grid_behaviour->Create(engine, alien_g_grid, &game_objects, &alien_g_pool);
+
+		alien_g_grid->Create();
+		alien_g_grid->AddComponent(alien_grid_behaviour);
+		game_objects.insert(alien_g_grid);
+
+		//**************CREATE ALIEN G POOL***************
+		alien_g_pool.Create(10); // create alien g pool of 6 aliens
+		float alien_g_x = 600.f, alien_g_y = 50.f, delay = 1.f;
+		int alien_g_count = 1;
+		for (auto alien_g = alien_g_pool.pool.begin(); alien_g != alien_g_pool.pool.end(); alien_g++)
+		{
+			RenderComponent* render = new RenderComponent();
+			render->Create(engine, *alien_g, &game_objects, "data/enemyGroup.png", 64, 64);
+			(*alien_g)->Create();
+			(*alien_g)->AddComponent(render);
+
+			AlienGBehaviourComponent* behaviour = new AlienGBehaviourComponent();
+			behaviour->Create(engine, *alien_g, &game_objects, delay);
+			(*alien_g)->AddComponent(behaviour);
+
+			(*alien_g)->AddReceiver(this);
+
+			(*alien_g)->horizontalPosition = alien_g_x;
+			(*alien_g)->verticalPosition = alien_g_y;
+			SDL_Log("verticalPos:%f", (*alien_g)->verticalPosition);
+			(*alien_g)->Init();
+
+
+			alien_g_y = alien_g_y + 100;
+			if (alien_g_count % 2 == 0) {
+				alien_g_x = alien_g_x + 100; // space between the alien g columns
+				alien_g_y = 50;
+				delay = delay + 1.0f;
+			}
+
+			alien_g_count++;
+		}
+	}
 
 	virtual void Init()
 	{
 		player->Init();
-		alien->Init();
+		//alien->Init();
+		//alien_g->Init();
+		alien_g_grid->Init();
 		
 
 		// Set background to white
@@ -228,9 +290,9 @@ public:
 	//	aliens_pool.Destroy();
 
 		delete player;
-		delete alien;
+		//delete alien;
 	//	delete alien_grid;
-		
+		delete alien_g;
 
 		// Mark game class as disabled
 		enabled = false;

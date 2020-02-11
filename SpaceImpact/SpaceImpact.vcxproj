@@ -134,11 +134,13 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="alien.h" />
+    <ClInclude Include="alien_g_grid.h" />
     <ClInclude Include="avancezlib.h" />
     <ClInclude Include="bomb.h" />
     <ClInclude Include="component.h" />
     <ClInclude Include="game.h" />
     <ClInclude Include="game_object.h" />
+    <ClInclude Include="alien_g.h" />
     <ClInclude Include="object_pool.h" />
     <ClInclude Include="player.h" />
     <ClInclude Include="rocket.h" />

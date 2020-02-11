@@ -11,7 +11,7 @@ class Sprite
 	int height;
 
 public:
-
+	// Create Sprite with specified width and height
 	Sprite(SDL_Renderer* renderer, SDL_Texture* texture, int w, int h);
 
 	// Destroys the sprite instance
