@@ -34,8 +34,10 @@ float game_speed = 1.f;		// speed of the game; it is increased each time all the
 #include "player.h"
 #include "bomb.h"
 #include "alien.h"
-#include "alien_grid.h"
+//#include "alien_grid.h"
 #include "game.h"
+
+
 
 
 int main(int argc, char** argv)

@@ -11,10 +11,16 @@ class Game : public GameObject
 
 	ObjectPool<Rocket> rockets_pool;	// used to instantiate rockets
 	ObjectPool<Bomb> bombs_pool;
-	ObjectPool<Alien> aliens_pool;
-
+	
+	
 	Player * player;
-	AlienGrid* alien_grid;
+	Alien* alien;
+
+	
+	
+	
+	
+	//AlienGrid* alien_grid;
 
 	Sprite * life_sprite;
 	bool game_over = false;
@@ -22,7 +28,7 @@ class Game : public GameObject
 	unsigned int score = 0;
 
 public:
-
+	
 	virtual void Create(AvancezLib* engine)
 	{
 		SDL_Log("Game::Create");
@@ -65,7 +71,7 @@ public:
 		CollideComponent * player_bomb_collide = new CollideComponent();
 		player_bomb_collide->Create(engine, player, &game_objects, (ObjectPool<GameObject>*) & bombs_pool);
 		CollideComponent* player_alien_collide = new CollideComponent();
-		player_alien_collide->Create(engine, player, &game_objects, (ObjectPool<GameObject>*) & aliens_pool);
+		player_alien_collide->Create(engine, player, &game_objects, (ObjectPool<GameObject>*) & alien);
 
 		player->Create();
 		player->AddComponent(player_behaviour);
@@ -75,63 +81,32 @@ public:
 		player->AddReceiver(this);
 		game_objects.insert(player);
 
-	/*
-		///************** ALIENS GRID ******************* 
-		alien_grid = new AlienGrid();
-		AlienGridBehaviourComponent* alien_grid_behaviour = new AlienGridBehaviourComponent();
-		alien_grid_behaviour->Create(engine, alien_grid, &game_objects, &aliens_pool, &bombs_pool);
 
-		alien_grid->Create();
-		alien_grid->AddComponent(alien_grid_behaviour);
-		alien_grid->AddReceiver(this); // alien_grid can send message to game (for LEVEL_WIN message)
-		game_objects.insert(alien_grid);
+		// *******************ENEMYS SINGLE ************************
 
-		// Create 55 aliens in aliens_pool;
-		aliens_pool.Create(11 * 5);
+		alien = new Alien();
+		AlienBehaviourComponent* alien_behaviour = new AlienBehaviourComponent();
+		alien_behaviour->Create(engine, alien, &game_objects, &bombs_pool);
+		RenderComponent* alien_render = new RenderComponent();
+		alien_render->Create(engine, alien, &game_objects, "data/enemySingle.png");
 
-		// Initialize all alien objects inside aliens_pool
-		int alien_x = 0, alien_y = 32, alien_count = 1;
-
-		for (auto alien = aliens_pool.pool.begin(); alien != aliens_pool.pool.end(); alien++)
-		{
-			AlienBehaviourComponent* alien_behaviour = new AlienBehaviourComponent();
-			alien_behaviour->Create(engine, *alien, &game_objects, &bombs_pool);
-			RenderComponent* alien_render = new RenderComponent();
-			alien_render->Create(engine, *alien, &game_objects, "data/enemySingle.png");
-			CollideComponent* alien_rocket_collide = new CollideComponent();
-			alien_rocket_collide->Create(engine, *alien, &game_objects, (ObjectPool<GameObject>*) & rockets_pool);
-
-			(*alien)->Create();
-			(*alien)->AddComponent(alien_behaviour);
-			(*alien)->AddComponent(alien_render);
-			(*alien)->AddComponent(alien_rocket_collide);
-			
-			(*alien)->Init(alien_x, alien_y);
-
-			(*alien)->AddReceiver(alien_grid); // alien can send message to alien_grid
-			(*alien)->AddReceiver(this); // alien can send message to game (for GAME_OVER message)
-			alien_grid->AddReceiver(*alien); // alien_grid can send message to all aliens
-			
-			// Add alien to global game_objects set
-			game_objects.insert(*alien);
-
-			////********* "DRAWING" THE GRID***********
-			//// Change the drawing position X to 0 and Y to Y + 4 at every 11 aliens
-			if (alien_count > 1 && alien_count % 11 == 0) {
-				alien_x = 0;
-				alien_y += 32 + 2; // leave 4 pixel between alien lines
-			}
-			else alien_x += 32 + 4; // leave 32+4 pixel between alien on the same row
-
-			alien_count++;
-		} */
+		CollideComponent* alien_bullet_collide = new CollideComponent();
+		alien_bullet_collide->Create(engine, alien, &game_objects, (ObjectPool<GameObject>*) & rockets_pool);
+		
+		alien->Create();
+		alien->AddComponent(alien_behaviour);
+		alien->AddComponent(alien_render);
+		player->AddComponent(alien_bullet_collide);
+		alien->AddReceiver(this);
+		game_objects.insert(alien);
 	
 }
 
 	virtual void Init()
 	{
 		player->Init();
-		//alien_grid->Init();
+		alien->Init();
+		
 
 		// Set background to white
 		AvancezLib::RGBColor LILA = { 99, 0, 191 };
@@ -253,10 +228,12 @@ public:
 	
 		rockets_pool.Destroy();
 		bombs_pool.Destroy();
-		aliens_pool.Destroy();
+	//	aliens_pool.Destroy();
 
 		delete player;
-		delete alien_grid;
+		delete alien;
+	//	delete alien_grid;
+		
 
 		// Mark game class as disabled
 		enabled = false;

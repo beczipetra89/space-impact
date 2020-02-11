@@ -32,12 +32,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="alien.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="alien_grid.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="avancezlib.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -65,7 +59,7 @@
     <ClInclude Include="sprite.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="enemyS.h">
+    <ClInclude Include="alien.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -6,26 +6,27 @@ public:
 
 	void Update(float dt)
 	{
-		go->verticalPosition += BOMB_SPEED * dt; // bomb_speed * time
+		//	go->verticalPosition -= BOMB_SPEED * dt; // rocket_speed * time
 
-		if (go->verticalPosition > 480-32) // When the bomb reaches the bottom of the screen, it disappears.
+		if (go->verticalPosition < 0) // When the rocket reaches the top of the screen, it disappears.
 			go->enabled = false;
 	}
 };
 
 
-// bombs are shot by the alien towards the player
+// rockets are shot by the player towards the aliens
 class Bomb : public GameObject
 {
+
 public:
 
-	virtual void Init(double xPos, double yPos)
+	virtual void Init(double xPos)
 	{
 		SDL_Log("Bomb::Init");
 		GameObject::Init();
 
 		horizontalPosition = xPos;
-		verticalPosition = yPos;
+		verticalPosition = 480 - 52;
 	}
 
 	virtual void Receive(Message m)
@@ -39,4 +40,6 @@ public:
 			SDL_Log("Bomb::Hit");
 		}
 	}
+
+
 };
