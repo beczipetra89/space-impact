@@ -52,12 +52,12 @@ void AvancezLib::clearWindow()
 	SDL_RenderClear(renderer);
 }
 
-Sprite* AvancezLib::createSprite(const char* name)
+Sprite* AvancezLib::createSprite(const char* name, int w, int h)
 {
 	SDL_Surface* surface = IMG_Load(name);
 	SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
 	SDL_FreeSurface(surface);
-	Sprite* sprite = new Sprite(renderer, texture);
+	Sprite* sprite = new Sprite(renderer, texture, w, h);
 	return sprite;
 }
 

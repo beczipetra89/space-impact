@@ -58,7 +58,8 @@ public:
 			Bomb* bomb = bombs_pool->FirstAvailable();
 			if (bomb != NULL)	// rocket is NULL is the object pool can not provide an object
 			{
-				//Alien* alien = aliens_pool->SelectRandom();
+				//Alien* alien = aliens_pool->SelectRandom
+				bombs_pool->SelectRandom();
 				bomb->Init(go->horizontalPosition, go->verticalPosition);
 				game_objects->insert(bomb);
 			}

@@ -32,7 +32,7 @@ class RenderComponent : public Component
 
 public:
 
-	virtual void Create(AvancezLib* engine, GameObject * go, std::set<GameObject*> * game_objects, const char * sprite_name);
+	virtual void Create(AvancezLib* engine, GameObject * go, std::set<GameObject*> * game_objects, const char * sprite_name, int w, int h);
 	virtual void Update(float dt);
 	virtual void Destroy();
 

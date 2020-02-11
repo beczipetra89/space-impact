@@ -15,10 +15,6 @@ class Game : public GameObject
 	
 	Player * player;
 	Alien* alien;
-
-	
-	
-	
 	
 	//AlienGrid* alien_grid;
 
@@ -41,7 +37,7 @@ public:
 			RocketBehaviourComponent* behaviour = new RocketBehaviourComponent();
 			behaviour->Create(engine, *rocket, &game_objects);
 			RenderComponent* render = new RenderComponent();
-			render->Create(engine, *rocket, &game_objects, "data/bullet1.png");
+			render->Create(engine, *rocket, &game_objects, "data/bullet1.png", 32, 32);
 			(*rocket)->Create();
 			(*rocket)->AddComponent(behaviour);
 			(*rocket)->AddComponent(render);
@@ -54,7 +50,7 @@ public:
 			BombBehaviourComponent* behaviour = new BombBehaviourComponent();
 			behaviour->Create(engine, *bomb, &game_objects);
 			RenderComponent* render = new RenderComponent();
-			render->Create(engine, *bomb, &game_objects, "data/bullet2.png");
+			render->Create(engine, *bomb, &game_objects, "data/bullet2.png", 32, 32);
 			(*bomb)->Create();
 			(*bomb)->AddComponent(behaviour);
 			(*bomb)->AddComponent(render);
@@ -67,7 +63,7 @@ public:
 		player_behaviour->Create(engine, player, &game_objects, &rockets_pool);
 		player_behaviour->InitKeys(&keys);
 		RenderComponent * player_render = new RenderComponent();
-		player_render->Create(engine, player, &game_objects, "data/player.png");
+		player_render->Create(engine, player, &game_objects, "data/player.png", 35, 35);
 		CollideComponent * player_bomb_collide = new CollideComponent();
 		player_bomb_collide->Create(engine, player, &game_objects, (ObjectPool<GameObject>*) & bombs_pool);
 		CollideComponent* player_alien_collide = new CollideComponent();
@@ -84,12 +80,11 @@ public:
 
 		// *******************ENEMYS SINGLE ************************
 		
-
 		alien = new Alien();
 		AlienBehaviourComponent* alien_behaviour = new AlienBehaviourComponent();
 		alien_behaviour->Create(engine, alien, &game_objects, &bombs_pool);
 		RenderComponent* alien_render = new RenderComponent();
-		alien_render->Create(engine, alien, &game_objects, "data/enemySingle.png");
+		alien_render->Create(engine, alien, &game_objects, "data/enemySingle.png", 64, 64);
 		CollideComponent* alien_bullet_collide = new CollideComponent();
 		alien_bullet_collide->Create(engine, alien, &game_objects, (ObjectPool<GameObject>*) & rockets_pool);
 		
@@ -149,7 +144,7 @@ public:
 
 		//Draw current lives indicator
 		for (int i = 0; i <= player->lives; i++) {
-			Sprite* life_sprite = engine->createSprite("data/player.bmp");  
+			Sprite* life_sprite = engine->createSprite("data/player.bmp", 32, 32);  
 			life_sprite->draw(34*i, 16); // 34*i, 16
 		}
 

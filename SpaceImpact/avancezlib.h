@@ -27,7 +27,7 @@ public:
 
 	// Create a sprite given a string.
 	// All sprites are 32*32 pixels.
-	Sprite* createSprite(const char* name);
+	Sprite* createSprite(const char* name, int w, int h);
 
 	// Draws the given text.
 	void drawText(int x, int y, const char* msg);
