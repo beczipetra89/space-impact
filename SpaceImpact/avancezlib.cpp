@@ -58,7 +58,6 @@ Sprite* AvancezLib::createSprite(const char* name)
 	SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
 	SDL_FreeSurface(surface);
 	Sprite* sprite = new Sprite(renderer, texture);
-
 	return sprite;
 }
 

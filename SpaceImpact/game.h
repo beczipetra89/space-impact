@@ -54,7 +54,7 @@ public:
 			BombBehaviourComponent* behaviour = new BombBehaviourComponent();
 			behaviour->Create(engine, *bomb, &game_objects);
 			RenderComponent* render = new RenderComponent();
-			render->Create(engine, *bomb, &game_objects, "data/bomb.bmp");
+			render->Create(engine, *bomb, &game_objects, "data/bullet2.png");
 			(*bomb)->Create();
 			(*bomb)->AddComponent(behaviour);
 			(*bomb)->AddComponent(render);
@@ -83,13 +83,13 @@ public:
 
 
 		// *******************ENEMYS SINGLE ************************
+		
 
 		alien = new Alien();
 		AlienBehaviourComponent* alien_behaviour = new AlienBehaviourComponent();
 		alien_behaviour->Create(engine, alien, &game_objects, &bombs_pool);
 		RenderComponent* alien_render = new RenderComponent();
 		alien_render->Create(engine, alien, &game_objects, "data/enemySingle.png");
-
 		CollideComponent* alien_bullet_collide = new CollideComponent();
 		alien_bullet_collide->Create(engine, alien, &game_objects, (ObjectPool<GameObject>*) & rockets_pool);
 		
@@ -144,6 +144,8 @@ public:
 	virtual void Draw()
 	{
 		//... Draw user interface elements here
+
+		
 
 		//Draw current lives indicator
 		for (int i = 0; i <= player->lives; i++) {

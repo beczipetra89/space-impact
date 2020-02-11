@@ -14,11 +14,11 @@ const unsigned int	NUM_LIVES = 2;
 const unsigned int	MAX_NUM_ROCKETS = 32;
 const unsigned int	MAX_NUM_BOMBS = 32;
 const unsigned int	POINTS_PER_ALIEN = 100;
-float				FIRE_TIME_INTERVAL = .2f; // use .05f for testing
+float				FIRE_TIME_INTERVAL = .2f;		// use .05f for testing
 const float			BOMB_TIME_INTERVAL = 1.25f;
-const float			PLAYER_SPEED = 160.0f;
-float				ROCKET_SPEED = 160.0f;
-const float			ALIEN_SPEED = 40.0f;
+const float			PLAYER_SPEED = 120.0f;		// 160.0f
+float				ROCKET_SPEED = 160.0f;		 // 160.0f
+const float			ALIEN_SPEED = 40.0f;		// 40.0f
 const float			BOMB_SPEED = 120.0f;
 
 
