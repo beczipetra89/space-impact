@@ -187,14 +187,40 @@ public:
 		game_objects.insert(alien_v_grid);
 
 		//**************CREATE ALIEN V POOL***************
-		alien_v_pool.Create(8); // create alien v pool of 8 aliens
-		float alien_v_x = 600.f, alien_v_y = 50.f;
+		alien_v_pool.Create(7); // create alien v pool of 8 aliens
+		std::vector<AlienV::Coordinate> alien_v_coordinates;
+		unsigned int time_ui = unsigned int(time(NULL));
+		srand(time_ui);
+		float initialVY = float(rand() % 250 + 1); // generate base line Y coordinate value
+		
+		// coordinates, x & y, screen size w = 600, h = 480, need to spawn out of screen so 640 for the first object
+		//alien_v_coordinates.push_back({ 760, 120 });
+		//alien_v_coordinates.push_back({ 720, 160});
+		//alien_v_coordinates.push_back({ 680, 200 });	// x + 40, y - 40
+		//alien_v_coordinates.push_back({ 640, 240 });  // <---first alien
+		//alien_v_coordinates.push_back({ 680, 280 });	// x + 40, y + 40
+		//alien_v_coordinates.push_back({ 720, 320 });
+		//alien_v_coordinates.push_back({ 760, 360 });
+
+		// Random height + 40 (spacing)
+		alien_v_coordinates.push_back({ 720, initialVY + 30 });
+		alien_v_coordinates.push_back({ 690, initialVY + 60 });
+		alien_v_coordinates.push_back({ 660, initialVY + 90 });	// x + 30, y - 30
+		alien_v_coordinates.push_back({ 630, initialVY + 120 });  // <---first alien
+		alien_v_coordinates.push_back({ 660, initialVY + 150 });	// x + 30, y + 30
+		alien_v_coordinates.push_back({ 690, initialVY + 180 });
+		alien_v_coordinates.push_back({ 720, initialVY + 210 });
+
+
+		float alien_v_x = 300.f, alien_v_y = 200.f;
 		int alien_v_count = 1;
+		
 		for (auto alien_v = alien_v_pool.pool.begin(); alien_v != alien_v_pool.pool.end(); alien_v++)
 		{
 			RenderComponent* render = new RenderComponent();
-			render->Create(engine, *alien_v, &game_objects, "data/enemyVGroup.png", 64, 64);
-			(*alien_v)->Create();
+			render->Create(engine, *alien_v, &game_objects, "data/enemyVGroup.png", 32, 32);
+		
+			(*alien_v)->Create();	
 			(*alien_v)->AddComponent(render);
 
 			AlienVBehaviourComponent* behaviour = new AlienVBehaviourComponent();
@@ -204,17 +230,9 @@ public:
 
 			(*alien_v)->AddReceiver(this);
 
-			(*alien_v)->horizontalPosition = alien_v_x;
-			(*alien_v)->verticalPosition = alien_v_y;
+			(*alien_v)->horizontalPosition = alien_v_coordinates.at(alien_v_count-1).x;
+			(*alien_v)->verticalPosition = alien_v_coordinates.at(alien_v_count - 1).y;
 			(*alien_v)->Init();
-
-
-			alien_v_y = alien_v_y + 100;
-			if (alien_v_count % 2 == 0) {
-				alien_v_x = alien_v_x + 100; // space between the alien v columns
-				alien_v_y = 50;
-				//delay = delay + 1.0f; 
-			}
 
 			alien_v_count++;
 		}
@@ -245,7 +263,7 @@ public:
 			Destroy();
 			engine->quit();
 		}
-
+		
 		if (keys.cheat) {
 			SDL_Log("Cheat mode enabled");
 			cheat_mode = true;

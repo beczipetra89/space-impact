@@ -52,6 +52,9 @@ public:
 class AlienV : public GameObject
 {
 public:
+
+	struct Coordinate { float  x; float y; }; // Coordinates to use when drawing V shape
+
 	virtual ~AlienV() { SDL_Log("AlienV::~AlienV"); }
 
 	virtual void Init()
