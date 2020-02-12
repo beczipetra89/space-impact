@@ -17,6 +17,7 @@ public:
 	virtual void Create(AvancezLib* engine, GameObject* go, std::set<GameObject*>* game_objects, float delay)
 	{
 		Component::Create(engine, go, game_objects);
+	
 		next_movement = engine->getElapsedTime() + delay;
 	}
 

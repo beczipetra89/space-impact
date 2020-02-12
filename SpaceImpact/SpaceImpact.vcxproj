@@ -135,6 +135,8 @@
   <ItemGroup>
     <ClInclude Include="alien.h" />
     <ClInclude Include="alien_g_grid.h" />
+    <ClInclude Include="alien_v.h" />
+    <ClInclude Include="alien_v_grid.h" />
     <ClInclude Include="avancezlib.h" />
     <ClInclude Include="bomb.h" />
     <ClInclude Include="component.h" />

@@ -19,6 +19,7 @@ const float			BOMB_TIME_INTERVAL = 1.25f;
 const float			PLAYER_SPEED = 120.0f;		// 160.0f
 float				ROCKET_SPEED = 160.0f;		 // 160.0f
 const float			ALIEN_SPEED = 40.0f;		// 40.0f
+const float			ALIEN_V_SPEED = 40.0f;
 const float			ALIEN_G_VERTICAL_SPEED = 20.0f;
 const float         ALIEN_G_VERTICAL_MOVE_TIME_INTERNAL = 1000.f;
 const float			BOMB_SPEED = 120.0f;
@@ -39,6 +40,8 @@ float game_speed = 1.f;		// speed of the game; it is increased each time all the
 //#include "alien_grid.h"
 #include "alien_g.h"
 #include "alien_g_grid.h"
+#include "alien_v.h"
+#include "alien_v_grid.h"
 #include "game.h"
 
 

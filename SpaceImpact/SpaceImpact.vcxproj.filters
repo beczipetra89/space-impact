@@ -68,5 +68,11 @@
     <ClInclude Include="alien_g_grid.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="alien_v.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="alien_v_grid.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

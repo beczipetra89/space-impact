@@ -12,12 +12,16 @@ class Game : public GameObject
 	ObjectPool<Rocket> rockets_pool;	// used to instantiate rockets
 	ObjectPool<Bomb> bombs_pool;
 	ObjectPool<AlienG> alien_g_pool;
+	ObjectPool<AlienV> alien_v_pool;
 	
 	
 	Player * player;
-	//Alien* alien;
+	Alien* alien;
 	AlienG* alien_g;
 	AlienGGrid* alien_g_grid;
+
+	AlienV* alien_v;
+	AlienVGrid* alien_v_grid;
 	
 	//AlienGrid* alien_grid;
 
@@ -81,9 +85,9 @@ public:
 		game_objects.insert(player);
 
 
-		/*
-		// *******************ENEMYS SINGLE ************************
 		
+		// *******************ENEMYS SINGLE ************************
+		/*
 		alien = new Alien();
 		AlienBehaviourComponent* alien_behaviour = new AlienBehaviourComponent();
 		alien_behaviour->Create(engine, alien, &game_objects, &bombs_pool);
@@ -95,13 +99,15 @@ public:
 		alien->Create();
 		alien->AddComponent(alien_behaviour);
 		alien->AddComponent(alien_render);
-		player->AddComponent(alien_bullet_collide);
+		alien->AddComponent(alien_bullet_collide);
 		alien->AddReceiver(this);
-		game_objects.insert(alien);
+		game_objects.insert(alien);   
+
 		*/
+		
 
 		/*
-		// **********************ALIEN G****************************
+		// **********************ALIEN G****************************  TO BE DELETED----
 		alien_g = new AlienG();
 		AlienGBehaviourComponent* alien_g_behaviour = new AlienGBehaviourComponent();
 		alien_g_behaviour->Create(engine, alien_g, &game_objects);
@@ -114,6 +120,12 @@ public:
 		game_objects.insert(alien_g);
 		*/
 
+
+
+
+
+		/*
+
 		////************** ALIEN G GRID ******************* 
 		alien_g_grid = new AlienGGrid();
 		AlienGGridBehaviourComponent* alien_grid_behaviour = new AlienGGridBehaviourComponent();
@@ -121,10 +133,13 @@ public:
 
 		alien_g_grid->Create();
 		alien_g_grid->AddComponent(alien_grid_behaviour);
-		game_objects.insert(alien_g_grid);
+		
+		
+		
+			game_objects.insert(alien_g_grid);
 
 		//**************CREATE ALIEN G POOL***************
-		alien_g_pool.Create(10); // create alien g pool of 6 aliens
+		alien_g_pool.Create(6); // create alien g pool of 6 aliens
 		float alien_g_x = 600.f, alien_g_y = 50.f, delay = 1.f;
 		int alien_g_count = 1;
 		for (auto alien_g = alien_g_pool.pool.begin(); alien_g != alien_g_pool.pool.end(); alien_g++)
@@ -142,7 +157,6 @@ public:
 
 			(*alien_g)->horizontalPosition = alien_g_x;
 			(*alien_g)->verticalPosition = alien_g_y;
-			SDL_Log("verticalPos:%f", (*alien_g)->verticalPosition);
 			(*alien_g)->Init();
 
 
@@ -155,17 +169,68 @@ public:
 
 			alien_g_count++;
 		}
+
+
+		*/
+
+
+		////************** ALIEN V GRID ******************* 
+		alien_v_grid = new AlienVGrid();
+		AlienVGridBehaviourComponent* alien_v_grid_behaviour = new AlienVGridBehaviourComponent();
+		alien_v_grid_behaviour->Create(engine, alien_v_grid, &game_objects, &alien_v_pool);
+
+		alien_v_grid->Create();
+		alien_v_grid->AddComponent(alien_v_grid_behaviour);
+
+
+
+		game_objects.insert(alien_v_grid);
+
+		//**************CREATE ALIEN V POOL***************
+		alien_v_pool.Create(8); // create alien v pool of 8 aliens
+		float alien_v_x = 600.f, alien_v_y = 50.f;
+		int alien_v_count = 1;
+		for (auto alien_v = alien_v_pool.pool.begin(); alien_v != alien_v_pool.pool.end(); alien_v++)
+		{
+			RenderComponent* render = new RenderComponent();
+			render->Create(engine, *alien_v, &game_objects, "data/enemyVGroup.png", 64, 64);
+			(*alien_v)->Create();
+			(*alien_v)->AddComponent(render);
+
+			AlienVBehaviourComponent* behaviour = new AlienVBehaviourComponent();
+			behaviour->Create(engine, *alien_v, &game_objects);
+
+			(*alien_v)->AddComponent(behaviour);
+
+			(*alien_v)->AddReceiver(this);
+
+			(*alien_v)->horizontalPosition = alien_v_x;
+			(*alien_v)->verticalPosition = alien_v_y;
+			(*alien_v)->Init();
+
+
+			alien_v_y = alien_v_y + 100;
+			if (alien_v_count % 2 == 0) {
+				alien_v_x = alien_v_x + 100; // space between the alien v columns
+				alien_v_y = 50;
+				//delay = delay + 1.0f; 
+			}
+
+			alien_v_count++;
+		}
+
 	}
 
 	virtual void Init()
 	{
 		player->Init();
-		//alien->Init();
+//		alien->Init();
 		//alien_g->Init();
-		alien_g_grid->Init();
+	//	alien_g_grid->Init();  ---ez kell
+		alien_v_grid->Init();
 		
 
-		// Set background to white
+		// Set background to lila
 		AvancezLib::RGBColor LILA = { 99, 0, 191 };
 		engine->SetBackgroundColor(LILA);
 
@@ -201,8 +266,6 @@ public:
 	virtual void Draw()
 	{
 		//... Draw user interface elements here
-
-		
 
 		//Draw current lives indicator
 		for (int i = 0; i <= player->lives; i++) {
@@ -262,7 +325,7 @@ public:
 			*/
 		}
 		
-		if (m == ALIEN_HIT) 
+		if (m == ALIEN_HIT || m == ALIEN_G_HIT)
 		{
 			SDL_Log("GAME::ALIEN_HIT!");
 			score += POINTS_PER_ALIEN * game_speed;
@@ -287,12 +350,15 @@ public:
 	
 		rockets_pool.Destroy();
 		bombs_pool.Destroy();
-	//	aliens_pool.Destroy();
+		alien_v_pool.Destroy();
+
+		//aliens_pool.Destroy();
 
 		delete player;
-		//delete alien;
-	//	delete alien_grid;
-		delete alien_g;
+	//	delete alien;
+	//	delete alien_grid; 
+	//	delete alien_g;  ---ez kell
+		delete alien_v;
 
 		// Mark game class as disabled
 		enabled = false;
