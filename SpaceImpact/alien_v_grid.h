@@ -31,8 +31,6 @@ public:
 	virtual ~AlienVGridBehaviourComponent() {}
 
 
-	
-
 	virtual void Create(AvancezLib* engine, GameObject* go, std::set<GameObject*>* game_objects, ObjectPool<AlienV>* alien_v_pool, ObjectPool<AlienLaser>* alienLaser_pool)
 	{
 		Component::Create(engine, go, game_objects);
@@ -52,6 +50,7 @@ public:
 		for (auto it = alien_v_pool->pool.begin(); it != alien_v_pool->pool.end(); it++) {
 			(*it)->Update(dt);
 		}
+			
 
 
 		if (CanFire())
@@ -61,8 +60,11 @@ public:
 			if (laser != NULL)	// rocket is NULL is the object pool can not provide an object
 			{
 				AlienV* alien_v = alien_v_pool->SelectRandom();
-				laser->Init(alien_v->horizontalPosition, alien_v->verticalPosition);
-				game_objects->insert(laser);
+				if (alien_v != NULL)
+				{
+					laser->Init(alien_v->horizontalPosition, alien_v->verticalPosition);
+					game_objects->insert(laser);
+				}
 			}
 		}
 	}
@@ -71,6 +73,8 @@ public:
 	bool CanFire()
 	{
 		// shoot just if enough time passed by
+
+		
 		if ((engine->getElapsedTime() - time_laser_shot) < (ALIENLASER_TIME_INTERVAL / game_speed))
 			return false;
 

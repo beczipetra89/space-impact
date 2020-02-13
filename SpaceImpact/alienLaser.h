@@ -8,7 +8,7 @@ public:
 	{
 		go->horizontalPosition -= ALIENLASER_SPEED * dt; // laser_speed * time
 
-		if (go->horizontalPosition < 0 - 32) // When the bomb reaches the screen, it disappears.
+		if (go->horizontalPosition < 0) // When the bomb reaches the screen, it disappears.
 			go->enabled = false;
 	}
 };

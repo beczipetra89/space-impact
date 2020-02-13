@@ -87,8 +87,14 @@ public:
 		player_behaviour->InitKeys(&keys);
 		RenderComponent * player_render = new RenderComponent();
 		player_render->Create(engine, player, &game_objects, "data/player.png", 35, 35);
-		CollideComponent * player_bomb_collide = new CollideComponent();
+		
+		CollideComponent * player_bomb_collide = new CollideComponent();			//Collide with enemy bullet
 		player_bomb_collide->Create(engine, player, &game_objects, (ObjectPool<GameObject>*) & bombs_pool);
+
+		CollideComponent* player_laser_collide = new CollideComponent();
+		player_laser_collide->Create(engine, player, &game_objects, (ObjectPool<GameObject>*) & alienLaser_pool);
+
+
 		//CollideComponent* player_alien_collide = new CollideComponent();
 		//player_alien_collide->Create(engine, player, &game_objects, (ObjectPool<GameObject>*) & alien);
 
@@ -96,6 +102,8 @@ public:
 		player->AddComponent(player_behaviour);
 		player->AddComponent(player_render);
 		player->AddComponent(player_bomb_collide);
+		player->AddComponent(player_laser_collide);
+
 		//player->AddComponent(player_alien_collide);
 		player->AddReceiver(this);
 		game_objects.insert(player);
@@ -238,9 +246,12 @@ public:
 
 			AlienVBehaviourComponent* behaviour = new AlienVBehaviourComponent();
 			behaviour->Create(engine, *alien_v, &game_objects, &alienLaser_pool);
+		
+			CollideComponent* alienV_rocket_collide = new CollideComponent();
+			alienV_rocket_collide->Create(engine, *alien_v, &game_objects, (ObjectPool<GameObject>*) & rockets_pool);
 
 			(*alien_v)->AddComponent(behaviour);
-
+			(*alien_v)->AddComponent(alienV_rocket_collide);
 			(*alien_v)->AddReceiver(this);
 
 			(*alien_v)->horizontalPosition = alien_v_coordinates.at(alien_v_count-1).x;
@@ -356,10 +367,10 @@ public:
 			*/
 		}
 		
-		if (m == ALIEN_HIT || m == ALIEN_G_HIT)
+		if (m == ALIEN_HIT || m == ALIEN_G_HIT || m == ALIEN_V_HIT)
 		{
 			SDL_Log("GAME::ALIEN_HIT!");
-			score += POINTS_PER_ALIEN * game_speed;
+			score += POINTS_PER_ALIEN;
 		}
 	}
 
