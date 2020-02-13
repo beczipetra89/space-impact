@@ -50,6 +50,9 @@ public:
 
 		Move(dt);
 
+		if (go->horizontalPosition < 0) // When alian G flew oout of window to the left, it disappears.
+			go->enabled = false;
+
 		/*	xpos = xpos - 1 * horizontialSpeed;
 		if (ypos < initialYpos - 20) {
 			// reached upper limit, fly downwards instead

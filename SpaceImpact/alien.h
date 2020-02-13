@@ -35,14 +35,6 @@ public:
 		go->verticalPosition= min + r * (max - min);
 
 
-		// Init alien on random height
-		
-		//go->verticalPosition = (rand() % 439) + 1;
-		
-	//	go->verticalPosition = 64 + (std::rand() % (64 - 416 + 1)); 
-
-	//	go->verticalPosition = RandomHeight(64, 416);
-
 
 
 	}
@@ -51,6 +43,8 @@ public:
 	{
 
 		Move(dt * ALIEN_SPEED );
+		if (go->horizontalPosition < -40) // When alian flew out of window to the left, it disappears.
+			go->enabled = false;
 		
 		if (CanFire())
 		{
@@ -64,26 +58,6 @@ public:
 				game_objects->insert(bomb);
 			}
 		}
-
-		/* // fetches a rocket from the pool and use it in game_objects
-				Rocket * rocket = rockets_pool->FirstAvailable();
-				if (rocket != NULL)	// rocket is NULL is the object pool can not provide an object
-				{
-					rocket->Init(go->horizontalPosition, go->verticalPosition);
-					game_objects->insert(rocket);
-		*/
-	
-
-
-		/*	xpos = xpos - 1 * horizontialSpeed;
-		if (ypos < initialYpos - 20) {
-			// reached upper limit, fly downwards instead
-			verticalDirection = 1;
-		}
-		else if (ypos > initialYpos + 20) {
-			verticalDirection = -1;
-		}
-		ypos = ypos + verticalSpeed * verticalDirection;  */
 
 	}
 

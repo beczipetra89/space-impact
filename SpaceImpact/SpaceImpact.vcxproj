@@ -134,6 +134,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="alien.h" />
+    <ClInclude Include="alienLaser.h" />
     <ClInclude Include="alien_g_grid.h" />
     <ClInclude Include="alien_v.h" />
     <ClInclude Include="alien_v_grid.h" />

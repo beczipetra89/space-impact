@@ -13,6 +13,8 @@ class Game : public GameObject
 	ObjectPool<Bomb> bombs_pool;
 	ObjectPool<AlienG> alien_g_pool;
 	ObjectPool<AlienV> alien_v_pool;
+	ObjectPool<AlienLaser> alienLaser_pool;
+
 	
 	
 	Player * player;
@@ -62,6 +64,20 @@ public:
 			(*bomb)->AddComponent(behaviour);
 			(*bomb)->AddComponent(render);
 		}
+
+		//**************CREATE ALIEN LASER POOL***************
+		alienLaser_pool.Create(30);
+		for (auto laser = alienLaser_pool.pool.begin(); laser != alienLaser_pool.pool.end(); laser++)
+		{
+			AlienLaserBehaviourComponent* behaviour = new AlienLaserBehaviourComponent();
+			behaviour->Create(engine, *laser, &game_objects);
+			RenderComponent* render = new RenderComponent();
+			render->Create(engine, *laser, &game_objects, "data/bullet2.png", 32, 32);
+			(*laser)->Create();
+			(*laser)->AddComponent(behaviour);
+			(*laser)->AddComponent(render);
+		}
+
 
 
 		//***************** PLAYER *******************
@@ -177,13 +193,10 @@ public:
 		////************** ALIEN V GRID ******************* 
 		alien_v_grid = new AlienVGrid();
 		AlienVGridBehaviourComponent* alien_v_grid_behaviour = new AlienVGridBehaviourComponent();
-		alien_v_grid_behaviour->Create(engine, alien_v_grid, &game_objects, &alien_v_pool);
+		alien_v_grid_behaviour->Create(engine, alien_v_grid, &game_objects, &alien_v_pool, &alienLaser_pool);
 
 		alien_v_grid->Create();
 		alien_v_grid->AddComponent(alien_v_grid_behaviour);
-
-
-
 		game_objects.insert(alien_v_grid);
 
 		//**************CREATE ALIEN V POOL***************
@@ -224,7 +237,7 @@ public:
 			(*alien_v)->AddComponent(render);
 
 			AlienVBehaviourComponent* behaviour = new AlienVBehaviourComponent();
-			behaviour->Create(engine, *alien_v, &game_objects);
+			behaviour->Create(engine, *alien_v, &game_objects, &alienLaser_pool);
 
 			(*alien_v)->AddComponent(behaviour);
 
@@ -369,6 +382,7 @@ public:
 		rockets_pool.Destroy();
 		bombs_pool.Destroy();
 		alien_v_pool.Destroy();
+		alienLaser_pool.Destroy();
 
 		//aliens_pool.Destroy();
 

@@ -79,6 +79,7 @@ public:
 
 		if (go->verticalPosition < 0)
 			go->verticalPosition = 0;
+	
 
 		if (go->horizontalPosition > (640 - 32))
 			go->horizontalPosition = 640 - 32;

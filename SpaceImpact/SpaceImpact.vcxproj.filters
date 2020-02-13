@@ -74,5 +74,8 @@
     <ClInclude Include="alien_v_grid.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="alienLaser.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -7,6 +7,10 @@
 
 class AlienVBehaviourComponent : public Component
 {
+	ObjectPool<AlienLaser>* alienLaser_pool;
+
+	float time_laser_shot;  // Time from last time laser was shot by alien V
+
 
 	float direction = -1.f; // if direction = 1, alien moves up, if direction = -1, alien moves down
 	float time_moved;	// time from the last time alien_g moved
@@ -17,10 +21,12 @@ class AlienVBehaviourComponent : public Component
 public:
 	virtual ~AlienVBehaviourComponent() {}
 
-	virtual void Create(AvancezLib* engine, GameObject* go, std::set<GameObject*>* game_objects) //deleted float delay
+	// replaced "GameObject with AlienV
+	virtual void Create(AvancezLib* engine, GameObject* go, std::set<GameObject*>* game_objects, ObjectPool<AlienLaser>* alienLaser_pool)
 	{
 		Component::Create(engine, go, game_objects);
-		//next_movement = engine->getElapsedTime() + delay;
+		this->alienLaser_pool = alienLaser_pool;
+		
 	}
 
 	virtual void Init()
@@ -34,6 +40,8 @@ public:
 	{
 
 		Move(dt);
+		if (go->horizontalPosition < -40) // When alian G flew oout of window to the left, it disappears.
+			go->enabled = false;
 
 	}
 
