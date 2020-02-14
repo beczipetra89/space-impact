@@ -40,13 +40,13 @@ public:
 		this->engine = engine;
 
 		//*************CREATE ROCKETS POOL**************
-		rockets_pool.Create(30);
+		rockets_pool.Create(100);
 		for (auto rocket = rockets_pool.pool.begin(); rocket != rockets_pool.pool.end(); rocket++)
 		{
 			RocketBehaviourComponent* behaviour = new RocketBehaviourComponent();
 			behaviour->Create(engine, *rocket, &game_objects);
 			RenderComponent* render = new RenderComponent();
-			render->Create(engine, *rocket, &game_objects, "data/bullet1.png", 32, 32);
+			render->Create(engine, *rocket, &game_objects, "data/bullet.png", 7, 5);
 			(*rocket)->Create();
 			(*rocket)->AddComponent(behaviour);
 			(*rocket)->AddComponent(render);
@@ -59,7 +59,7 @@ public:
 			BombBehaviourComponent* behaviour = new BombBehaviourComponent();
 			behaviour->Create(engine, *bomb, &game_objects);
 			RenderComponent* render = new RenderComponent();
-			render->Create(engine, *bomb, &game_objects, "data/bullet2.png", 32, 32);
+			render->Create(engine, *bomb, &game_objects, "data/laser.png", 9, 7);
 			(*bomb)->Create();
 			(*bomb)->AddComponent(behaviour);
 			(*bomb)->AddComponent(render);
@@ -72,7 +72,7 @@ public:
 			AlienLaserBehaviourComponent* behaviour = new AlienLaserBehaviourComponent();
 			behaviour->Create(engine, *laser, &game_objects);
 			RenderComponent* render = new RenderComponent();
-			render->Create(engine, *laser, &game_objects, "data/bullet2.png", 32, 32);
+			render->Create(engine, *laser, &game_objects, "data/laser.png", 9, 7);
 			(*laser)->Create();
 			(*laser)->AddComponent(behaviour);
 			(*laser)->AddComponent(render);
@@ -86,7 +86,7 @@ public:
 		player_behaviour->Create(engine, player, &game_objects, &rockets_pool);
 		player_behaviour->InitKeys(&keys);
 		RenderComponent * player_render = new RenderComponent();
-		player_render->Create(engine, player, &game_objects, "data/player.png", 35, 35);
+		player_render->Create(engine, player, &game_objects, "data/player.png", 43, 43);
 		
 		CollideComponent * player_bomb_collide = new CollideComponent();			//Collide with enemy bullet
 		player_bomb_collide->Create(engine, player, &game_objects, (ObjectPool<GameObject>*) & bombs_pool);
@@ -111,12 +111,12 @@ public:
 
 		
 		// *******************ENEMYS SINGLE ************************
-		/*
+		
 		alien = new Alien();
 		AlienBehaviourComponent* alien_behaviour = new AlienBehaviourComponent();
 		alien_behaviour->Create(engine, alien, &game_objects, &bombs_pool);
 		RenderComponent* alien_render = new RenderComponent();
-		alien_render->Create(engine, alien, &game_objects, "data/enemySingle.png", 64, 64);
+		alien_render->Create(engine, alien, &game_objects, "data/alien_s.png", 53, 41);
 		CollideComponent* alien_bullet_collide = new CollideComponent();
 		alien_bullet_collide->Create(engine, alien, &game_objects, (ObjectPool<GameObject>*) & rockets_pool);
 		
@@ -127,7 +127,7 @@ public:
 		alien->AddReceiver(this);
 		game_objects.insert(alien);   
 
-		*/
+		
 		
 
 		/*
@@ -136,7 +136,7 @@ public:
 		AlienGBehaviourComponent* alien_g_behaviour = new AlienGBehaviourComponent();
 		alien_g_behaviour->Create(engine, alien_g, &game_objects);
 		RenderComponent* alien_g_render = new RenderComponent();
-		alien_g_render->Create(engine, alien_g, &game_objects, "data/enemyGroup.png", 64, 64);
+		alien_g_render->Create(engine, alien_g, &game_objects, "data/alien_g.png", 50, 38);
 		alien_g->Create();
 		alien_g->AddComponent(alien_g_behaviour);
 		alien_g->AddComponent(alien_g_render);
@@ -145,10 +145,6 @@ public:
 		*/
 
 
-
-
-
-		/*
 
 		////************** ALIEN G GRID ******************* 
 		alien_g_grid = new AlienGGrid();
@@ -169,7 +165,7 @@ public:
 		for (auto alien_g = alien_g_pool.pool.begin(); alien_g != alien_g_pool.pool.end(); alien_g++)
 		{
 			RenderComponent* render = new RenderComponent();
-			render->Create(engine, *alien_g, &game_objects, "data/enemyGroup.png", 64, 64);
+			render->Create(engine, *alien_g, &game_objects, "data/alien_g.png", 50, 38);
 			(*alien_g)->Create();
 			(*alien_g)->AddComponent(render);
 
@@ -194,8 +190,6 @@ public:
 			alien_g_count++;
 		}
 
-
-		*/
 
 
 		////************** ALIEN V GRID ******************* 
@@ -239,7 +233,7 @@ public:
 		for (auto alien_v = alien_v_pool.pool.begin(); alien_v != alien_v_pool.pool.end(); alien_v++)
 		{
 			RenderComponent* render = new RenderComponent();
-			render->Create(engine, *alien_v, &game_objects, "data/enemyVGroup.png", 32, 32);
+			render->Create(engine, *alien_v, &game_objects, "data/alien_v.png", 33, 33);
 		
 			(*alien_v)->Create();	
 			(*alien_v)->AddComponent(render);
@@ -266,9 +260,9 @@ public:
 	virtual void Init()
 	{
 		player->Init();
-//		alien->Init();
+		alien->Init();
 		//alien_g->Init();
-	//	alien_g_grid->Init();  ---ez kell
+		alien_g_grid->Init();  
 		alien_v_grid->Init();
 		
 
@@ -303,6 +297,8 @@ public:
 			else
 				(*go)->Update(dt);
 		}
+
+		
 	}
 
 	virtual void Draw()
@@ -311,8 +307,9 @@ public:
 
 		//Draw current lives indicator
 		for (int i = 0; i <= player->lives; i++) {
-			Sprite* life_sprite = engine->createSprite("data/player.bmp", 32, 32);  
-			life_sprite->draw(34*i, 16); // 34*i, 16
+			Sprite* life_sprite = engine->createSprite("data/heart.gif", 15, 12); 
+			life_sprite->draw(20 * i, 20); 
+			
 		}
 
 		//Score indicator
@@ -398,9 +395,9 @@ public:
 		//aliens_pool.Destroy();
 
 		delete player;
-	//	delete alien;
+		delete alien;
 	//	delete alien_grid; 
-	//	delete alien_g;  ---ez kell
+		delete alien_g;  
 		delete alien_v;
 
 		// Mark game class as disabled

@@ -29,8 +29,8 @@ public:
 		SDL_Log("Rocket::Init");
 		GameObject::Init();
 
-		horizontalPosition = xPos;
-		verticalPosition = yPos;
+		horizontalPosition = xPos+40;  //considering player sprite and bullet sprite size
+		verticalPosition = yPos+20;
 
 		//horizontalPosition = 0+32;
 		//verticalPosition = 250 - 52; 

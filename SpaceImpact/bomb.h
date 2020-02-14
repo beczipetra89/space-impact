@@ -25,7 +25,7 @@ public:
 		GameObject::Init();
 
 		horizontalPosition = xPos;
-		verticalPosition = yPos;
+		verticalPosition = yPos+18;
 	}
 
 	virtual void Receive(Message m)
