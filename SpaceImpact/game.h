@@ -318,16 +318,10 @@ public:
 
 		//Score indicator
 		char score_string[10];
-		sprintf(score_string, "%07d", score); // pad score with zeros on the left
-		engine->drawText(250, 16, score_string);
-		
-		//Bonus indicator
-		// Make a string using sprintf with some format
-		char bonus_string [20];
-		sprintf(bonus_string, "Bonus: %.1f X", game_speed);
-		engine->drawText(500, 16, bonus_string);
+		sprintf(score_string, "%07d", score);
+		engine->drawText(500, 16, score_string);
 
-		//40-el tobb
+		
 		if (game_over) {
 			engine->drawText(250, 0, "***GAME OVER***");
 		}
