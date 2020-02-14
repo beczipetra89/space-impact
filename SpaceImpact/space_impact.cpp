@@ -30,6 +30,8 @@ const float			ALIEN_V_SPEED = 80.0f;
 const float			ALIEN_G_VERTICAL_SPEED = 20.0f;
 const float         ALIEN_G_VERTICAL_MOVE_TIME_INTERNAL = 1000.f;
 
+const float			PICKUP_SPEED = 40.0f;
+
 
 float game_speed = 1.f;		// speed of the game; it is increased each time all the aliens are hit
 							// it is also the score multiplier
@@ -49,6 +51,9 @@ float game_speed = 1.f;		// speed of the game; it is increased each time all the
 #include "alienLaser.h"
 #include "alien_v.h"
 #include "alien_v_grid.h"
+
+#include "pickup_life.h"
+
 #include "game.h"
 
 

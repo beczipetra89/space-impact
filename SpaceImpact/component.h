@@ -49,3 +49,12 @@ public:
 	virtual void Update(float dt);
 };
 
+// For testing collision between single objects
+class SingleObjectCollideComponent : public Component
+{
+	GameObject * coll_object; // collision will be tested with a single object
+
+public:
+	virtual void Create(AvancezLib* engine, GameObject* go, std::set<GameObject*>* game_objects, GameObject * coll_object);
+	virtual void Update(float dt);
+};

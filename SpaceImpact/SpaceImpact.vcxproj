@@ -145,6 +145,7 @@
     <ClInclude Include="game_object.h" />
     <ClInclude Include="alien_g.h" />
     <ClInclude Include="object_pool.h" />
+    <ClInclude Include="pickup_life.h" />
     <ClInclude Include="player.h" />
     <ClInclude Include="rocket.h" />
     <ClInclude Include="sprite.h" />

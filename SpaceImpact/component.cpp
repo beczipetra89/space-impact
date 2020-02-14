@@ -59,3 +59,28 @@ void CollideComponent::Update(float dt)
 		}
 	}
 }
+
+void SingleObjectCollideComponent::Create(AvancezLib* engine, GameObject* go, std::set<GameObject*>* game_objects, GameObject* coll_object)
+{
+	Component::Create(engine, go, game_objects);
+	this->coll_object = coll_object;
+}
+
+void SingleObjectCollideComponent::Update(float dt)
+{
+	GameObject* go0 = this->coll_object;
+
+	if (go != NULL && go0 !=NULL ) {
+		if (go->enabled && go0->enabled)
+		{
+			if ((go0->horizontalPosition > go->horizontalPosition - 10) &&
+				(go0->horizontalPosition < go->horizontalPosition + 10) &&
+				(go0->verticalPosition > go->verticalPosition - 10) &&
+				(go0->verticalPosition < go->verticalPosition + 10))
+			{
+				go->Receive(HIT);
+				go0->Receive(HIT);
+			}
+		}
+	}
+}

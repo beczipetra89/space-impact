@@ -77,5 +77,8 @@
     <ClInclude Include="alienLaser.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="pickup_life.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

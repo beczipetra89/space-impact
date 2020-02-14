@@ -25,14 +25,10 @@ public:
 	{
 		time_bomb_dropped = -10000.f;
 
-		go->horizontalPosition = 600; 
+		go->horizontalPosition = 400; 
 	
-		int min = 64;
-		int max = 412;
-	
-		srand((unsigned)time(0));
-		int r = (int)rand() / (int)RAND_MAX;
-		go->verticalPosition= min + r * (max - min);
+		
+		go->verticalPosition= 400;
 
 
 

@@ -132,9 +132,17 @@ public:
 			if (lives < 0)
 				Send(GAME_OVER);
 		}
+
+		if (m == LIFE_PICKED) {
+			AddLife();
+		}
 	}
 
-	
+	void AddLife() {
+		lives++;
+		SDL_Log("Total lives: %d", lives);
+	}
+
 	void RemoveLife()
 	{
 		lives--;

@@ -24,6 +24,8 @@ class Game : public GameObject
 
 	AlienV* alien_v;
 	AlienVGrid* alien_v_grid;
+
+	PickupLife* life_pickup;
 	
 	//AlienGrid* alien_grid;
 
@@ -94,17 +96,13 @@ public:
 		CollideComponent* player_laser_collide = new CollideComponent();
 		player_laser_collide->Create(engine, player, &game_objects, (ObjectPool<GameObject>*) & alienLaser_pool);
 
-
-		//CollideComponent* player_alien_collide = new CollideComponent();
-		//player_alien_collide->Create(engine, player, &game_objects, (ObjectPool<GameObject>*) & alien);
-
 		player->Create();
 		player->AddComponent(player_behaviour);
 		player->AddComponent(player_render);
 		player->AddComponent(player_bomb_collide);
 		player->AddComponent(player_laser_collide);
+		
 
-		//player->AddComponent(player_alien_collide);
 		player->AddReceiver(this);
 		game_objects.insert(player);
 
@@ -119,16 +117,21 @@ public:
 		alien_render->Create(engine, alien, &game_objects, "data/alien_s.png", 53, 44);
 		CollideComponent* alien_bullet_collide = new CollideComponent();
 		alien_bullet_collide->Create(engine, alien, &game_objects, (ObjectPool<GameObject>*) & rockets_pool);
+
+
+		SingleObjectCollideComponent* alien_player_collide = new SingleObjectCollideComponent();
+		alien_player_collide->Create(engine, alien, &game_objects, player);
 		
 		alien->Create();
 		alien->AddComponent(alien_behaviour);
 		alien->AddComponent(alien_render);
 		alien->AddComponent(alien_bullet_collide);
+		
+		alien->AddComponent(alien_player_collide);
+		
 		alien->AddReceiver(this);
 		game_objects.insert(alien);   
 
-		
-		
 
 		/*
 		// **********************ALIEN G****************************  TO BE DELETED----
@@ -259,6 +262,24 @@ public:
 			alien_v_count++;
 		}
 
+		// LIFE PICKUP
+		life_pickup = new PickupLife();
+		PickupLifeBehaviourComponent* life_pickup_behaviour = new PickupLifeBehaviourComponent();
+		life_pickup_behaviour->Create(engine, life_pickup, &game_objects);
+		
+		RenderComponent* life_pickup_render = new RenderComponent();
+		life_pickup_render->Create(engine, life_pickup, &game_objects, "data/life.png", 33, 33);
+
+		SingleObjectCollideComponent* life_pickup_collide = new SingleObjectCollideComponent();
+		life_pickup_collide->Create(engine, life_pickup, &game_objects, player);
+
+		life_pickup->Create();
+		life_pickup->AddComponent(life_pickup_behaviour);
+		life_pickup->AddComponent(life_pickup_render);
+		life_pickup->AddComponent(life_pickup_collide);
+		life_pickup->AddReceiver(this);
+		game_objects.insert(life_pickup);
+
 	}
 
 	virtual void Init()
@@ -268,6 +289,7 @@ public:
 		//alien_g->Init();
 		alien_g_grid->Init();  
 		alien_v_grid->Init();
+		life_pickup->Init();
 		
 
 		// Set background to lila
@@ -332,6 +354,7 @@ public:
 
 	virtual void Receive(Message m)
 	{
+
 		if (m == GAME_OVER)
 		{
 			SDL_Log("GAME::GAME_OVER!");
@@ -362,6 +385,11 @@ public:
 			*/
 		}
 		
+		if(m == LIFE_PICKED){
+		// If the +UP collected, add one life to the player
+			player->AddLife();
+		}
+
 		if (m == ALIEN_HIT || m == ALIEN_G_HIT || m == ALIEN_V_HIT)
 		{
 			SDL_Log("GAME::ALIEN_HIT!");
@@ -389,6 +417,7 @@ public:
 		bombs_pool.Destroy();
 		alien_v_pool.Destroy();
 		alienLaser_pool.Destroy();
+		//life_pickup.Destroy();
 
 		//aliens_pool.Destroy();
 
@@ -397,6 +426,7 @@ public:
 	//	delete alien_grid; 
 		delete alien_g;  
 		delete alien_v;
+		delete life_pickup;
 
 		// Mark game class as disabled
 		enabled = false;
