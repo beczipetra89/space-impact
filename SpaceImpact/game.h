@@ -116,7 +116,7 @@ public:
 		AlienBehaviourComponent* alien_behaviour = new AlienBehaviourComponent();
 		alien_behaviour->Create(engine, alien, &game_objects, &bombs_pool);
 		RenderComponent* alien_render = new RenderComponent();
-		alien_render->Create(engine, alien, &game_objects, "data/alien_s.png", 53, 41);
+		alien_render->Create(engine, alien, &game_objects, "data/alien_s.png", 53, 44);
 		CollideComponent* alien_bullet_collide = new CollideComponent();
 		alien_bullet_collide->Create(engine, alien, &game_objects, (ObjectPool<GameObject>*) & rockets_pool);
 		
@@ -146,7 +146,7 @@ public:
 
 
 
-		////************** ALIEN G GRID ******************* 
+		////************** ALIEN G GRID *******************   
 		alien_g_grid = new AlienGGrid();
 		AlienGGridBehaviourComponent* alien_grid_behaviour = new AlienGGridBehaviourComponent();
 		alien_grid_behaviour->Create(engine, alien_g_grid, &game_objects, &alien_g_pool);
@@ -171,8 +171,12 @@ public:
 
 			AlienGBehaviourComponent* behaviour = new AlienGBehaviourComponent();
 			behaviour->Create(engine, *alien_g, &game_objects, delay);
+			
+			CollideComponent* alienG_rocket_collide = new CollideComponent();
+			alienG_rocket_collide->Create(engine, *alien_g, &game_objects, (ObjectPool<GameObject>*)& rockets_pool);
+			
 			(*alien_g)->AddComponent(behaviour);
-
+			(*alien_g)->AddComponent(alienG_rocket_collide);
 			(*alien_g)->AddReceiver(this);
 
 			(*alien_g)->horizontalPosition = alien_g_x;
