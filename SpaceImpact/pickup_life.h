@@ -46,8 +46,6 @@ class PickupLife : public GameObject
 {
 public:
 
-	int lives;
-
 	virtual ~PickupLife() { SDL_Log("PickupLife::~PickupLife"); }
 
 	virtual void Init()
@@ -62,11 +60,13 @@ public:
 		if (!enabled) {
 			return;
 		}
-		if (m == HIT) {
+		if (m == LIFE_PICKED ) { // life can be picked when player has full life, but will not add life
 			
 			SDL_Log("LifePickup::HIT!");
 			Send(LIFE_PICKED); // Send a message so that game can update the score
 			enabled = false;
 		}
+		
+
 	}
 };

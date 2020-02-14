@@ -270,7 +270,7 @@ public:
 		RenderComponent* life_pickup_render = new RenderComponent();
 		life_pickup_render->Create(engine, life_pickup, &game_objects, "data/life.png", 33, 33);
 
-		SingleObjectCollideComponent* life_pickup_collide = new SingleObjectCollideComponent();
+		LifePickupCollisionComponent* life_pickup_collide = new LifePickupCollisionComponent();
 		life_pickup_collide->Create(engine, life_pickup, &game_objects, player);
 
 		life_pickup->Create();
@@ -387,7 +387,7 @@ public:
 		
 		if(m == LIFE_PICKED){
 		// If the +UP collected, add one life to the player
-			player->AddLife();
+			//player->AddLife();
 		}
 
 		if (m == ALIEN_HIT || m == ALIEN_G_HIT || m == ALIEN_V_HIT)

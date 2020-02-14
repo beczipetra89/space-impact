@@ -139,6 +139,7 @@ public:
 	}
 
 	void AddLife() {
+	if(lives<2)
 		lives++;
 		SDL_Log("Total lives: %d", lives);
 	}

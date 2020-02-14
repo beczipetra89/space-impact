@@ -73,13 +73,39 @@ void SingleObjectCollideComponent::Update(float dt)
 	if (go != NULL && go0 !=NULL ) {
 		if (go->enabled && go0->enabled)
 		{
+			if ((go0->horizontalPosition > go->horizontalPosition - 35) &&
+				(go0->horizontalPosition < go->horizontalPosition + 35) &&
+				(go0->verticalPosition > go->verticalPosition - 35) &&
+				(go0->verticalPosition < go->verticalPosition + 35))
+			{
+				go->Receive(HIT);
+				go0->Receive(HIT);
+			}
+		}
+	}
+}
+
+
+void LifePickupCollisionComponent::Create(AvancezLib* engine, GameObject* go, std::set<GameObject*>* game_objects, GameObject* coll_object)
+{
+	Component::Create(engine, go, game_objects);
+	this->coll_object = coll_object;
+}
+
+void LifePickupCollisionComponent::Update(float dt)
+{
+	GameObject* go0 = this->coll_object;
+
+	if (go != NULL && go0 != NULL) {
+		if (go->enabled && go0->enabled)
+		{
 			if ((go0->horizontalPosition > go->horizontalPosition - 10) &&
 				(go0->horizontalPosition < go->horizontalPosition + 10) &&
 				(go0->verticalPosition > go->verticalPosition - 10) &&
 				(go0->verticalPosition < go->verticalPosition + 10))
 			{
-				go->Receive(HIT);
-				go0->Receive(HIT);
+				go->Receive(LIFE_PICKED);
+				go0->Receive(LIFE_PICKED);
 			}
 		}
 	}
