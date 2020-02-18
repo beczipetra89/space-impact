@@ -1,31 +1,31 @@
 #pragma once
 
-class BombBehaviourComponent : public Component
+class MineBehaviourComponent : public Component
 {
 public:
 
 	void Update(float dt)
 	{
-		go->horizontalPosition -= BOMB_SPEED * dt; // bomb_speed * time
+		go->horizontalPosition -= MINE_SPEED * dt; // bomb_speed * time
 
-		if (go->horizontalPosition < 0 - 32) // When the bomb reaches the side of the screen, it disappears.
+		if (go->horizontalPosition < 0 - 32) // When the mine reaches the side of the screen, it disappears.
 			go->enabled = false;
 	}
 };
 
 
 // bombs are shot by the alien towards the player
-class Bomb : public GameObject
+class Mine : public GameObject
 {
 public:
 
 	virtual void Init(double xPos, double yPos)
 	{
-		SDL_Log("Bomb::Init");
+		SDL_Log("Mine::Init");
 		GameObject::Init();
 
 		horizontalPosition = xPos;
-		verticalPosition = yPos+18;
+		verticalPosition = yPos;
 	}
 
 	virtual void Receive(Message m)
@@ -36,7 +36,7 @@ public:
 		if (m == HIT)
 		{
 			enabled = false;
-			SDL_Log("Bomb::Hit");
+			SDL_Log("Mine::Hit");
 		}
 	}
 };

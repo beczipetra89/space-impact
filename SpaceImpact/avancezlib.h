@@ -54,10 +54,12 @@ public:
 	};
 
 	void SetBackgroundColor(RGBColor& color);
+	SDL_Renderer* renderer;
 
 private:
 	SDL_Window* window;
-	SDL_Renderer* renderer;
+	//For rendering collider box
+	//SDL_Renderer* renderer;
 
 	TTF_Font* font;
 };

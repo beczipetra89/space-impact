@@ -140,10 +140,13 @@
     <ClInclude Include="alien_v_grid.h" />
     <ClInclude Include="avancezlib.h" />
     <ClInclude Include="bomb.h" />
+    <ClInclude Include="boss_alien_manager.h" />
+    <ClInclude Include="boss_alien.h" />
     <ClInclude Include="component.h" />
     <ClInclude Include="game.h" />
     <ClInclude Include="game_object.h" />
     <ClInclude Include="alien_g.h" />
+    <ClInclude Include="mines.h" />
     <ClInclude Include="object_pool.h" />
     <ClInclude Include="pickup_life.h" />
     <ClInclude Include="player.h" />

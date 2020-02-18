@@ -21,6 +21,11 @@ public:
 		next_movement = engine->getElapsedTime() + delay;
 	}
 
+	void SetDelay(float delay)
+	{
+		next_movement = engine->getElapsedTime() + delay;
+	}
+
 	virtual void Init()
 	{
 		SDL_Log("AlienGBehaviourComponent::Init");
@@ -50,9 +55,10 @@ public:
 
 		Move(dt);
 
-		if (go->horizontalPosition < 0) // When alian G flew oout of window to the left, it disappears.
+		if (go->horizontalPosition < 0) // When alian G flew out of window to the left, it disappears.
+		{
 			go->enabled = false;
-
+		}
 		/*	xpos = xpos - 1 * horizontialSpeed;
 		if (ypos < initialYpos - 20) {
 			// reached upper limit, fly downwards instead
@@ -79,7 +85,7 @@ public:
 		//if ((initialYPos - go->verticalPosition) < 0.f)
 		//	SDL_Log("iYP-go: %f", (initialYPos - go->verticalPosition));
 
-		go->horizontalPosition -= dt * ALIEN_SPEED;
+		go->horizontalPosition -= dt * ALIEN_G_SPEED;
 
 		if (engine->getElapsedTime()>next_movement)
 		{

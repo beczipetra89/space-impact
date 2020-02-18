@@ -80,5 +80,14 @@
     <ClInclude Include="pickup_life.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="boss_alien.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="mines.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="boss_alien_manager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

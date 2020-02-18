@@ -25,12 +25,19 @@ float				ALIENLASER_TIME_INTERVAL = 3.25f;
 float				ALIENLASER_SPEED = 120.0f;
 
 
-const float			ALIEN_SPEED = 40.0f;		// 40.0f
-const float			ALIEN_V_SPEED = 80.0f;
+const float			ALIEN_SPEED = 80.0f;		// 40.0f
+const float			ALIEN_V_SPEED = 40.0f;		// 40.0f
+const float			ALIEN_G_SPEED = 40.0f;
 const float			ALIEN_G_VERTICAL_SPEED = 20.0f;
 const float         ALIEN_G_VERTICAL_MOVE_TIME_INTERNAL = 1000.f;
 
 const float			PICKUP_SPEED = 40.0f;
+
+const unsigned int	MAX_NUM_MINES = 32;
+const float			MINE_TIME_INTERVAL = 10.25f;
+const float			MINE_SPEED = 120.0f;
+const float			BOSS_SPEED = 80.0f;
+
 
 
 float game_speed = 1.f;		// speed of the game; it is increased each time all the aliens are hit
@@ -51,8 +58,11 @@ float game_speed = 1.f;		// speed of the game; it is increased each time all the
 #include "alienLaser.h"
 #include "alien_v.h"
 #include "alien_v_grid.h"
-
 #include "pickup_life.h"
+
+#include "mines.h"
+#include "boss_alien.h"
+#include "boss_alien_manager.h"
 
 #include "game.h"
 
@@ -61,6 +71,8 @@ float game_speed = 1.f;		// speed of the game; it is increased each time all the
 
 int main(int argc, char** argv)
 {
+	// Seed the random number generator
+	srand(time(NULL));
 
 	AvancezLib engine;
 

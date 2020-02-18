@@ -9,7 +9,8 @@ class AlienBehaviourComponent : public Component
 	int direction = 1; // if direction = 1, alien moves right, if direction = -1, alien moves left
 	ObjectPool<Bomb>* bombs_pool;
 	
-	float time_bomb_dropped;	// time from the last time the bomb was dropped
+	float time_laser_shot;	// time from the last time the laser was shot
+	float init_delay;       // time delay before alien start to move
 
 
 public:
@@ -23,25 +24,30 @@ public:
 
 	virtual void Init()
 	{
-		time_bomb_dropped = -10000.f;
+		time_laser_shot = -10000.f;
+		go->horizontalPosition = 640; 
+		go->verticalPosition= 300;
+		init_delay = engine->getElapsedTime();
+	}
 
-		go->horizontalPosition = 400; 
-	
-		
-		go->verticalPosition= 400;
-
-
-
-
+	void setInitDelay(float delay)
+	{
+		init_delay = engine->getElapsedTime() + delay;
 	}
 
 	virtual void Update(float dt)
 	{
+		// If we haven't passed the delay time, skip update
+		if (engine->getElapsedTime() < init_delay)
+			return;
 
 		Move(dt * ALIEN_SPEED );
 		if (go->horizontalPosition < -40) // When alian flew out of window to the left, it disappears.
+		{
+			go->Send(ALIEN_LEVEL_CLEAR);
 			go->enabled = false;
-		
+		}
+
 		if (CanFire())
 		{
 			// fetches a rocket from the pool and use it in game_objects
@@ -62,7 +68,6 @@ public:
 	void Move(float move)
 	{
 		go->horizontalPosition -= move;
-
 	}
 
 
@@ -74,14 +79,13 @@ public:
 	}
 
 
-
 	bool CanFire()
 	{
 		// shoot just if enough time passed by
-		if ((engine->getElapsedTime() - time_bomb_dropped) < (BOMB_TIME_INTERVAL / game_speed))
+		if ((engine->getElapsedTime() - time_laser_shot) < (BOMB_TIME_INTERVAL / game_speed))
 			return false;
 
-		time_bomb_dropped = engine->getElapsedTime();
+		time_laser_shot = engine->getElapsedTime();
 
 		SDL_Log("bomb!");
 		return true;
@@ -111,10 +115,11 @@ public:
 				return;
 		}
 		if (m == HIT) {
-				// Disabe alien when it's hit
-				SDL_Log("Alien::HIT!");
-				Send(ALIEN_HIT); // Send a message so that game can update the score
-				enabled = false;
+			// Disabe alien when it's hit
+			SDL_Log("Alien::HIT!");
+			Send(ALIEN_HIT); // Send a message so that game can update the score
+			Send(ALIEN_LEVEL_CLEAR); // Send a message so that game can init new alien
+			enabled = false;
 		}
 	}
 };

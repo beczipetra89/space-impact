@@ -40,6 +40,17 @@ public:
 };
 
 
+//class RectRenderComponent : public Component
+//{
+//
+//public:
+//
+//	virtual void Create(AvancezLib* engine, GameObject* go, std::set<GameObject*>* game_objects, const char* sprite_name, int w, int h);
+//	virtual void Update(float dt);
+//	virtual void Destroy();
+//};
+
+
 class CollideComponent : public Component
 {
 	ObjectPool<GameObject> * coll_objects; // collision will be tested with these objects
@@ -69,4 +80,12 @@ public:
 	virtual void Update(float dt);
 };
 
+// Collision to BOSS ALIEN
+class BossObjectCollideComponent : public Component
+{
+	GameObject* coll_object; // collision will be tested with a single object: BOSS
 
+public:
+	virtual void Create(AvancezLib* engine, GameObject* go, std::set<GameObject*>* game_objects, GameObject* coll_object);
+	virtual void Update(float dt);
+};

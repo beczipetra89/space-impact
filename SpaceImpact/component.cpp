@@ -85,7 +85,6 @@ void SingleObjectCollideComponent::Update(float dt)
 	}
 }
 
-
 void LifePickupCollisionComponent::Create(AvancezLib* engine, GameObject* go, std::set<GameObject*>* game_objects, GameObject* coll_object)
 {
 	Component::Create(engine, go, game_objects);
@@ -106,6 +105,37 @@ void LifePickupCollisionComponent::Update(float dt)
 			{
 				go->Receive(LIFE_PICKED);
 				go0->Receive(LIFE_PICKED);
+			}
+		}
+	}
+}
+
+
+void BossObjectCollideComponent::Create(AvancezLib* engine, GameObject* go, std::set<GameObject*>* game_objects, GameObject* coll_object)
+{
+	Component::Create(engine, go, game_objects);
+	this->coll_object = coll_object;
+}
+
+void BossObjectCollideComponent::Update(float dt)
+{
+	// For rendering collider
+	SDL_Rect rect = {go->horizontalPosition-110, go->verticalPosition - 135, 220, 270};
+	//SDL_SetRenderDrawColor(engine->renderer, 255, 0, 0, 128);
+	//SDL_RenderFillRect(engine->renderer, &rect);
+
+	GameObject* go0 = this->coll_object;
+
+	if (go != NULL && go0 != NULL) {
+		if (go->enabled && go0->enabled)
+		{
+			if ((go0->horizontalPosition > go->horizontalPosition - 110) &&
+				(go0->horizontalPosition < go->horizontalPosition + 110) &&
+				(go0->verticalPosition > go->verticalPosition - 135) &&
+				(go0->verticalPosition < go->verticalPosition + 135))
+			{
+				go->Receive(HIT);
+				go0->Receive(HIT);
 			}
 		}
 	}

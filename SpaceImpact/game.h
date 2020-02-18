@@ -1,5 +1,15 @@
 #pragma once
 #include "sstream"
+enum ALIEN_TYPE {
+	ALIEN_S,
+	ALIEN_G,
+	ALIEN_V
+};
+const float LEVEL1_DELAY[] = {
+	0.5f, // ALIEN_S init delays for 0.5 second
+	0.f,  // For ALIEN_G and ALIEN_V no delays
+	0.f
+};
 
 class Game : public GameObject
 {
@@ -8,24 +18,27 @@ class Game : public GameObject
 	AvancezLib* engine;
 	AvancezLib::KeyStatus keys = { false, false, false, false, false};
 	bool cheat_mode = false;
+	float init_time; // the time when Game object init() is called
+	bool init_new_alien = false; // whether to init new alien
+	bool init_new_alien_g = false; // whether to init new alien_g in alien_g_grid
+	bool init_new_alien_v = false; 
 
 	ObjectPool<Rocket> rockets_pool;	// used to instantiate rockets
 	ObjectPool<Bomb> bombs_pool;
 	ObjectPool<AlienG> alien_g_pool;
 	ObjectPool<AlienV> alien_v_pool;
 	ObjectPool<AlienLaser> alienLaser_pool;
+	ObjectPool<Mine> mines_pool;
 
-	
-	
 	Player * player;
 	Alien* alien;
 	AlienG* alien_g;
 	AlienGGrid* alien_g_grid;
-
 	AlienV* alien_v;
 	AlienVGrid* alien_v_grid;
-
 	PickupLife* life_pickup;
+
+	BossAlien* boss_alien;
 	
 	//AlienGrid* alien_grid;
 
@@ -34,12 +47,17 @@ class Game : public GameObject
 
 	unsigned int score = 0;
 
+	// for drawing text
+	char life_string[10];
+	char score_string[10];
+
 public:
 	
 	virtual void Create(AvancezLib* engine)
 	{
 		SDL_Log("Game::Create");
 		this->engine = engine;
+		SDL_Log("%d", ALIEN_TYPE::ALIEN_G);
 
 		//*************CREATE ROCKETS POOL**************
 		rockets_pool.Create(100);
@@ -80,6 +98,19 @@ public:
 			(*laser)->AddComponent(render);
 		}
 
+		//**************CREATE MINES POOL***************
+		mines_pool.Create(30);
+		for (auto mine = mines_pool.pool.begin(); mine != mines_pool.pool.end(); mine++)
+		{
+			MineBehaviourComponent* behaviour = new MineBehaviourComponent();
+			behaviour->Create(engine, *mine, &game_objects);
+			RenderComponent* render = new RenderComponent();
+			render->Create(engine, *mine, &game_objects, "data/cross.png", 18, 17);
+			(*mine)->Create();
+			(*mine)->AddComponent(behaviour);
+			(*mine)->AddComponent(render);
+		}
+
 
 
 		//***************** PLAYER *******************
@@ -101,8 +132,6 @@ public:
 		player->AddComponent(player_render);
 		player->AddComponent(player_bomb_collide);
 		player->AddComponent(player_laser_collide);
-		
-
 		player->AddReceiver(this);
 		game_objects.insert(player);
 
@@ -156,14 +185,13 @@ public:
 
 		alien_g_grid->Create();
 		alien_g_grid->AddComponent(alien_grid_behaviour);
+		alien_g_grid->AddReceiver(this); // alien_g_grid can send message to game
 		
-		
-		
-			game_objects.insert(alien_g_grid);
+		game_objects.insert(alien_g_grid);
 
 		//**************CREATE ALIEN G POOL***************
 		alien_g_pool.Create(6); // create alien g pool of 6 aliens
-		float alien_g_x = 600.f, alien_g_y = 50.f, delay = 1.f;
+		float alien_g_x = 660.f, alien_g_y = 50.f, delay = 1.f;
 		int alien_g_count = 1;
 		for (auto alien_g = alien_g_pool.pool.begin(); alien_g != alien_g_pool.pool.end(); alien_g++)
 		{
@@ -207,6 +235,7 @@ public:
 		alien_v_grid->Create();
 		alien_v_grid->AddComponent(alien_v_grid_behaviour);
 		game_objects.insert(alien_v_grid);
+		alien_v_grid->AddReceiver(this); // alien_v_grid can send message to game
 
 		//**************CREATE ALIEN V POOL***************
 		alien_v_pool.Create(7); // create alien v pool of 8 aliens
@@ -280,23 +309,66 @@ public:
 		life_pickup->AddReceiver(this);
 		game_objects.insert(life_pickup);
 
+
+
+		// *******************BOSS ALIEN ************************
+
+		boss_alien = new BossAlien();
+		BossAlienBehaviourComponent* boss_behaviour = new BossAlienBehaviourComponent();
+		boss_behaviour->Create(engine, boss_alien, &game_objects, &mines_pool);
+		RenderComponent* boss_render = new RenderComponent();
+		boss_render->Create(engine, boss_alien, &game_objects, "data/boss_b.png", 110, 135);
+		CollideComponent* boss_bullet_collide = new CollideComponent();
+		boss_bullet_collide->Create(engine, boss_alien, &game_objects, (ObjectPool<GameObject>*)& rockets_pool);
+
+		BossObjectCollideComponent* boss_player_collide = new BossObjectCollideComponent();
+		boss_player_collide->Create(engine, boss_alien, &game_objects, player);
+
+
+	//	SingleObjectCollideComponent* alien_player_collide = new SingleObjectCollideComponent();
+	//	alien_player_collide->Create(engine, alien, &game_objects, player);
+
+		boss_alien->Create();
+		boss_alien->AddComponent(boss_behaviour);
+		boss_alien->AddComponent(boss_render);
+		boss_alien->AddComponent(boss_bullet_collide);
+		boss_alien->AddComponent(boss_player_collide);
+
+	//	alien->AddComponent(alien_player_collide);
+
+		boss_alien->AddReceiver(this);
+		game_objects.insert(boss_alien);
+
+	}
+
+	float randomDelay()
+	{
+		//generate random float between 0.0 and 10.0
+		return (rand() % 10);
 	}
 
 	virtual void Init()
 	{
 		player->Init();
 		alien->Init();
+		alien_g_grid->Init();
+		alien_v_grid->Init(0.f + randomDelay()); 
+		//alien_v_grid->Init(0.f);
+
+		/*	alien->Init();
 		//alien_g->Init();
 		alien_g_grid->Init();  
 		alien_v_grid->Init();
 		life_pickup->Init();
-		
+		*/
+		//boss_alien->Init();
 
 		// Set background to lila
 		AvancezLib::RGBColor LILA = { 99, 0, 191 };
 		engine->SetBackgroundColor(LILA);
 
 		enabled = true;
+		init_time = engine->getElapsedTime();
 	}
 
 	virtual void Update(float dt)
@@ -315,6 +387,55 @@ public:
 			FIRE_TIME_INTERVAL = FIRE_TIME_INTERVAL / 10;
 		}
 
+		if (init_new_alien_g && engine->getElapsedTime() < init_time + 60 * 5.f) // if game runs for less than 5 minutes then we can start new aliens
+		{
+			init_new_alien_g = false;
+
+			float alien_g_x = 660.f, alien_g_y = 50.f, delay = 1.0f;
+			int alien_g_count = 1;
+			for (auto alien_g = alien_g_pool.pool.begin(); alien_g != alien_g_pool.pool.end(); alien_g++)
+			{
+				(*alien_g)->horizontalPosition = alien_g_x;
+				(*alien_g)->verticalPosition = alien_g_y;
+				(*alien_g)->Init();
+				AlienGBehaviourComponent* component = (*alien_g)->GetComponent<AlienGBehaviourComponent*>();
+				component->SetDelay(delay);
+
+				alien_g_y = alien_g_y + 100;
+				if (alien_g_count % 2 == 0) {
+					alien_g_x = alien_g_x + 100; // space between the alien g columns
+					alien_g_y = 50;
+					delay = delay + 1.0f;
+				}
+
+				alien_g_count++;
+			}
+			alien_g_grid->Init();
+		}
+
+		if (init_new_alien_v)
+		{
+			init_new_alien_v = false;
+
+			float alien_v_x = 300.f, alien_v_y = 200.f;
+			int alien_v_count = 1;
+
+			for (auto alien_v = alien_v_pool.pool.begin(); alien_v != alien_v_pool.pool.end(); alien_v++)
+			{
+				(*alien_v)->horizontalPosition = 620 + alien_v_count * 20;
+				(*alien_v)->Init();
+				alien_v_count++;
+			}
+			alien_v_grid->Init(randomDelay());
+		}
+
+		if (init_new_alien)
+		{
+			alien->Init();
+			alien->GetComponent<AlienBehaviourComponent*>()->setInitDelay(randomDelay());
+			init_new_alien = false;
+		}
+
 		for (auto go = game_objects.begin(); go != game_objects.end(); go++)
 		{
 			// If game_over is true, set dt to 0 so that all objects will not move.
@@ -323,8 +444,6 @@ public:
 			else
 				(*go)->Update(dt);
 		}
-
-		
 	}
 
 	virtual void Draw()
@@ -332,14 +451,18 @@ public:
 		//... Draw user interface elements here
 
 		//Draw current lives indicator
-		for (int i = 0; i <= player->lives; i++) {
-			Sprite* life_sprite = engine->createSprite("data/heart.gif", 15, 12); 
-			life_sprite->draw(20 * i, 20); 
-			
-		}
+		// memory leak here, create too many sprite objects but not destroying them
+		//for (int i = 0; i <= player->lives; i++) {
+		//	Sprite* life_sprite = engine->createSprite("data/heart.gif", 15, 12); 
+		//	life_sprite->draw(20 * i, 20); 
+		//}
+		sprintf(life_string, "Life: %d", player->lives);
+		engine->drawText(0, 16, life_string);
+
+		AvancezLib::RGBColor LILA = { 99, 0, 191 };
+		engine->SetBackgroundColor(LILA);
 
 		//Score indicator
-		char score_string[10];
 		sprintf(score_string, "%07d", score);
 		engine->drawText(500, 16, score_string);
 
@@ -355,34 +478,30 @@ public:
 	virtual void Receive(Message m)
 	{
 
-		if (m == GAME_OVER)
+		if (m == GAME_OVER)	
 		{
 			SDL_Log("GAME::GAME_OVER!");
 			game_over = true;
 		}
 
-		if (m == LEVEL_WIN)
+		if (m == LEVEL_WIN)  //if boss alien dies
 		{
 			SDL_Log("GAME::LEVEL_WIN");
-/*
-			// New level, prepare aliens
-			game_speed *= 1.2f;
-			int alien_x = 0, alien_y = 32, alien_count = 1;
-			for (auto alien = aliens_pool.pool.begin(); alien != aliens_pool.pool.end(); alien++)
-			{
-				(*alien)->Init(alien_x, alien_y);
-			//	//********* "DRAWING" THE GRID***********
-			// Change the drawing position X to 0 and Y to Y + 4 at every 11 aliens
-				if (alien_count > 1 && alien_count % 11 == 0) {
-					alien_x = 0;
-					alien_y += 32 + 2; // leave 4 pixel between alien lines
-				}
-				else alien_x += 32 + 4; // leave 32+4 pixel between alien on the same row
-				alien_count++;
-			}
-			alien_grid->Init();
 
-			*/
+			// New level, prepare aliens and new background
+		}
+
+		if (m == ALIEN_G_LEVEL_CLEAR) {
+			SDL_Log("GAME::ALIEN_G_LEVEL_CLEAR!");
+			if (!init_new_alien_g)
+				init_new_alien_g = true;
+			//boss_alien->Init();
+		}
+
+		if (m == ALL_ALIENS_V_CLEAR) {
+			SDL_Log("GAME::ALL_ALIENS_V_CLEAR!");
+			if (!init_new_alien_v)
+				init_new_alien_v = true;
 		}
 		
 		if(m == LIFE_PICKED){
@@ -394,6 +513,12 @@ public:
 		{
 			SDL_Log("GAME::ALIEN_HIT!");
 			score += POINTS_PER_ALIEN;
+		}
+
+		if (m == ALIEN_HIT || m == ALIEN_LEVEL_CLEAR)
+		{
+			if (!init_new_alien)
+				init_new_alien = true;
 		}
 	}
 
@@ -411,22 +536,32 @@ public:
 		// Empty the game_objects set
 		game_objects.clear();
 
-		life_sprite->destroy();
-	
 		rockets_pool.Destroy();
+		
+	
+		life_sprite->destroy();
 		bombs_pool.Destroy();
 		alien_v_pool.Destroy();
 		alienLaser_pool.Destroy();
+
+		
+
+		mines_pool.Destroy();
+
 		//life_pickup.Destroy();
 
 		//aliens_pool.Destroy();
 
 		delete player;
-		delete alien;
+/*		delete alien;
 	//	delete alien_grid; 
 		delete alien_g;  
 		delete alien_v;
 		delete life_pickup;
+		
+		*/
+
+		delete boss_alien;
 
 		// Mark game class as disabled
 		enabled = false;
