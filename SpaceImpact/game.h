@@ -135,10 +135,8 @@ public:
 		player->AddReceiver(this);
 		game_objects.insert(player);
 
-
-		
-		// *******************ENEMYS SINGLE ************************
-		
+		 
+		// **********************  ALIEN S   ************************
 		alien = new Alien();
 		AlienBehaviourComponent* alien_behaviour = new AlienBehaviourComponent();
 		alien_behaviour->Create(engine, alien, &game_objects, &bombs_pool);
@@ -205,9 +203,13 @@ public:
 			
 			CollideComponent* alienG_rocket_collide = new CollideComponent();
 			alienG_rocket_collide->Create(engine, *alien_g, &game_objects, (ObjectPool<GameObject>*)& rockets_pool);
+
+			SingleObjectCollideComponent* alienG_player_collide = new SingleObjectCollideComponent();
+			alienG_player_collide->Create(engine, * alien_g, & game_objects, player);
 			
 			(*alien_g)->AddComponent(behaviour);
 			(*alien_g)->AddComponent(alienG_rocket_collide);
+			(*alien_g)->AddComponent(alienG_player_collide);
 			(*alien_g)->AddReceiver(this);
 
 			(*alien_g)->horizontalPosition = alien_g_x;
@@ -243,15 +245,6 @@ public:
 		unsigned int time_ui = unsigned int(time(NULL));
 		srand(time_ui);
 		float initialVY = float(rand() % 250 + 1); // generate base line Y coordinate value
-		
-		// coordinates, x & y, screen size w = 600, h = 480, need to spawn out of screen so 640 for the first object
-		//alien_v_coordinates.push_back({ 760, 120 });
-		//alien_v_coordinates.push_back({ 720, 160});
-		//alien_v_coordinates.push_back({ 680, 200 });	// x + 40, y - 40
-		//alien_v_coordinates.push_back({ 640, 240 });  // <---first alien
-		//alien_v_coordinates.push_back({ 680, 280 });	// x + 40, y + 40
-		//alien_v_coordinates.push_back({ 720, 320 });
-		//alien_v_coordinates.push_back({ 760, 360 });
 
 		// Random height + 40 (spacing)
 		alien_v_coordinates.push_back({ 720, initialVY + 30 });
@@ -280,8 +273,12 @@ public:
 			CollideComponent* alienV_rocket_collide = new CollideComponent();
 			alienV_rocket_collide->Create(engine, *alien_v, &game_objects, (ObjectPool<GameObject>*) & rockets_pool);
 
+			SingleObjectCollideComponent* alienV_player_collide = new SingleObjectCollideComponent();
+			alienV_player_collide->Create(engine, *alien_v, &game_objects, player);
+
 			(*alien_v)->AddComponent(behaviour);
 			(*alien_v)->AddComponent(alienV_rocket_collide);
+			(*alien_v)->AddComponent(alienV_player_collide);
 			(*alien_v)->AddReceiver(this);
 
 			(*alien_v)->horizontalPosition = alien_v_coordinates.at(alien_v_count-1).x;
