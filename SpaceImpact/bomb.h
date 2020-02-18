@@ -38,5 +38,10 @@ public:
 			enabled = false;
 			SDL_Log("Bomb::Hit");
 		}
+
+		if (m == BULLET_BULLET_HIT) {
+			enabled = false;
+			SDL_Log("Bomb::BULLET_BULLET_HIT");
+		}
 	}
 };

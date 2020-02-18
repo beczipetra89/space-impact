@@ -67,32 +67,63 @@ public:
 			behaviour->Create(engine, *rocket, &game_objects);
 			RenderComponent* render = new RenderComponent();
 			render->Create(engine, *rocket, &game_objects, "data/bullet.png", 7, 5);
+
+			BulletCollideComponent* rocket_laser_S_collision = new BulletCollideComponent();
+			rocket_laser_S_collision->Create(engine, *rocket, &game_objects, (ObjectPool<GameObject>*) & bombs_pool);
+
+			BulletCollideComponent* rocket_laser_V_collision = new BulletCollideComponent();
+			rocket_laser_V_collision->Create(engine, *rocket, &game_objects, (ObjectPool<GameObject>*) & alienLaser_pool);
+
+			BulletCollideComponent* rocket_mine_collision = new BulletCollideComponent();
+			rocket_mine_collision->Create(engine, *rocket, &game_objects, (ObjectPool<GameObject>*) & mines_pool);
+
+
 			(*rocket)->Create();
 			(*rocket)->AddComponent(behaviour);
 			(*rocket)->AddComponent(render);
+
+			(*rocket)->AddComponent(rocket_laser_S_collision);
+			(*rocket)->AddComponent(rocket_laser_V_collision);
+			(*rocket)->AddComponent(rocket_mine_collision);
+			(*rocket)->AddReceiver(this);
 		}
 
-		//**************CREATE BOMBS POOL***************
-		bombs_pool.Create(30);
+		//**************CREATE LASER S POOL***************
+		bombs_pool.Create(2);
 		for (auto bomb = bombs_pool.pool.begin(); bomb != bombs_pool.pool.end(); bomb++)
 		{
 			BombBehaviourComponent* behaviour = new BombBehaviourComponent();
 			behaviour->Create(engine, *bomb, &game_objects);
 			RenderComponent* render = new RenderComponent();
 			render->Create(engine, *bomb, &game_objects, "data/laser.png", 9, 7);
+			
+			BulletCollideComponent* laserS_rocket_collision = new BulletCollideComponent();
+			laserS_rocket_collision->Create(engine, *bomb, &game_objects, (ObjectPool<GameObject>*) & rockets_pool);
+
 			(*bomb)->Create();
 			(*bomb)->AddComponent(behaviour);
 			(*bomb)->AddComponent(render);
+
+			(*bomb)->AddComponent(laserS_rocket_collision);
+			(*bomb)->AddReceiver(this);
+
 		}
 
-		//**************CREATE ALIEN LASER POOL***************
-		alienLaser_pool.Create(30);
+		//**************CREATE ALIEN V LASER POOL***************
+		alienLaser_pool.Create(7);
 		for (auto laser = alienLaser_pool.pool.begin(); laser != alienLaser_pool.pool.end(); laser++)
 		{
 			AlienLaserBehaviourComponent* behaviour = new AlienLaserBehaviourComponent();
 			behaviour->Create(engine, *laser, &game_objects);
 			RenderComponent* render = new RenderComponent();
 			render->Create(engine, *laser, &game_objects, "data/laser.png", 9, 7);
+
+			BulletCollideComponent* laserV_rocket_collision = new BulletCollideComponent();
+			laserV_rocket_collision->Create(engine, *laser, &game_objects, (ObjectPool<GameObject>*) & rockets_pool);
+
+			(*laser)->AddComponent(laserV_rocket_collision);
+			(*laser)->AddReceiver(this);
+
 			(*laser)->Create();
 			(*laser)->AddComponent(behaviour);
 			(*laser)->AddComponent(render);
@@ -106,6 +137,13 @@ public:
 			behaviour->Create(engine, *mine, &game_objects);
 			RenderComponent* render = new RenderComponent();
 			render->Create(engine, *mine, &game_objects, "data/cross.png", 18, 17);
+
+			BulletCollideComponent* mine_rocket_collision = new BulletCollideComponent();
+			mine_rocket_collision->Create(engine, *mine, &game_objects, (ObjectPool<GameObject>*) & rockets_pool);
+
+			(*mine)->AddComponent(mine_rocket_collision);
+			(*mine)->AddReceiver(this);
+
 			(*mine)->Create();
 			(*mine)->AddComponent(behaviour);
 			(*mine)->AddComponent(render);
@@ -510,6 +548,10 @@ public:
 		{
 			SDL_Log("GAME::ALIEN_HIT!");
 			score += POINTS_PER_ALIEN;
+		}
+
+		if (m == BULLET_BULLET_HIT) {
+			SDL_Log("GAME::BULLET_BULLET_HIT!");
 		}
 
 		if (m == ALIEN_HIT || m == ALIEN_LEVEL_CLEAR)

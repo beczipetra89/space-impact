@@ -38,5 +38,10 @@ public:
 			enabled = false;
 			SDL_Log("Mine::Hit");
 		}
+
+		if (m == BULLET_BULLET_HIT) {
+			enabled = false;
+			SDL_Log("Mine::BULLET_BULLET_HIT");
+		}
 	}
 };

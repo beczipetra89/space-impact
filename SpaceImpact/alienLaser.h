@@ -38,5 +38,10 @@ public:
 			enabled = false;
 			SDL_Log("AlienLaser::Hit");
 		}
+
+		if (m == BULLET_BULLET_HIT) {
+			enabled = false;
+			SDL_Log("AlienLaser::BULLET_BULLET_HIT");
+		}
 	}
 };

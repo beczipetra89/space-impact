@@ -60,6 +60,16 @@ public:
 	virtual void Update(float dt);
 };
 
+// Collision between bullets to bullets
+class BulletCollideComponent : public Component
+{
+	ObjectPool<GameObject>* coll_objects; 
+
+public:
+	virtual void Create(AvancezLib* engine, GameObject* go, std::set<GameObject*>* game_objects, ObjectPool<GameObject>* coll_objects);
+	virtual void Update(float dt);
+};
+
 // For testing collision between single objects
 class SingleObjectCollideComponent : public Component
 {

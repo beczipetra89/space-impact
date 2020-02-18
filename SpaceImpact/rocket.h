@@ -47,5 +47,10 @@ public:
 			enabled = false;
 			SDL_Log("Rocket::Hit");
 		}
+
+		if (m == BULLET_BULLET_HIT) {
+			enabled = false;
+			SDL_Log("Rocket::BULLET_BULLET_HIT");
+		}
 	}
 };

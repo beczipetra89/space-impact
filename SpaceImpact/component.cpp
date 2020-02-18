@@ -34,6 +34,9 @@ void RenderComponent::Destroy()
 }
 
 
+
+
+
 void CollideComponent::Create(AvancezLib* engine, GameObject * go, std::set<GameObject*> * game_objects, ObjectPool<GameObject> * coll_objects)
 {
 	Component::Create(engine, go, game_objects);
@@ -59,6 +62,33 @@ void CollideComponent::Update(float dt)
 		}
 	}
 }
+
+void BulletCollideComponent::Create(AvancezLib* engine, GameObject* go, std::set<GameObject*>* game_objects, ObjectPool<GameObject>* coll_objects)
+{
+	Component::Create(engine, go, game_objects);
+	this->coll_objects = coll_objects;
+}
+
+
+void BulletCollideComponent::Update(float dt)
+{
+	for (auto i = 0; i < coll_objects->pool.size(); i++)
+	{
+		GameObject* go0 = coll_objects->pool[i];
+		if (go0->enabled)
+		{
+			if ((go0->horizontalPosition > go->horizontalPosition - 5) &&
+				(go0->horizontalPosition < go->horizontalPosition + 5) &&
+				(go0->verticalPosition > go->verticalPosition - 7) &&
+				(go0->verticalPosition < go->verticalPosition + 7))
+			{
+				go->Receive(BULLET_BULLET_HIT);
+				go0->Receive(BULLET_BULLET_HIT);
+			}
+		}
+	}
+}
+
 
 void SingleObjectCollideComponent::Create(AvancezLib* engine, GameObject* go, std::set<GameObject*>* game_objects, GameObject* coll_object)
 {
