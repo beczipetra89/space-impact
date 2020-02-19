@@ -26,7 +26,7 @@ public:
 	{
 		time_laser_shot = -10000.f;
 		go->horizontalPosition = 640; 
-		go->verticalPosition= 300;
+		//go->verticalPosition= 300;
 		init_delay = engine->getElapsedTime();
 	}
 
@@ -103,9 +103,10 @@ public:
 
 	virtual ~Alien() { SDL_Log("Alien::~Alien"); }
 
-	virtual void Init()
+	virtual void Init(float y)
 	{
 		SDL_Log("Alien::Init");
+		verticalPosition = y;
 		GameObject::Init();
 		
 	}

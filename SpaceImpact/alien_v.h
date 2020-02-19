@@ -67,7 +67,7 @@ public:
 
 	virtual void Init()
 	{
-		SDL_Log("AlienV::Init");
+		SDL_Log("AlienV::Init x:%f, y:%f", horizontalPosition, verticalPosition);
 		GameObject::Init();
 	}
 

@@ -248,8 +248,6 @@ public:
 			alien_g_count++;
 		}
 
-
-
 		////************** ALIEN V GRID ******************* 
 		alien_v_grid = new AlienVGrid();
 		AlienVGridBehaviourComponent* alien_v_grid_behaviour = new AlienVGridBehaviourComponent();
@@ -261,25 +259,9 @@ public:
 		alien_v_grid->AddReceiver(this); // alien_v_grid can send message to game
 
 		//**************CREATE ALIEN V POOL***************
-		alien_v_pool.Create(7); // create alien v pool of 8 aliens
-		std::vector<AlienV::Coordinate> alien_v_coordinates;
-		unsigned int time_ui = unsigned int(time(NULL));
-		srand(time_ui);
-		float initialVY = float(rand() % 250 + 1); // generate base line Y coordinate value
-
-		// Random height + 40 (spacing)
-		alien_v_coordinates.push_back({ 720, initialVY + 30 });
-		alien_v_coordinates.push_back({ 690, initialVY + 60 });
-		alien_v_coordinates.push_back({ 660, initialVY + 90 });	// x + 30, y - 30
-		alien_v_coordinates.push_back({ 630, initialVY + 120 });  // <---first alien
-		alien_v_coordinates.push_back({ 660, initialVY + 150 });	// x + 30, y + 30
-		alien_v_coordinates.push_back({ 690, initialVY + 180 });
-		alien_v_coordinates.push_back({ 720, initialVY + 210 });
-
-
-		float alien_v_x = 300.f, alien_v_y = 200.f;
-		int alien_v_count = 1;
-		
+		alien_v_pool.Create(7); // create alien v pool of 7 aliens
+		std::vector<AlienV::Coordinate> alien_v_coordinates = MakeVShapeAlienPositions({ 660.f, AlienVRandomHeigh() }, 7);
+		int alien_v_count = 0;		
 		for (auto alien_v = alien_v_pool.pool.begin(); alien_v != alien_v_pool.pool.end(); alien_v++)
 		{
 			RenderComponent* render = new RenderComponent();
@@ -302,8 +284,8 @@ public:
 			(*alien_v)->AddComponent(alienV_player_collide);
 			(*alien_v)->AddReceiver(this);
 
-			(*alien_v)->horizontalPosition = alien_v_coordinates.at(alien_v_count-1).x;
-			(*alien_v)->verticalPosition = alien_v_coordinates.at(alien_v_count - 1).y;
+			(*alien_v)->horizontalPosition = alien_v_coordinates.at(alien_v_count).x;
+			(*alien_v)->verticalPosition = alien_v_coordinates.at(alien_v_count).y;
 			(*alien_v)->Init();
 
 			alien_v_count++;
@@ -368,7 +350,7 @@ public:
 	virtual void Init()
 	{
 		player->Init();
-		alien->Init();
+		alien->Init(AlienRandomHeigh());
 		alien_g_grid->Init();
 		alien_v_grid->Init(0.f + randomDelay()); 
 		//alien_v_grid->Init(0.f);
@@ -435,12 +417,13 @@ public:
 		{
 			init_new_alien_v = false;
 
-			float alien_v_x = 300.f, alien_v_y = 200.f;
-			int alien_v_count = 1;
-
+			std::vector<AlienV::Coordinate> alienv_pos = MakeVShapeAlienPositions({660.f, AlienVRandomHeigh()}, 7);
+			int alien_v_count = 0;
 			for (auto alien_v = alien_v_pool.pool.begin(); alien_v != alien_v_pool.pool.end(); alien_v++)
 			{
-				(*alien_v)->horizontalPosition = 620 + alien_v_count * 20;
+				AlienV::Coordinate pos = alienv_pos.at(alien_v_count);
+				(*alien_v)->horizontalPosition = pos.x;
+				(*alien_v)->verticalPosition = pos.y;
 				(*alien_v)->Init();
 				alien_v_count++;
 			}
@@ -449,7 +432,7 @@ public:
 
 		if (init_new_alien)
 		{
-			alien->Init();
+			alien->Init(AlienRandomHeigh()); // random vertical position
 			alien->GetComponent<AlienBehaviourComponent*>()->setInitDelay(randomDelay());
 			init_new_alien = false;
 		}
@@ -587,5 +570,33 @@ public:
 
 		// Mark game class as disabled
 		enabled = false;
+	}
+
+	float AlienRandomHeigh() {
+		return 30.f + rand() % 420; // generate random height between 30 to 450
+	}
+	float AlienVRandomHeigh() {
+		return 120.f + rand() % 240; // generate random height between 120 and 360
+	}
+	// Generate position x and y value to draw V shape aliens
+	// alien_num should be an odd number: 3, 5, 7
+	std::vector<AlienV::Coordinate> MakeVShapeAlienPositions(AlienV::Coordinate first_alien_xy, int alien_num) {
+		std::vector<AlienV::Coordinate> alien_v_coordinates;
+
+		alien_v_coordinates.push_back(first_alien_xy);
+
+		for (auto i = 1; i < alien_num; i++) {
+			int col_num = (i+1) / 2;
+			printf("col_num %d\n", col_num);
+			float y = first_alien_xy.y;
+			if (i % 2 == 0)
+				y = y + 30 * col_num;
+			else
+				y = y - 30 * col_num;
+
+			alien_v_coordinates.push_back({ (first_alien_xy.x + col_num * 30.f), y});
+		}
+
+		return alien_v_coordinates;
 	}
 };
