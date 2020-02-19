@@ -16,6 +16,7 @@
 *.dylib
 *.dll
 
+SDL2_mixer-2.0.4/
 # Fortran module files
 *.mod
 *.smod
@@ -55,3 +56,4 @@ bld/
 SDL2-2.0.10/
 SDL2_ttf-2.0.14/
 SDL2_image-2.0.1/
+SDL2_mixer-2.0.4/
