@@ -67,8 +67,6 @@ float game_speed = 1.f;		// speed of the game; it is increased each time all the
 #include "game.h"
 
 
-
-
 int main(int argc, char** argv)
 {
 	// Seed the random number generator

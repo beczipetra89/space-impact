@@ -10,6 +10,7 @@ void AvancezLib::destroy()
 
 	SDL_Quit();
 	TTF_Quit();
+	Mix_Quit();
 }
 
 void AvancezLib::quit()
@@ -31,7 +32,13 @@ bool AvancezLib::init(int width, int height)
 
 	if (renderer == NULL)
 	{
-		std::cout << "Error creating renderer" << std::endl;
+		SDL_LogError(SDL_LOG_CATEGORY_RENDER, "Error creating renderer");
+		return false;
+	}
+
+	// Initialize audio
+	if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 4096) < 0) {
+		printf("Mixer Initialization Error: %s\n", Mix_GetError());
 		return false;
 	}
 
@@ -75,6 +82,7 @@ void AvancezLib::drawText(int x, int y, const char* msg)
 	int texW = 0;
 	int texH = 0;
 	SDL_QueryTexture(fontTexture, NULL, NULL, &texW, &texH);
+
 	// Set position also
 	SDL_Rect dstRect = { x, y, texW, texH };
 	SDL_RenderCopy(renderer, fontTexture, NULL, &dstRect);
@@ -124,6 +132,7 @@ void AvancezLib::getKeyStatus(KeyStatus& keys)
 
 			case SDLK_SPACE:
 				keys.fire = true;
+				PlaySFX("data/audio/laser_sound.wav", 0, -1);
 				break;
 
 			case SDLK_p:
@@ -176,4 +185,59 @@ void AvancezLib::SetBackgroundColor(RGBColor& color)
 {
 	// Select the color for drawing.
 	SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, 255);
+}
+
+
+// AudioManager will be using these 
+Mix_Music* AvancezLib::GetMusic(std::string filename) {
+	
+	std::string fullPath = SDL_GetBasePath();
+	fullPath.append("data/audio/" + filename);
+
+	//check if we already loaded the file or not
+	if (mMusic[fullPath] == nullptr) {
+		mMusic[fullPath] = Mix_LoadMUS(fullPath.c_str());
+
+		if (mMusic[fullPath] == NULL)
+			printf("Music Loading Error: File -%s Error -%s", filename.c_str(), Mix_GetError());		
+	}
+
+	return mMusic[fullPath];
+	
+}
+
+Mix_Chunk* AvancezLib::GetSFX(std::string filename) {
+	//std::string filepath = SDL_GetBasePath();
+	//fullPath.append("data/audio/" + filename);
+	//SDL_Log("Loading SFX sound file from %s", filepath.c_str());
+
+	if(mSFX[filename] == nullptr){
+		mSFX[filename] = Mix_LoadWAV(filename.c_str());
+
+		if (mSFX[filename] == NULL)
+			printf("SFX Loading Error: File -%s Error-%s\n",filename.c_str(), Mix_GetError());
+	}
+	return mSFX[filename];
+}
+
+void AvancezLib::PlayMusic(std::string filename, int loops)
+{
+	Mix_PlayMusic(GetMusic(filename), loops);
+}
+
+void AvancezLib::PauseMusic()
+{
+	if (Mix_PlayingMusic() != 0)
+		Mix_PauseMusic();
+}
+
+void AvancezLib::ResumeMusic()
+{
+	if (Mix_PausedMusic() != 0)
+		Mix_ResumeMusic();
+}
+
+void AvancezLib::PlaySFX(std::string filename, int loops, int channel)
+{
+	Mix_PlayChannel(channel, GetSFX(filename), loops);
 }

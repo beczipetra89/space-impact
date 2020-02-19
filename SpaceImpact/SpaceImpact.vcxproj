@@ -76,12 +76,12 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Assignments\SpaceImpact\SDL2-2.0.10\include;C:\Assignments\SpaceImpact\SDL2_ttf-2.0.14\include;C:\Assignments\SpaceImpact\SDL2_image-2.0.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Assignments\SpaceImpact\SDL2_mixer-2.0.4\include;C:\Assignments\SpaceImpact\SDL2-2.0.10\include;C:\Assignments\SpaceImpact\SDL2_ttf-2.0.14\include;C:\Assignments\SpaceImpact\SDL2_image-2.0.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
-      <AdditionalLibraryDirectories>C:\Assignments\SpaceImpact\SDL2_image-2.0.1\lib\x86;C:\Assignments\SpaceImpact\SDL2-2.0.10\lib\x86;C:\Assignments\SpaceImpact\SDL2_ttf-2.0.14\lib\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_ttf.lib;SDL2_image.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\Assignments\SpaceImpact\SDL2_mixer-2.0.4\lib\x86;C:\Assignments\SpaceImpact\SDL2_image-2.0.1\lib\x86;C:\Assignments\SpaceImpact\SDL2-2.0.10\lib\x86;C:\Assignments\SpaceImpact\SDL2_ttf-2.0.14\lib\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_ttf.lib;SDL2_image.lib;SDL2_mixer.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -152,6 +152,10 @@
     <ClInclude Include="player.h" />
     <ClInclude Include="rocket.h" />
     <ClInclude Include="sprite.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Media Include="data\audio\laser_sound.wav" />
+    <Media Include="data\audio\music.wav" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

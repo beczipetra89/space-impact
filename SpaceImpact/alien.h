@@ -56,6 +56,7 @@ public:
 			{
 				//Alien* alien = aliens_pool->SelectRandom
 				bombs_pool->SelectRandom();
+				engine->PlaySFX("data/audio/laser_sound.wav", 0, -1);
 				bomb->Init(go->horizontalPosition, go->verticalPosition);
 				game_objects->insert(bomb);
 			}

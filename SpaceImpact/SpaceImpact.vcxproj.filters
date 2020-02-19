@@ -13,6 +13,12 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Resource Files\data">
+      <UniqueIdentifier>{837d7f2d-9887-4bf5-ae17-bcafe6ec6eb7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\data\audio">
+      <UniqueIdentifier>{4042e111-6b2e-4cac-adb3-2305ceb0fc58}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="space_impact.cpp">
@@ -89,5 +95,13 @@
     <ClInclude Include="boss_alien_manager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Media Include="data\audio\laser_sound.wav">
+      <Filter>Resource Files\data\audio</Filter>
+    </Media>
+    <Media Include="data\audio\music.wav">
+      <Filter>Resource Files\data\audio</Filter>
+    </Media>
   </ItemGroup>
 </Project>

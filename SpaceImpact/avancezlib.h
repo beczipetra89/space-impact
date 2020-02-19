@@ -1,11 +1,19 @@
 #pragma once
 
+#ifndef _AVANCEZLIB_H
+#define _AVANCEZLIB_H
 #include "SDL.h"
 #include "SDL_ttf.h"
 #include "Sprite.h"
+#include "SDL_mixer.h"
+#include <map>
+#include <string>
+
+//#include "AudioManager.h"
 
 class AvancezLib
 {
+
 public:
 	// Destroys the avancez library instance
 	void destroy();
@@ -54,7 +62,20 @@ public:
 	};
 
 	void SetBackgroundColor(RGBColor& color);
+
+	//For rendering collider box
 	SDL_Renderer* renderer;
+
+	std::map<std::string, Mix_Music*>mMusic;	//This map will hold all the music files that we will be loading
+	std::map<std::string, Mix_Chunk*>mSFX;		//This map will hold all the sound effects that we will be loading
+
+	Mix_Music* GetMusic(std::string filename);
+	Mix_Chunk* GetSFX(std::string filename);
+	void PlayMusic(std::string filename, int loops = -1); // Music will play only once
+	void PauseMusic();
+	void ResumeMusic();
+
+	void PlaySFX(std::string filename, int loops = 0, int channel = 0);
 
 private:
 	SDL_Window* window;
@@ -63,3 +84,4 @@ private:
 
 	TTF_Font* font;
 };
+#endif // _AVANCEZLIB_H
