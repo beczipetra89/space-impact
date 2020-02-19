@@ -210,7 +210,8 @@ public:
 
 		//**************CREATE ALIEN G POOL***************
 		alien_g_pool.Create(6); // create alien g pool of 6 aliens
-		float alien_g_x = 660.f, alien_g_y = 50.f, delay = 1.f;
+		float alien_g_x = 660.f, alien_g_y = AlienGRandomHeight(), delay = 1.f;
+		float alien_g_init_y = alien_g_y;
 		int alien_g_count = 1;
 		for (auto alien_g = alien_g_pool.pool.begin(); alien_g != alien_g_pool.pool.end(); alien_g++)
 		{
@@ -237,11 +238,10 @@ public:
 			(*alien_g)->verticalPosition = alien_g_y;
 			(*alien_g)->Init();
 
-
 			alien_g_y = alien_g_y + 100;
 			if (alien_g_count % 2 == 0) {
 				alien_g_x = alien_g_x + 100; // space between the alien g columns
-				alien_g_y = 50;
+				alien_g_y = alien_g_init_y;
 				delay = delay + 1.0f;
 			}
 
@@ -255,12 +255,12 @@ public:
 
 		alien_v_grid->Create();
 		alien_v_grid->AddComponent(alien_v_grid_behaviour);
-		game_objects.insert(alien_v_grid);
 		alien_v_grid->AddReceiver(this); // alien_v_grid can send message to game
+		game_objects.insert(alien_v_grid);
 
 		//**************CREATE ALIEN V POOL***************
 		alien_v_pool.Create(7); // create alien v pool of 7 aliens
-		std::vector<AlienV::Coordinate> alien_v_coordinates = MakeVShapeAlienPositions({ 660.f, AlienVRandomHeigh() }, 7);
+		std::vector<AlienV::Coordinate> alien_v_coordinates = MakeVShapeAlienPositions({ 660.f, AlienVRandomHeight() }, 7);
 		int alien_v_count = 0;		
 		for (auto alien_v = alien_v_pool.pool.begin(); alien_v != alien_v_pool.pool.end(); alien_v++)
 		{
@@ -350,15 +350,10 @@ public:
 	virtual void Init()
 	{
 		player->Init();
-		alien->Init(AlienRandomHeigh());
-		alien_g_grid->Init();
+		alien->Init(AlienRandomHeight());
+		alien_g_grid->Init(0.f + randomDelay());
 		alien_v_grid->Init(0.f + randomDelay()); 
-		//alien_v_grid->Init(0.f);
-
-		/*	alien->Init();
-		//alien_g->Init();
-		alien_g_grid->Init();  
-		alien_v_grid->Init();
+		/*
 		life_pickup->Init();
 		*/
 		//boss_alien->Init();
@@ -391,7 +386,8 @@ public:
 		{
 			init_new_alien_g = false;
 
-			float alien_g_x = 660.f, alien_g_y = 50.f, delay = 1.0f;
+			float alien_g_x = 660.f, alien_g_y = AlienGRandomHeight(), delay = 1.0f;
+			float alien_g_init_y = alien_g_y;
 			int alien_g_count = 1;
 			for (auto alien_g = alien_g_pool.pool.begin(); alien_g != alien_g_pool.pool.end(); alien_g++)
 			{
@@ -404,20 +400,20 @@ public:
 				alien_g_y = alien_g_y + 100;
 				if (alien_g_count % 2 == 0) {
 					alien_g_x = alien_g_x + 100; // space between the alien g columns
-					alien_g_y = 50;
+					alien_g_y = alien_g_init_y;
 					delay = delay + 1.0f;
 				}
 
 				alien_g_count++;
 			}
-			alien_g_grid->Init();
+			alien_g_grid->Init(randomDelay());
 		}
 
 		if (init_new_alien_v)
 		{
 			init_new_alien_v = false;
 
-			std::vector<AlienV::Coordinate> alienv_pos = MakeVShapeAlienPositions({660.f, AlienVRandomHeigh()}, 7);
+			std::vector<AlienV::Coordinate> alienv_pos = MakeVShapeAlienPositions({660.f, AlienVRandomHeight()}, 7);
 			int alien_v_count = 0;
 			for (auto alien_v = alien_v_pool.pool.begin(); alien_v != alien_v_pool.pool.end(); alien_v++)
 			{
@@ -432,7 +428,7 @@ public:
 
 		if (init_new_alien)
 		{
-			alien->Init(AlienRandomHeigh()); // random vertical position
+			alien->Init(AlienRandomHeight()); // random vertical position
 			alien->GetComponent<AlienBehaviourComponent*>()->setInitDelay(randomDelay());
 			init_new_alien = false;
 		}
@@ -572,12 +568,18 @@ public:
 		enabled = false;
 	}
 
-	float AlienRandomHeigh() {
+	float AlienRandomHeight() {
 		return 30.f + rand() % 420; // generate random height between 30 to 450
 	}
-	float AlienVRandomHeigh() {
+
+	float AlienGRandomHeight() {
+		return 50.f + rand() % 350; // generate random height between 50 and 400
+	}
+
+	float AlienVRandomHeight() {
 		return 120.f + rand() % 240; // generate random height between 120 and 360
 	}
+
 	// Generate position x and y value to draw V shape aliens
 	// alien_num should be an odd number: 3, 5, 7
 	std::vector<AlienV::Coordinate> MakeVShapeAlienPositions(AlienV::Coordinate first_alien_xy, int alien_num) {

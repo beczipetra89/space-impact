@@ -17,7 +17,8 @@ public:
 	virtual void Create(AvancezLib* engine, GameObject* go, std::set<GameObject*>* game_objects, float delay)
 	{
 		Component::Create(engine, go, game_objects);
-	
+		SDL_Log("AlienGBehaviourComponent::Create Y: %f", go->verticalPosition);
+		initialYPos = go->verticalPosition;
 		next_movement = engine->getElapsedTime() + delay;
 	}
 
@@ -28,26 +29,10 @@ public:
 
 	virtual void Init()
 	{
-		SDL_Log("AlienGBehaviourComponent::Init");
 		SDL_Log("AlienGBehaviourComponent::Init::next_move: %f", next_movement);
-		//go->horizontalPosition = 600;
-
-		//int min = 64;
-		//int max = 412;
-
-		//srand((unsigned)time(0));
-		//int r = (int)rand() / (int)RAND_MAX;
-		//go->verticalPosition = min + r * (max - min);
 		initialYPos = go->verticalPosition;
 		SDL_Log("AlienGBehaviourComponent::Init::initialYPos %f elapsedTime: %f, next_move: %f", go->verticalPosition, engine->getElapsedTime(), next_movement);
 		time_moved = -1000.0f;
-		// Init alien on random height
-
-		//go->verticalPosition = (rand() % 439) + 1;
-
-	//	go->verticalPosition = 64 + (std::rand() % (64 - 416 + 1)); 
-
-	//	go->verticalPosition = RandomHeight(64, 416);
 	}
 
 	virtual void Update(float dt)
