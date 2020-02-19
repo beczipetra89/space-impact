@@ -197,23 +197,6 @@ public:
 		alien->AddReceiver(this);
 		game_objects.insert(alien);   
 
-
-		/*
-		// **********************ALIEN G****************************  TO BE DELETED----
-		alien_g = new AlienG();
-		AlienGBehaviourComponent* alien_g_behaviour = new AlienGBehaviourComponent();
-		alien_g_behaviour->Create(engine, alien_g, &game_objects);
-		RenderComponent* alien_g_render = new RenderComponent();
-		alien_g_render->Create(engine, alien_g, &game_objects, "data/alien_g.png", 50, 38);
-		alien_g->Create();
-		alien_g->AddComponent(alien_g_behaviour);
-		alien_g->AddComponent(alien_g_render);
-		alien_g->AddReceiver(this);
-		game_objects.insert(alien_g);
-		*/
-
-
-
 		////************** ALIEN G GRID *******************   
 		alien_g_grid = new AlienGGrid();
 		AlienGGridBehaviourComponent* alien_grid_behaviour = new AlienGGridBehaviourComponent();

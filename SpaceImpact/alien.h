@@ -64,7 +64,7 @@ public:
 
 	}
 
-	// move the alien  to left
+	// move the alien to left
 	// param move depends on the time, so the player moves always at the same speed on any computer
 	void Move(float move)
 	{
