@@ -30,7 +30,7 @@ public:
 	{
 		//AvancezLib::KeyStatus keys;
 		engine->getKeyStatus(*keys);
-	
+
 		if (keys->up) {
 			Move(-dt * PLAYER_SPEED);
 			go->verticalPosition--;
@@ -56,14 +56,15 @@ public:
 			if (CanFire())
 			{
 				// fetches a rocket from the pool and use it in game_objects
-				Rocket * rocket = rockets_pool->FirstAvailable();
+				Rocket* rocket = rockets_pool->FirstAvailable();
 				if (rocket != NULL)	// rocket is NULL is the object pool can not provide an object
 				{
 					rocket->Init(go->horizontalPosition, go->verticalPosition);
 					game_objects->insert(rocket);
 				}
 			}
-		}
+		} 
+
 	}
 
 
@@ -103,6 +104,7 @@ public:
 	}
 private:
 	AvancezLib::KeyStatus* keys;
+	
 };
 
 
@@ -113,7 +115,7 @@ public:
 
 	int lives;	// it's game over when goes below zero 
 
-	virtual ~Player()	{		SDL_Log("Player::~Player");	}
+	virtual ~Player()	{SDL_Log("Player::~Player");}
 
 	virtual void Init()
 	{
@@ -128,7 +130,8 @@ public:
 		{ 
 			SDL_Log("Player::Hit!");
 			RemoveLife();
-
+		
+		
 			if (lives < 0)
 				Send(GAME_OVER);
 		}
@@ -141,12 +144,15 @@ public:
 	void AddLife() {
 	if(lives<2)
 		lives++;
-		SDL_Log("Total lives: %d", lives);
+	SDL_Log("Total lives: %d", lives);
+		
 	}
+
 
 	void RemoveLife()
 	{
 		lives--;
 		SDL_Log("remaining lives %d", lives);
+		
 	}
 };

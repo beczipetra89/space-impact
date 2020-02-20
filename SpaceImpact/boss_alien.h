@@ -28,7 +28,7 @@ public:
 		time_mine_dropped = -10000.f;
 
 		go->verticalPosition = 210;
-		go->horizontalPosition = 640;
+		go->horizontalPosition = 550;
 	}
 
 	virtual void Update(float dt)

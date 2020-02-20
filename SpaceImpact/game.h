@@ -22,6 +22,7 @@ class Game : public GameObject
 	bool init_new_alien = false; // whether to init new alien
 	bool init_new_alien_g = false; // whether to init new alien_g in alien_g_grid
 	bool init_new_alien_v = false; 
+	bool boss_spawned = false; // whether boss is spawned
 
 	ObjectPool<Rocket> rockets_pool;	// used to instantiate rockets
 	ObjectPool<Bomb> bombs_pool;
@@ -50,6 +51,7 @@ class Game : public GameObject
 	// for drawing text
 	char life_string[10];
 	char score_string[10];
+	char time_string[10];
 
 public:
 	
@@ -382,55 +384,68 @@ public:
 			FIRE_TIME_INTERVAL = FIRE_TIME_INTERVAL / 10;
 		}
 
-		if (init_new_alien_g && engine->getElapsedTime() < init_time + 60 * 5.f) // if game runs for less than 5 minutes then we can start new aliens
+		//if (engine->getElapsedTime() < init_time + 60 * 5.f) // if game runs for less than 5 minutes then we can start new aliens
+		if (engine != nullptr && engine->getElapsedTime() < init_time + 30 * 1.f) // if game runs for less than 5 minutes then we can start new aliens
 		{
-			init_new_alien_g = false;
+			SDL_Log("Time: %f", engine->getElapsedTime());
+			if (init_new_alien_g) {
+				init_new_alien_g = false;
 
-			float alien_g_x = 660.f, alien_g_y = AlienGRandomHeight(), delay = 1.0f;
-			float alien_g_init_y = alien_g_y;
-			int alien_g_count = 1;
-			for (auto alien_g = alien_g_pool.pool.begin(); alien_g != alien_g_pool.pool.end(); alien_g++)
-			{
-				(*alien_g)->horizontalPosition = alien_g_x;
-				(*alien_g)->verticalPosition = alien_g_y;
-				(*alien_g)->Init();
-				AlienGBehaviourComponent* component = (*alien_g)->GetComponent<AlienGBehaviourComponent*>();
-				component->SetDelay(delay);
+				float alien_g_x = 660.f, alien_g_y = AlienGRandomHeight(), delay = 1.0f;
+				float alien_g_init_y = alien_g_y;
+				int alien_g_count = 1;
+				for (auto alien_g = alien_g_pool.pool.begin(); alien_g != alien_g_pool.pool.end(); alien_g++)
+				{
+					(*alien_g)->horizontalPosition = alien_g_x;
+					(*alien_g)->verticalPosition = alien_g_y;
+					(*alien_g)->Init();
+					AlienGBehaviourComponent* component = (*alien_g)->GetComponent<AlienGBehaviourComponent*>();
+					component->SetDelay(delay);
 
-				alien_g_y = alien_g_y + 100;
-				if (alien_g_count % 2 == 0) {
-					alien_g_x = alien_g_x + 100; // space between the alien g columns
-					alien_g_y = alien_g_init_y;
-					delay = delay + 1.0f;
+					alien_g_y = alien_g_y + 100;
+					if (alien_g_count % 2 == 0) {
+						alien_g_x = alien_g_x + 100; // space between the alien g columns
+						alien_g_y = alien_g_init_y;
+						delay = delay + 1.0f;
+					}
+
+					alien_g_count++;
 				}
-
-				alien_g_count++;
+				alien_g_grid->Init(randomDelay());
 			}
-			alien_g_grid->Init(randomDelay());
-		}
 
-		if (init_new_alien_v)
-		{
-			init_new_alien_v = false;
-
-			std::vector<AlienV::Coordinate> alienv_pos = MakeVShapeAlienPositions({660.f, AlienVRandomHeight()}, 7);
-			int alien_v_count = 0;
-			for (auto alien_v = alien_v_pool.pool.begin(); alien_v != alien_v_pool.pool.end(); alien_v++)
+			if (init_new_alien_v)
 			{
-				AlienV::Coordinate pos = alienv_pos.at(alien_v_count);
-				(*alien_v)->horizontalPosition = pos.x;
-				(*alien_v)->verticalPosition = pos.y;
-				(*alien_v)->Init();
-				alien_v_count++;
-			}
-			alien_v_grid->Init(randomDelay());
-		}
+				init_new_alien_v = false;
 
-		if (init_new_alien)
-		{
-			alien->Init(AlienRandomHeight()); // random vertical position
-			alien->GetComponent<AlienBehaviourComponent*>()->setInitDelay(randomDelay());
-			init_new_alien = false;
+				std::vector<AlienV::Coordinate> alienv_pos = MakeVShapeAlienPositions({ 660.f, AlienVRandomHeight() }, 7);
+				int alien_v_count = 0;
+				for (auto alien_v = alien_v_pool.pool.begin(); alien_v != alien_v_pool.pool.end(); alien_v++)
+				{
+					AlienV::Coordinate pos = alienv_pos.at(alien_v_count);
+					(*alien_v)->horizontalPosition = pos.x;
+					(*alien_v)->verticalPosition = pos.y;
+					(*alien_v)->Init();
+					alien_v_count++;
+				}
+				alien_v_grid->Init(randomDelay());
+			}
+
+			if (init_new_alien)
+			{
+				alien->Init(AlienRandomHeight()); // random vertical position
+				alien->GetComponent<AlienBehaviourComponent*>()->setInitDelay(randomDelay());
+				init_new_alien = false;
+			}
+		} else {
+			// if all alines are cleared, init boss
+  			if ((init_new_alien && init_new_alien_g && init_new_alien_v) && !boss_spawned) {
+				init_new_alien = false;
+				init_new_alien_g = false;
+				init_new_alien_v = false;
+				boss_spawned = true;
+				boss_alien->Init();
+			}
 		}
 
 		for (auto go = game_objects.begin(); go != game_objects.end(); go++)
@@ -441,7 +456,7 @@ public:
 			else
 				(*go)->Update(dt);
 		}
-	}
+	} 
 
 	virtual void Draw()
 	{
@@ -458,6 +473,9 @@ public:
 
 		AvancezLib::RGBColor LILA = { 99, 0, 191 };
 		engine->SetBackgroundColor(LILA);
+
+		sprintf(time_string, "Time: %f", engine->getElapsedTime());
+		engine->drawText(300, 16, time_string);
 
 		//Score indicator
 		sprintf(score_string, "%07d", score);
@@ -479,11 +497,13 @@ public:
 		{
 			SDL_Log("GAME::GAME_OVER!");
 			game_over = true;
+			engine->PlaySFX("data/audio/game_over.wav", 0, -1);
 		}
 
 		if (m == LEVEL_WIN)  //if boss alien dies
 		{
 			SDL_Log("GAME::LEVEL_WIN");
+			engine->PlaySFX("data/audio/level_win.wav", 0, -1);
 
 			// New level, prepare aliens and new background
 		}
@@ -492,7 +512,6 @@ public:
 			SDL_Log("GAME::ALIEN_G_LEVEL_CLEAR!");
 			if (!init_new_alien_g)
 				init_new_alien_g = true;
-			//boss_alien->Init();
 		}
 
 		if (m == ALL_ALIENS_V_CLEAR) {
@@ -501,15 +520,22 @@ public:
 				init_new_alien_v = true;
 		}
 		
+
+		if (m == HIT) {
+			engine->PlaySFX("data/audio/player_hit.wav", 0, -1);
+		}
+
 		if(m == LIFE_PICKED){
 		// If the +UP collected, add one life to the player
 			//player->AddLife();
+			engine->PlaySFX("data/audio/pickup_sound.wav", 0, -1);
 		}
 
 		if (m == ALIEN_HIT || m == ALIEN_G_HIT || m == ALIEN_V_HIT)
 		{
 			SDL_Log("GAME::ALIEN_HIT!");
 			score += POINTS_PER_ALIEN;
+			engine->PlaySFX("data/audio/alien_v_die.wav", 0, -1);
 		}
 
 		if (m == BULLET_BULLET_HIT) {
