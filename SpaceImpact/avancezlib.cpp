@@ -132,7 +132,7 @@ void AvancezLib::getKeyStatus(KeyStatus& keys)
 
 			case SDLK_SPACE:
 				keys.fire = true;
-				PlaySFX("data/audio/laser_sound.wav", 0, -1);
+				PlaySFX("data/audio/player_shoot.wav", 0, -1);
 				break;
 
 			case SDLK_p:

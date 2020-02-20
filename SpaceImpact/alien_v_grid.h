@@ -85,6 +85,7 @@ public:
 				AlienV* alien_v = alien_v_pool->SelectRandom();
 				if (alien_v != NULL)
 				{
+					engine->PlaySFX("data/audio/laser_sound.wav", 0, -1);
 					laser->Init(alien_v->horizontalPosition, alien_v->verticalPosition);
 					game_objects->insert(laser);
 				}
