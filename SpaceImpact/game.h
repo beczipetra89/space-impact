@@ -41,14 +41,14 @@ class Game : public GameObject
 	bool level_finished = false;
 	bool level_win = false;
 	bool game_over = false;
+	bool game_finished = false;
 	int current_level = -1;
 	unsigned int score = 0;
 
 	// for drawing text
 	char life_string[10];
 	char score_string[10];
-	char debug_string[10];
-	char bottom_string[10];
+	char debug_string[30];
 
 public:
 	
@@ -357,9 +357,9 @@ public:
 		engine->getKeyStatus(keys);
 		if (keys.esc) {
 			enabled = false;
-			return;
-			//Destroy();
-			//engine->quit();
+			//return;
+			Destroy();
+			engine->quit();
 		}
 		
 		if (keys.cheat) {
@@ -409,14 +409,9 @@ public:
 		sprintf(life_string, "Life: %d", player->lives);
 		engine->drawText(0, 16, life_string);
 
-		//AvancezLib::RGBColor LILA = { 99, 0, 191 };
-		//engine->SetBackgroundColor(LILA);
-
-		//float r_time = engine->getElapsedTime() - init_time;
-		//sprintf(debug_string, "Relative time: %.2f Stage: %d", r_time, seq_count);
-		//engine->drawText(230, 16, debug_string);
-		//sprintf(bottom_string, "Abolute time: %.2f", engine->getElapsedTime());
-		//engine->drawText(230, 460, bottom_string);
+		relative_time = engine->getElapsedTime() - init_time;
+		sprintf(debug_string, "T: %.2f R-T: %.2f Level: %d Seq: %d", engine->getElapsedTime(), relative_time, current_level, seq_count);
+		engine->drawText(230, 16, debug_string);
 
 		//Score indicator
 		sprintf(score_string, "%07d", score);
@@ -447,11 +442,11 @@ public:
 		{
 			SDL_Log("GAME::BOSS_HIT");
 			engine->PlaySFX("data/audio/win_level.wav", 0, -1);
-			//if (current_level < 2) {
+			if (current_level < 2) {
 				level_win = true;
 				level_finished = true;
-			//}
-			//else game_over = true;
+			}
+			else game_over = true;
 		}
 
 		if (m == ALIEN_G_LEVEL_CLEAR) {
