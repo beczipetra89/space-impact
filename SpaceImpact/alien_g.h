@@ -7,8 +7,7 @@ class AlienGBehaviourComponent : public Component
 
 	float direction = -1.f; // if direction = 1, alien moves up, if direction = -1, alien moves down
 	float time_moved;	// time from the last time alien_g moved
-	float next_movement;
-	bool vertical_movement_pause = false;
+	float vertical_delay; // time when alien can start moving vertically
 	float initialYPos;
 
 public:
@@ -19,19 +18,19 @@ public:
 		Component::Create(engine, go, game_objects);
 		SDL_Log("AlienGBehaviourComponent::Create Y: %f", go->verticalPosition);
 		initialYPos = go->verticalPosition;
-		next_movement = engine->getElapsedTime() + delay;
+		vertical_delay = engine->getElapsedTime() + delay;
 	}
 
 	void SetDelay(float delay)
 	{
-		next_movement = engine->getElapsedTime() + delay;
+		vertical_delay = engine->getElapsedTime() + delay;
 	}
 
 	virtual void Init()
 	{
-		SDL_Log("AlienGBehaviourComponent::Init::next_move: %f", next_movement);
+		SDL_Log("AlienGBehaviourComponent::Init::next_move: %f", vertical_delay);
 		initialYPos = go->verticalPosition;
-		SDL_Log("AlienGBehaviourComponent::Init::initialYPos %f elapsedTime: %f, next_move: %f", go->verticalPosition, engine->getElapsedTime(), next_movement);
+		SDL_Log("AlienGBehaviourComponent::Init::initialYPos %f elapsedTime: %f, next_move: %f", go->verticalPosition, engine->getElapsedTime(), vertical_delay);
 		time_moved = -1000.0f;
 	}
 
@@ -40,7 +39,7 @@ public:
 
 		Move(dt);
 
-		if (go->horizontalPosition < 0) // When alian G flew out of window to the left, it disappears.
+		if (go->horizontalPosition < -40) // When alian G flew out of window to the left, it disappears.
 		{
 			go->enabled = false;
 		}
@@ -72,37 +71,11 @@ public:
 
 		go->horizontalPosition -= dt * ALIEN_G_SPEED;
 
-		if (engine->getElapsedTime()>next_movement)
+		if (engine->getElapsedTime()>vertical_delay)
 		{
 			go->verticalPosition += dt * ALIEN_G_VERTICAL_SPEED * direction;
 		//	//SDL_Log("New YPos: %f", go->verticalPosition);
 		}
-		//else
-		//{
-		//	vertical_movement_pause = true;
-		//	//SDL_Log("Wait until %f, current time %f, vertial_pause %d", next_movement, engine->getElapsedTime(), vertical_movement_pause);
-		//}
-		//SDL_Log("New Ypos: %f, InitalY: %f", go->verticalPosition, initialYPos);
-	}
-
-	int RandomHeight(int min, int max)
-	{
-		srand((unsigned)time(0));
-		int r = (int)rand() / (int)RAND_MAX;
-		return min + r * (max - min);
-	}
-
-	// return true if enough time has passed from the last vertical movement
-	bool canMove()
-	{
-		// shoot just if enough time passed by
-		if ((engine->getElapsedTime() - time_moved) < (ALIEN_G_VERTICAL_MOVE_TIME_INTERNAL / game_speed))
-			return false;
-
-		if ((engine->getElapsedTime() - time_moved) > 500)
-			time_moved = engine->getElapsedTime();
-		SDL_Log("Move! New time_moved: %f elaspsed time: %f", time_moved, engine->getElapsedTime());
-		return true;
 	}
 };
 
@@ -113,7 +86,7 @@ public:
 
 	virtual void Init()
 	{
-		SDL_Log("AlienG::Init");
+		SDL_Log("AlienG::Init x:%f y:%f", horizontalPosition, verticalPosition);
 		GameObject::Init();
 	}
 

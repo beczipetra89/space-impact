@@ -1,10 +1,7 @@
 #pragma once
 #include "sstream"
-enum ALIEN_TYPE {
-	ALIEN_S,
-	ALIEN_G,
-	ALIEN_V
-};
+#include "levels.h"
+
 const float LEVEL1_DELAY[] = {
 	0.5f, // ALIEN_S init delays for 0.5 second
 	0.f,  // For ALIEN_G and ALIEN_V no delays
@@ -22,7 +19,8 @@ class Game : public GameObject
 	bool init_new_alien = false; // whether to init new alien
 	bool init_new_alien_g = false; // whether to init new alien_g in alien_g_grid
 	bool init_new_alien_v = false; 
-	bool boss_spawned = false; // whether boss is spawned
+	bool boss_spawned = false;
+	int current_level = 0; // Current game level in levels
 
 	ObjectPool<Rocket> rockets_pool;	// used to instantiate rockets
 	ObjectPool<Bomb> bombs_pool;
@@ -33,6 +31,10 @@ class Game : public GameObject
 
 	Player * player;
 	Alien* alien;
+	Alien2* alien2;
+
+
+
 	AlienG* alien_g;
 	AlienGGrid* alien_g_grid;
 	AlienV* alien_v;
@@ -51,7 +53,7 @@ class Game : public GameObject
 	// for drawing text
 	char life_string[10];
 	char score_string[10];
-	char time_string[10];
+	char debug_string[10];
 
 public:
 	
@@ -59,7 +61,6 @@ public:
 	{
 		SDL_Log("Game::Create");
 		this->engine = engine;
-		SDL_Log("%d", ALIEN_TYPE::ALIEN_G);
 
 		//*************CREATE ROCKETS POOL**************
 		rockets_pool.Create(100);
@@ -177,27 +178,40 @@ public:
 
 		 
 		// **********************  ALIEN S   ************************
+
 		alien = new Alien();
 		AlienBehaviourComponent* alien_behaviour = new AlienBehaviourComponent();
 		alien_behaviour->Create(engine, alien, &game_objects, &bombs_pool);
 		RenderComponent* alien_render = new RenderComponent();
 		alien_render->Create(engine, alien, &game_objects, "data/alien_s.png", 53, 44);
 		CollideComponent* alien_bullet_collide = new CollideComponent();
-		alien_bullet_collide->Create(engine, alien, &game_objects, (ObjectPool<GameObject>*) & rockets_pool);
-
-
+		alien_bullet_collide->Create(engine, alien, &game_objects, (ObjectPool<GameObject>*)& rockets_pool);
 		SingleObjectCollideComponent* alien_player_collide = new SingleObjectCollideComponent();
 		alien_player_collide->Create(engine, alien, &game_objects, player);
-		
 		alien->Create();
 		alien->AddComponent(alien_behaviour);
 		alien->AddComponent(alien_render);
 		alien->AddComponent(alien_bullet_collide);
-		
 		alien->AddComponent(alien_player_collide);
-		
 		alien->AddReceiver(this);
-		game_objects.insert(alien);   
+		game_objects.insert(alien);
+
+		alien2 = new Alien2();
+		AlienBehaviourComponent* alien2_behaviour = new AlienBehaviourComponent();
+		alien2_behaviour->Create(engine, alien2, &game_objects, &bombs_pool);
+		RenderComponent* alien2_render = new RenderComponent();
+		alien2_render->Create(engine, alien2, &game_objects, "data/alien_s.png", 53, 44);
+		CollideComponent* alien2_bullet_collide = new CollideComponent();
+		alien2_bullet_collide->Create(engine, alien2, &game_objects, (ObjectPool<GameObject>*)& rockets_pool);
+		SingleObjectCollideComponent* alien2_player_collide = new SingleObjectCollideComponent();
+		alien2_player_collide->Create(engine, alien2, &game_objects, player);
+		alien2->Create();
+		alien2->AddComponent(alien2_behaviour);
+		alien2->AddComponent(alien2_render);
+		alien2->AddComponent(alien2_bullet_collide);
+		alien2->AddComponent(alien2_player_collide);
+		alien2->AddReceiver(this);
+		game_objects.insert(alien2);
 
 		////************** ALIEN G GRID *******************   
 		alien_g_grid = new AlienGGrid();
@@ -207,7 +221,6 @@ public:
 		alien_g_grid->Create();
 		alien_g_grid->AddComponent(alien_grid_behaviour);
 		alien_g_grid->AddReceiver(this); // alien_g_grid can send message to game
-		
 		game_objects.insert(alien_g_grid);
 
 		//**************CREATE ALIEN G POOL***************
@@ -219,8 +232,6 @@ public:
 		{
 			RenderComponent* render = new RenderComponent();
 			render->Create(engine, *alien_g, &game_objects, "data/alien_g.png", 50, 38);
-			(*alien_g)->Create();
-			(*alien_g)->AddComponent(render);
 
 			AlienGBehaviourComponent* behaviour = new AlienGBehaviourComponent();
 			behaviour->Create(engine, *alien_g, &game_objects, delay);
@@ -231,11 +242,14 @@ public:
 			SingleObjectCollideComponent* alienG_player_collide = new SingleObjectCollideComponent();
 			alienG_player_collide->Create(engine, * alien_g, & game_objects, player);
 			
+			(*alien_g)->Create();
+			(*alien_g)->AddComponent(render); 
 			(*alien_g)->AddComponent(behaviour);
 			(*alien_g)->AddComponent(alienG_rocket_collide);
 			(*alien_g)->AddComponent(alienG_player_collide);
 			(*alien_g)->AddReceiver(this);
 
+			/*
 			(*alien_g)->horizontalPosition = alien_g_x;
 			(*alien_g)->verticalPosition = alien_g_y;
 			(*alien_g)->Init();
@@ -248,6 +262,7 @@ public:
 			}
 
 			alien_g_count++;
+			*/
 		}
 
 		////************** ALIEN V GRID ******************* 
@@ -352,9 +367,9 @@ public:
 	virtual void Init()
 	{
 		player->Init();
-		alien->Init(AlienRandomHeight());
-		alien_g_grid->Init(0.f + randomDelay());
-		alien_v_grid->Init(0.f + randomDelay()); 
+		//Spawn(ALIEN_S, 300.f);
+		//alien_g_grid->Init(0.f + randomDelay());
+		//alien_v_grid->Init(0.f + randomDelay()); 
 		/*
 		life_pickup->Init();
 		*/
@@ -370,11 +385,12 @@ public:
 
 	virtual void Update(float dt)
 	{
-		//AvancezLib::KeyStatus keys;
 		engine->getKeyStatus(keys);
 		if (keys.esc) {
-			Destroy();
-			engine->quit();
+			enabled = false;
+			return;
+			//Destroy();
+			//engine->quit();
 		}
 		
 		if (keys.cheat) {
@@ -384,6 +400,16 @@ public:
 			FIRE_TIME_INTERVAL = FIRE_TIME_INTERVAL / 10;
 		}
 
+		if (current_level < levels.size())
+		{
+			if (engine->getElapsedTime() > levels.at(current_level).delay) {
+				const Level level = levels.at(current_level);
+				Spawn(level.type, level.pos_y);
+				current_level++;
+			}
+		}			
+
+		/*
 		//if (engine->getElapsedTime() < init_time + 60 * 5.f) // if game runs for less than 5 minutes then we can start new aliens
 		if (engine != nullptr && engine->getElapsedTime() < init_time + 30 * 1.f) // if game runs for less than 5 minutes then we can start new aliens
 		{
@@ -447,6 +473,7 @@ public:
 				boss_alien->Init();
 			}
 		}
+		*/
 
 		for (auto go = game_objects.begin(); go != game_objects.end(); go++)
 		{
@@ -474,8 +501,8 @@ public:
 		AvancezLib::RGBColor LILA = { 99, 0, 191 };
 		engine->SetBackgroundColor(LILA);
 
-		sprintf(time_string, "Time: %f", engine->getElapsedTime());
-		engine->drawText(300, 16, time_string);
+		sprintf(debug_string, "Time: %.2f Stage: %d", engine->getElapsedTime(), current_level);
+		engine->drawText(300, 16, debug_string);
 
 		//Score indicator
 		sprintf(score_string, "%07d", score);
@@ -562,17 +589,12 @@ public:
 
 		// Empty the game_objects set
 		game_objects.clear();
-
 		rockets_pool.Destroy();
-		
-	
 		life_sprite->destroy();
 		bombs_pool.Destroy();
+		alien_g_pool.Destroy();
 		alien_v_pool.Destroy();
 		alienLaser_pool.Destroy();
-
-		
-
 		mines_pool.Destroy();
 
 		//life_pickup.Destroy();
@@ -580,9 +602,10 @@ public:
 		//aliens_pool.Destroy();
 
 		delete player;
-/*		delete alien;
-	//	delete alien_grid; 
-		delete alien_g;  
+		delete alien;
+		delete alien2;
+		delete alien_g_grid; 
+		/*
 		delete alien_v;
 		delete life_pickup;
 		
@@ -594,6 +617,53 @@ public:
 		enabled = false;
 	}
 
+private:
+	void Spawn(Level::ALIEN_TYPE type, float pos_y) {
+		switch (type)
+		{
+		case Level::ALIEN_TYPE::ALIEN_S:
+			SDL_Log("Spwaning Level::ALIEN_TYPE::ALIEN_S");
+			alien->Init(pos_y);
+			break;
+
+		case Level::ALIEN_TYPE::ALIEN_S_2:
+			SDL_Log("Spwaning Level::ALIEN_TYPE::ALIEN_S_2");
+			alien2->Init(pos_y);
+			break;
+
+		case Level::ALIEN_TYPE::ALIEN_G:
+		{
+			SDL_Log("Spwaning Level::ALIEN_TYPE::ALIEN_G");
+
+			std::vector<Vector2D> xys = MakeGShapeAlienPositions(pos_y, 6);
+			int index = 0;
+			float delay = 0.f;
+			for (auto it = alien_g_pool.pool.begin(); it != alien_g_pool.pool.end(); it++)
+			{
+				Vector2D xy = xys.at(index);
+				(*it)->horizontalPosition = xy.x;
+				(*it)->verticalPosition = xy.y;
+				(*it)->GetComponent<AlienGBehaviourComponent*>()->SetDelay(delay);
+				(*it)->Init();
+				index++;
+				// Increase delay every column
+				if (index % 2 == 0)
+					delay += 1.2f;
+			}
+
+			alien_g_grid->Init(0.f);
+			break;
+		}
+
+		default:
+			SDL_Log("Doesn't support spawning ALIEN_TYPE: %d", type);
+			break;
+		}
+
+		return;
+	}
+
+	// TODO remove this
 	float AlienRandomHeight() {
 		return 30.f + rand() % 420; // generate random height between 30 to 450
 	}
@@ -626,5 +696,31 @@ public:
 		}
 
 		return alien_v_coordinates;
+	}
+
+	std::vector<Vector2D> MakeGShapeAlienPositions(float first_alien_y, int alien_num) {
+		std::vector<Vector2D> pos;
+
+		float init_x = 640;
+		float init_y = first_alien_y;
+		//pos.push_back(Vector2D(640, first_alien_y));
+
+		for (auto i = 0; i < alien_num; i++) {
+			Vector2D alien_pos;
+
+			int col_num = i / 2;
+			printf("col_num %d\n", col_num);
+
+			alien_pos.x = init_x + col_num * 100.f;
+
+			if (i % 2 == 0)
+				alien_pos.y = init_y;
+			else
+				alien_pos.y = init_y + 100.f;
+
+			pos.push_back(alien_pos);
+		}
+
+		return pos;
 	}
 };

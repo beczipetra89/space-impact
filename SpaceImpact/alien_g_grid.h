@@ -27,7 +27,6 @@ class AlienGGridBehaviourComponent : public Component {
 	// needs access to the object pools: aliens, bombs
 	ObjectPool<AlienG>* alien_g_pool;
 	bool alien_g_level_clear = false;
-	float init_delay; // Time when the aliens can start moving and shooting
 
 public:
 	virtual ~AlienGGridBehaviourComponent() {}
@@ -41,20 +40,11 @@ public:
 	virtual void Init() {
 		SDL_Log("AlienGGridBehaviourComponent::Init");
 		Component::Init();
-		AlienGGrid* grid = dynamic_cast<AlienGGrid*>(go); //ugly hack from lab5 to make us access start_delay property from AlienVGrid
-		init_delay = engine->getElapsedTime() + grid->start_delay;
-		SDL_Log("Initial delay %f, AlienV should show up at %f", grid->start_delay, init_delay);
 	    alien_g_level_clear = false;
 	}
 
 	virtual void Update(float dt)
 	{
-		// If we haven't passed the delay time, skip update
-		if (engine->getElapsedTime() < init_delay)
-		{
-			return;
-		}
-
 		if (alien_g_level_clear) {
 			return;
 		}
