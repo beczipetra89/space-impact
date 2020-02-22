@@ -42,8 +42,6 @@ class Game : public GameObject
 	PickupLife* life_pickup;
 
 	BossAlien* boss_alien;
-	
-	//AlienGrid* alien_grid;
 
 	Sprite * life_sprite;
 	bool game_over = false;
@@ -255,9 +253,7 @@ public:
 		game_objects.insert(alien_v_grid);
 
 		//**************CREATE ALIEN V POOL***************
-		alien_v_pool.Create(7); // create alien v pool of 7 aliens
-		//std::vector<AlienV::Coordinate> alien_v_coordinates = MakeVShapeAlienPositions({ 660.f, AlienVRandomHeight() }, 7);
-		//int alien_v_count = 0;		
+		alien_v_pool.Create(7); // create alien v pool of 7 aliens	
 		for (auto alien_v = alien_v_pool.pool.begin(); alien_v != alien_v_pool.pool.end(); alien_v++)
 		{
 			RenderComponent* render = new RenderComponent();
@@ -275,13 +271,6 @@ public:
 			(*alien_v)->AddComponent(alienV_rocket_collide);
 			(*alien_v)->AddComponent(alienV_player_collide);
 			(*alien_v)->AddReceiver(this);
-
-	/*		(*alien_v)->horizontalPosition = alien_v_coordinates.at(alien_v_count).x;
-			(*alien_v)->verticalPosition = alien_v_coordinates.at(alien_v_count).y;
-			(*alien_v)->Init();
-
-			alien_v_count++;
-	*/	
 		}
 
 		// LIFE PICKUP
