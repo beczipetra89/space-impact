@@ -2,12 +2,6 @@
 #include "sstream"
 #include "levels.h"
 
-const float LEVEL1_DELAY[] = {
-	0.5f, // ALIEN_S init delays for 0.5 second
-	0.f,  // For ALIEN_G and ALIEN_V no delays
-	0.f
-};
-
 class Game : public GameObject
 {
 	std::set<GameObject*> game_objects;	// http://www.cplusplus.com/reference/set/set/
@@ -16,11 +10,12 @@ class Game : public GameObject
 	AvancezLib::KeyStatus keys = { false, false, false, false, false};
 	bool cheat_mode = false;
 	float init_time; // the time when Game object init() is called
-	bool init_new_alien = false; // whether to init new alien
+	float relative_time;
 	bool init_new_alien_g = false; // whether to init new alien_g in alien_g_grid
 	bool init_new_alien_v = false; 
 	bool boss_spawned = false;
-	int current_level = 0; // Current game level in levels
+	int seq_count = 0; // Current game level in levels
+	std::vector<Sequence> current_level_sequence;
 
 	ObjectPool<Rocket> rockets_pool;	// used to instantiate rockets
 	ObjectPool<Bomb> bombs_pool;
@@ -33,8 +28,6 @@ class Game : public GameObject
 	Alien* alien;
 	Alien2* alien2;
 
-
-
 	AlienG* alien_g;
 	AlienGGrid* alien_g_grid;
 	AlienV* alien_v;
@@ -44,14 +37,18 @@ class Game : public GameObject
 	BossAlien* boss_alien;
 
 	Sprite * life_sprite;
-	bool game_over = false;
 
+	bool level_finished = false;
+	bool level_win = false;
+	bool game_over = false;
+	int current_level = -1;
 	unsigned int score = 0;
 
 	// for drawing text
 	char life_string[10];
 	char score_string[10];
 	char debug_string[10];
+	char bottom_string[10];
 
 public:
 	
@@ -305,7 +302,6 @@ public:
 		BossObjectCollideComponent* boss_player_collide = new BossObjectCollideComponent();
 		boss_player_collide->Create(engine, boss_alien, &game_objects, player);
 
-
 	//	SingleObjectCollideComponent* alien_player_collide = new SingleObjectCollideComponent();
 	//	alien_player_collide->Create(engine, alien, &game_objects, player);
 
@@ -329,20 +325,30 @@ public:
 
 	virtual void Init()
 	{
-		player->Init();
-		//Spawn(ALIEN_S, 300.f);
-		//alien_g_grid->Init(0.f + randomDelay());
-		//alien_v_grid->Init(0.f + randomDelay()); 
-		/*
-		life_pickup->Init();
-		*/
-		//boss_alien->Init();
+		init_time = engine->getElapsedTime();
+		current_level = 1;
+		current_level_sequence = level1_spawns;
 
 		// Set background to lila
 		AvancezLib::RGBColor LILA = { 99, 0, 191 };
 		engine->SetBackgroundColor(LILA);
-
+		
+		player->Init();
 		enabled = true;
+	}
+
+	void InitNewLevel() {
+		level_finished = false;
+		level_win = false;
+		current_level = 2;
+		// Set background to soemthing
+		AvancezLib::RGBColor c = { 191, 0, 99 };
+		engine->SetBackgroundColor(c);
+
+		// Load spawn sequences for level 2 and 
+		// reset current sequence counter to 0
+		current_level_sequence = level2_spawns;
+		seq_count = 0;
 		init_time = engine->getElapsedTime();
 	}
 
@@ -363,80 +369,22 @@ public:
 			FIRE_TIME_INTERVAL = FIRE_TIME_INTERVAL / 10;
 		}
 
-		if (current_level < level1_spawns.size())
+		if (level_finished && level_win) {
+			InitNewLevel();
+		}
+
+		// Current_level counter should not exceed level total size
+		// Only spawn new enermies if level_finished is false
+		if (seq_count < current_level_sequence.size() && !level_finished)
 		{
-			if (engine->getElapsedTime() > level1_spawns.at(current_level).delay) {
-				const Sequence level = level1_spawns.at(current_level);
-				Spawn(level.type, level.pos_y);
-				current_level++;
-			}
-		}			
-
-		/*
-		//if (engine->getElapsedTime() < init_time + 60 * 5.f) // if game runs for less than 5 minutes then we can start new aliens
-		if (engine != nullptr && engine->getElapsedTime() < init_time + 30 * 1.f) // if game runs for less than 5 minutes then we can start new aliens
-		{
-			SDL_Log("Time: %f", engine->getElapsedTime());
-			if (init_new_alien_g) {
-				init_new_alien_g = false;
-
-				float alien_g_x = 660.f, alien_g_y = AlienGRandomHeight(), delay = 1.0f;
-				float alien_g_init_y = alien_g_y;
-				int alien_g_count = 1;
-				for (auto alien_g = alien_g_pool.pool.begin(); alien_g != alien_g_pool.pool.end(); alien_g++)
-				{
-					(*alien_g)->horizontalPosition = alien_g_x;
-					(*alien_g)->verticalPosition = alien_g_y;
-					(*alien_g)->Init();
-					AlienGBehaviourComponent* component = (*alien_g)->GetComponent<AlienGBehaviourComponent*>();
-					component->SetDelay(delay);
-
-					alien_g_y = alien_g_y + 100;
-					if (alien_g_count % 2 == 0) {
-						alien_g_x = alien_g_x + 100; // space between the alien g columns
-						alien_g_y = alien_g_init_y;
-						delay = delay + 1.0f;
-					}
-
-					alien_g_count++;
-				}
-				alien_g_grid->Init(randomDelay());
-			}
-
-			if (init_new_alien_v)
-			{
-				init_new_alien_v = false;
-
-				std::vector<AlienV::Coordinate> alienv_pos = MakeVShapeAlienPositions({ 660.f, AlienVRandomHeight() }, 7);
-				int alien_v_count = 0;
-				for (auto alien_v = alien_v_pool.pool.begin(); alien_v != alien_v_pool.pool.end(); alien_v++)
-				{
-					AlienV::Coordinate pos = alienv_pos.at(alien_v_count);
-					(*alien_v)->horizontalPosition = pos.x;
-					(*alien_v)->verticalPosition = pos.y;
-					(*alien_v)->Init();
-					alien_v_count++;
-				}
-				alien_v_grid->Init(randomDelay());
-			}
-
-			if (init_new_alien)
-			{
-				alien->Init(AlienRandomHeight()); // random vertical position
-				alien->GetComponent<AlienBehaviourComponent*>()->setInitDelay(randomDelay());
-				init_new_alien = false;
-			}
-		} else {
-			// if all alines are cleared, init boss
-  			if ((init_new_alien && init_new_alien_g && init_new_alien_v) && !boss_spawned) {
-				init_new_alien = false;
-				init_new_alien_g = false;
-				init_new_alien_v = false;
-				boss_spawned = true;
-				boss_alien->Init();
+			// delay + init_time to convert relative delay time to absolute time
+			if (engine->getElapsedTime() > current_level_sequence.at(seq_count).delay + init_time) {
+				const Sequence seq = current_level_sequence.at(seq_count);
+				Spawn(seq.type, seq.pos_y);
+				seq_count++;
 			}
 		}
-		*/
+
 
 		for (auto go = game_objects.begin(); go != game_objects.end(); go++)
 		{
@@ -461,11 +409,14 @@ public:
 		sprintf(life_string, "Life: %d", player->lives);
 		engine->drawText(0, 16, life_string);
 
-		AvancezLib::RGBColor LILA = { 99, 0, 191 };
-		engine->SetBackgroundColor(LILA);
+		//AvancezLib::RGBColor LILA = { 99, 0, 191 };
+		//engine->SetBackgroundColor(LILA);
 
-		sprintf(debug_string, "Time: %.2f Stage: %d", engine->getElapsedTime(), current_level);
-		engine->drawText(300, 16, debug_string);
+		//float r_time = engine->getElapsedTime() - init_time;
+		//sprintf(debug_string, "Relative time: %.2f Stage: %d", r_time, seq_count);
+		//engine->drawText(230, 16, debug_string);
+		//sprintf(bottom_string, "Abolute time: %.2f", engine->getElapsedTime());
+		//engine->drawText(230, 460, bottom_string);
 
 		//Score indicator
 		sprintf(score_string, "%07d", score);
@@ -490,12 +441,17 @@ public:
 			engine->PlaySFX("data/audio/game_over.wav", 0, -1);
 		}
 
-		if (m == LEVEL_WIN)  //if boss alien dies
+		if (m == BOSS_HIT)  
+		//if boss alien dies
+		// New level, prepare aliens and new background
 		{
-			SDL_Log("GAME::LEVEL_WIN");
-			engine->PlaySFX("data/audio/level_win.wav", 0, -1);
-
-			// New level, prepare aliens and new background
+			SDL_Log("GAME::BOSS_HIT");
+			engine->PlaySFX("data/audio/win_level.wav", 0, -1);
+			//if (current_level < 2) {
+				level_win = true;
+				level_finished = true;
+			//}
+			//else game_over = true;
 		}
 
 		if (m == ALIEN_G_LEVEL_CLEAR) {
@@ -530,12 +486,6 @@ public:
 
 		if (m == BULLET_BULLET_HIT) {
 			SDL_Log("GAME::BULLET_BULLET_HIT!");
-		}
-
-		if (m == ALIEN_HIT || m == ALIEN_LEVEL_CLEAR)
-		{
-			if (!init_new_alien)
-				init_new_alien = true;
 		}
 	}
 
