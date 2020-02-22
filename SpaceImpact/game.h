@@ -41,7 +41,7 @@ class Game : public GameObject
 	bool level_finished = false;
 	bool level_win = false;
 	bool game_over = false;
-	bool game_finished = false;
+	bool game_won = false;
 	int current_level = -1;
 	unsigned int score = 0;
 
@@ -389,7 +389,7 @@ public:
 		for (auto go = game_objects.begin(); go != game_objects.end(); go++)
 		{
 			// If game_over is true, set dt to 0 so that all objects will not move.
-			if (game_over)
+			if (game_over || game_won)
 				(*go)->Update(0);
 			else
 				(*go)->Update(dt);
@@ -416,10 +416,13 @@ public:
 		//Score indicator
 		sprintf(score_string, "%07d", score);
 		engine->drawText(500, 16, score_string);
-
 		
 		if (game_over) {
 			engine->drawText(250, 0, "***GAME OVER***");
+		}
+
+		if (game_won) {
+			engine->drawText(250, 0, "***YOU WON***");
 		}
 
 		engine->swapBuffers();
@@ -446,7 +449,7 @@ public:
 				level_win = true;
 				level_finished = true;
 			}
-			else game_over = true;
+			else game_won = true;
 		}
 
 		if (m == ALIEN_G_LEVEL_CLEAR) {
