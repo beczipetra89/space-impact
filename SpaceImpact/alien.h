@@ -5,8 +5,6 @@
 
 class AlienBehaviourComponent : public Component
 {
-
-	int direction = 1; // if direction = 1, alien moves right, if direction = -1, alien moves left
 	ObjectPool<Bomb>* bombs_pool;
 	
 	float time_laser_shot;	// time from the last time the laser was shot
@@ -25,8 +23,8 @@ public:
 	virtual void Init()
 	{
 		time_laser_shot = -10000.f;
-		go->horizontalPosition = 640; 
-		//go->verticalPosition= 300;
+		go->horizontalPosition = 640;
+		// TODO: remove me
 		init_delay = engine->getElapsedTime();
 	}
 
@@ -109,7 +107,6 @@ public:
 		SDL_Log("Alien::Init");
 		verticalPosition = y;
 		GameObject::Init();
-		
 	}
 
 	virtual void Receive(Message m)

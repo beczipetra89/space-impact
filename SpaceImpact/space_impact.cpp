@@ -63,7 +63,7 @@ float game_speed = 1.f;		// speed of the game; it is increased each time all the
 #include "mines.h"
 #include "boss_alien.h"
 #include "boss_alien_manager.h"
-
+#include "vector_2d.h"
 #include "game.h"
 
 
