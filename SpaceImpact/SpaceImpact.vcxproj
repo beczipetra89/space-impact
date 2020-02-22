@@ -141,7 +141,6 @@
     <ClInclude Include="alien_v_grid.h" />
     <ClInclude Include="avancezlib.h" />
     <ClInclude Include="bomb.h" />
-    <ClInclude Include="boss_alien_manager.h" />
     <ClInclude Include="boss_alien.h" />
     <ClInclude Include="component.h" />
     <ClInclude Include="game.h" />

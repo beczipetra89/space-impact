@@ -92,9 +92,6 @@
     <ClInclude Include="mines.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="boss_alien_manager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="vector_2d.h">
       <Filter>Header Files</Filter>
     </ClInclude>

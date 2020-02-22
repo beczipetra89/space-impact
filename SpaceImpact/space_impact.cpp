@@ -10,6 +10,7 @@
 
 const unsigned int	MAX_NUM_GAME_OBJECTS = 10000;
 const unsigned int	NUM_LIVES = 2;
+const unsigned int	BOSS1_LIVES = 5;
 
 const unsigned int	MAX_NUM_ROCKETS = 100;
 const unsigned int	MAX_NUM_BOMBS = 32;
@@ -61,7 +62,6 @@ float game_speed = 1.f;		// speed of the game; it is increased each time all the
 
 #include "mines.h"
 #include "boss_alien.h"
-#include "boss_alien_manager.h"
 #include "vector_2d.h"
 #include "game.h"
 
