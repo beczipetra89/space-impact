@@ -61,42 +61,25 @@ public:
 	virtual void Update(float dt);
 };
 
-// Collision between bullets to bullets
-class BulletCollideComponent : public Component
-{
-	ObjectPool<GameObject>* coll_objects; 
-
-public:
-	virtual void Create(AvancezLib* engine, GameObject* go, std::set<GameObject*>* game_objects, ObjectPool<GameObject>* coll_objects);
-	virtual void Update(float dt);
-};
 
 // For testing collision between single objects
 class SingleObjectCollideComponent : public Component
 {
 	GameObject * coll_object; // collision will be tested with a single object
+	SDL_Rect coll_rect;
 
 public:
-	virtual void Create(AvancezLib* engine, GameObject* go, std::set<GameObject*>* game_objects, GameObject * coll_object);
+	virtual void Create(AvancezLib* engine, GameObject* go, std::set<GameObject*>* game_objects, GameObject * coll_object, SDL_Rect coll_rect);
 	virtual void Update(float dt);
 };
 
 //  Collision to PICKUPS
 class LifePickupCollisionComponent : public Component
 {
-	GameObject* coll_object; // collision will be tested with a single object
+	GameObject* coll_object; // collision will be tested with pickups
+	SDL_Rect coll_rect;
 
 public:
-	virtual void Create(AvancezLib* engine, GameObject* go, std::set<GameObject*>* game_objects, GameObject* coll_object);
-	virtual void Update(float dt);
-};
-
-// Collision to BOSS ALIEN
-class BossObjectCollideComponent : public Component
-{
-	GameObject* coll_object; // collision will be tested with a single object: BOSS
-
-public:
-	virtual void Create(AvancezLib* engine, GameObject* go, std::set<GameObject*>* game_objects, GameObject* coll_object);
+	virtual void Create(AvancezLib* engine, GameObject* go, std::set<GameObject*>* game_objects, GameObject* coll_object, SDL_Rect coll_rect);
 	virtual void Update(float dt);
 };

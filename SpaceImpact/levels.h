@@ -19,11 +19,11 @@ struct Sequence {
 const std::vector<Sequence> level1_spawns{
 	//Level{Level::ALIEN_TYPE::ALIEN_G, 200.f, 0.f}
 	//Level{Level::ALIEN_TYPE::ALIEN_V, 200.f, 0.f}
-	//Sequence{Sequence::ALIEN_TYPE::ALIEN_S, 300.f, 0.f },
-	//Sequence{Sequence::ALIEN_TYPE::ALIEN_S_2, 100.f, 6.f},
-	//Sequence{Sequence::ALIEN_TYPE::ALIEN_S, 60.f, 9.f},
-	//Sequence{Sequence::ALIEN_TYPE::ALIEN_G, 300.f, 12.f},
-	Sequence{Sequence::ALIEN_TYPE::BOSS, -1.f, 0.f} // postion Y is ignored for boss
+	Sequence{Sequence::ALIEN_TYPE::ALIEN_S, 300.f, 0.f },
+	Sequence{Sequence::ALIEN_TYPE::ALIEN_S_2, 100.f, 6.f},
+	Sequence{Sequence::ALIEN_TYPE::ALIEN_S, 60.f, 9.f},
+	Sequence{Sequence::ALIEN_TYPE::ALIEN_G, 300.f, 12.f},  //,
+								Sequence{Sequence::ALIEN_TYPE::BOSS, -1.f, 0.f} // postion Y is ignored for boss
 	/*
 	Level{Level::ALIEN_TYPE::ALIEN_V, 240.f, 20.f},
 	Level{Level::ALIEN_TYPE::ALIEN_S, 60.f, 28.f},
