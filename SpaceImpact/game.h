@@ -225,20 +225,14 @@ public:
 
 		//**************CREATE ALIEN G POOL***************
 		alien_g_pool.Create(6); // create alien g pool of 6 aliens
-		float alien_g_x = 660.f, alien_g_y = AlienGRandomHeight(), delay = 1.f;
-		float alien_g_init_y = alien_g_y;
-		int alien_g_count = 1;
 		for (auto alien_g = alien_g_pool.pool.begin(); alien_g != alien_g_pool.pool.end(); alien_g++)
 		{
 			RenderComponent* render = new RenderComponent();
 			render->Create(engine, *alien_g, &game_objects, "data/alien_g.png", 50, 38);
-
 			AlienGBehaviourComponent* behaviour = new AlienGBehaviourComponent();
-			behaviour->Create(engine, *alien_g, &game_objects, delay);
-			
+			behaviour->Create(engine, *alien_g, &game_objects);
 			CollideComponent* alienG_rocket_collide = new CollideComponent();
 			alienG_rocket_collide->Create(engine, *alien_g, &game_objects, (ObjectPool<GameObject>*)& rockets_pool);
-
 			SingleObjectCollideComponent* alienG_player_collide = new SingleObjectCollideComponent();
 			alienG_player_collide->Create(engine, * alien_g, & game_objects, player);
 			
@@ -248,21 +242,6 @@ public:
 			(*alien_g)->AddComponent(alienG_rocket_collide);
 			(*alien_g)->AddComponent(alienG_player_collide);
 			(*alien_g)->AddReceiver(this);
-
-			/*
-			(*alien_g)->horizontalPosition = alien_g_x;
-			(*alien_g)->verticalPosition = alien_g_y;
-			(*alien_g)->Init();
-
-			alien_g_y = alien_g_y + 100;
-			if (alien_g_count % 2 == 0) {
-				alien_g_x = alien_g_x + 100; // space between the alien g columns
-				alien_g_y = alien_g_init_y;
-				delay = delay + 1.0f;
-			}
-
-			alien_g_count++;
-			*/
 		}
 
 		////************** ALIEN V GRID ******************* 
@@ -277,35 +256,32 @@ public:
 
 		//**************CREATE ALIEN V POOL***************
 		alien_v_pool.Create(7); // create alien v pool of 7 aliens
-		std::vector<AlienV::Coordinate> alien_v_coordinates = MakeVShapeAlienPositions({ 660.f, AlienVRandomHeight() }, 7);
-		int alien_v_count = 0;		
+		//std::vector<AlienV::Coordinate> alien_v_coordinates = MakeVShapeAlienPositions({ 660.f, AlienVRandomHeight() }, 7);
+		//int alien_v_count = 0;		
 		for (auto alien_v = alien_v_pool.pool.begin(); alien_v != alien_v_pool.pool.end(); alien_v++)
 		{
 			RenderComponent* render = new RenderComponent();
-			render->Create(engine, *alien_v, &game_objects, "data/alien_v.png", 33, 33);
-		
-			(*alien_v)->Create();	
-			(*alien_v)->AddComponent(render);
-
+			render->Create(engine, *alien_v, &game_objects, "data/alien_v.png", 33, 33);		
 			AlienVBehaviourComponent* behaviour = new AlienVBehaviourComponent();
 			behaviour->Create(engine, *alien_v, &game_objects, &alienLaser_pool);
-		
 			CollideComponent* alienV_rocket_collide = new CollideComponent();
 			alienV_rocket_collide->Create(engine, *alien_v, &game_objects, (ObjectPool<GameObject>*) & rockets_pool);
-
 			SingleObjectCollideComponent* alienV_player_collide = new SingleObjectCollideComponent();
 			alienV_player_collide->Create(engine, *alien_v, &game_objects, player);
 
+			(*alien_v)->Create();
+			(*alien_v)->AddComponent(render);
 			(*alien_v)->AddComponent(behaviour);
 			(*alien_v)->AddComponent(alienV_rocket_collide);
 			(*alien_v)->AddComponent(alienV_player_collide);
 			(*alien_v)->AddReceiver(this);
 
-			(*alien_v)->horizontalPosition = alien_v_coordinates.at(alien_v_count).x;
+	/*		(*alien_v)->horizontalPosition = alien_v_coordinates.at(alien_v_count).x;
 			(*alien_v)->verticalPosition = alien_v_coordinates.at(alien_v_count).y;
 			(*alien_v)->Init();
 
 			alien_v_count++;
+	*/	
 		}
 
 		// LIFE PICKUP
@@ -651,12 +627,24 @@ private:
 					delay += 1.2f;
 			}
 
-			alien_g_grid->Init(0.f);
+			alien_g_grid->Init();
 			break;
 		}
 
-		default:
-			SDL_Log("Doesn't support spawning ALIEN_TYPE: %d", type);
+		case Level::ALIEN_TYPE::ALIEN_V:
+			SDL_Log("Spwaning Level::ALIEN_TYPE::ALIEN_V");
+
+			std::vector<Vector2D> xys = MakeVShapeAlienPositions(pos_y, 7);
+			int index = 0;
+			for (auto it = alien_v_pool.pool.begin(); it != alien_v_pool.pool.end(); it++)
+			{
+				Vector2D xy = xys.at(index);
+				(*it)->horizontalPosition = xy.x;
+				(*it)->verticalPosition = xy.y;
+				(*it)->Init();
+				index++;
+			}
+			alien_v_grid->Init(0.f);
 			break;
 		}
 
@@ -678,32 +666,32 @@ private:
 
 	// Generate position x and y value to draw V shape aliens
 	// alien_num should be an odd number: 3, 5, 7
-	std::vector<AlienV::Coordinate> MakeVShapeAlienPositions(AlienV::Coordinate first_alien_xy, int alien_num) {
-		std::vector<AlienV::Coordinate> alien_v_coordinates;
+	std::vector<Vector2D> MakeVShapeAlienPositions(float first_alien_y, int alien_num) {
+		std::vector<Vector2D> pos;
+		float init_x = 640, init_y = first_alien_y;
 
-		alien_v_coordinates.push_back(first_alien_xy);
+		pos.push_back(Vector2D(init_x, init_y));
 
 		for (auto i = 1; i < alien_num; i++) {
 			int col_num = (i+1) / 2;
-			printf("col_num %d\n", col_num);
-			float y = first_alien_xy.y;
-			if (i % 2 == 0)
-				y = y + 30 * col_num;
-			else
-				y = y - 30 * col_num;
+			float y;
 
-			alien_v_coordinates.push_back({ (first_alien_xy.x + col_num * 30.f), y});
+			if (i % 2 == 0)
+				y = init_y + 30 * col_num;
+			else
+				y = init_y - 30 * col_num;
+
+			pos.push_back(Vector2D((init_x + col_num * 30.f), y));
 		}
 
-		return alien_v_coordinates;
+		return pos;
 	}
 
+	// Generate position x and y value to draw alien G shapes
+	// alien_num should be even numbers: 2, 4, 6...
 	std::vector<Vector2D> MakeGShapeAlienPositions(float first_alien_y, int alien_num) {
 		std::vector<Vector2D> pos;
-
-		float init_x = 640;
-		float init_y = first_alien_y;
-		//pos.push_back(Vector2D(640, first_alien_y));
+		float init_x = 640, init_y = first_alien_y;
 
 		for (auto i = 0; i < alien_num; i++) {
 			Vector2D alien_pos;

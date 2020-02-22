@@ -26,8 +26,8 @@ float				ALIENLASER_SPEED = 120.0f;
 
 
 const float			ALIEN_SPEED = 80.0f;		// 40.0f
-const float			ALIEN_V_SPEED = 40.0f;		// 40.0f
-const float			ALIEN_G_SPEED = 40.0f;
+const float			ALIEN_V_SPEED = 70.0f;		// 40.0f
+const float			ALIEN_G_SPEED = 60.0f;
 const float			ALIEN_G_VERTICAL_SPEED = 20.0f;
 const float         ALIEN_G_VERTICAL_MOVE_TIME_INTERNAL = 1000.f;
 

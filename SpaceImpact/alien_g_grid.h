@@ -3,14 +3,11 @@
 class AlienGGrid : public GameObject {
 
 public:
-	float start_delay; // a time delay, after which the game object in pool can perform update()
-
 	virtual ~AlienGGrid() { SDL_Log("AlienGGrid::~AlienGGrid"); }
 
-	virtual void Init(float start_delay)
+	virtual void Init()
 	{
 		SDL_Log("AlienGGrid::Init");
-		this->start_delay = start_delay;
 		GameObject::Init();
 	}
 
