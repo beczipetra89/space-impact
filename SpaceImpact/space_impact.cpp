@@ -15,7 +15,7 @@ const unsigned int	MAX_NUM_ROCKETS = 100;
 const unsigned int	MAX_NUM_BOMBS = 32;
 const unsigned int	POINTS_PER_ALIEN = 10;
 float				FIRE_TIME_INTERVAL = .10f;		// use .05f for testing
-const float			BOMB_TIME_INTERVAL = 10.25f;
+const float			ALIEN_LASER_TIME_INTERVAL = 10.25f;
 const float			BOMB_SPEED = 120.0f;
 const float			PLAYER_SPEED = 100.0f;		// 160.0f
 float				ROCKET_SPEED = 140.0f;		 // 160.0f
@@ -47,12 +47,11 @@ float game_speed = 1.f;		// speed of the game; it is increased each time all the
 #include "component.h"
 #include "game_object.h"
 
-
 #include "rocket.h"
 #include "player.h"
 #include "bomb.h"
 #include "alien.h"
-//#include "alien_grid.h"
+#include "alien2.h"
 #include "alien_g.h"
 #include "alien_g_grid.h"
 #include "alienLaser.h"

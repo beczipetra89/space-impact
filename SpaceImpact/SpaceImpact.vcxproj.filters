@@ -101,6 +101,9 @@
     <ClInclude Include="levels.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="alien2.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Media Include="data\audio\laser_sound.wav">

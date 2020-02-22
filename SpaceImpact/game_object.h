@@ -3,7 +3,10 @@
 // GameObject represents objects which moves are drawn
 #include <vector>
 
-enum Message { HIT, ALIEN_HIT, ALIEN_G_HIT, ALIEN_V_HIT, 
+enum Message { HIT, 
+	ALIEN_HIT, 
+	ALIEN2_HIT,
+	ALIEN_G_HIT, ALIEN_V_HIT, 
 	ALIEN_LEVEL_CLEAR,
 	ALIEN_CHANGE_DIRECTION_AND_MOVE_DOWN, ALIEN_HIT_WALL,
 	ALIEN_G_LEVEL_CLEAR,

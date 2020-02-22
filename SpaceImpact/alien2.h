@@ -1,14 +1,41 @@
 #pragma once
 
-class AlienBehaviourComponent : public Component
+class Alien2 : public GameObject
+{
+public:
+	virtual ~Alien2() { SDL_Log("Alien2::~Alien2"); }
+
+	virtual void Init(float y)
+	{
+		SDL_Log("Alien2::Init");
+		verticalPosition = y;
+		GameObject::Init();
+	}
+
+	virtual void Receive(Message m)
+	{
+		if (!enabled) {
+			return;
+		}
+		if (m == HIT) {
+			// Disabe alien2 when it's hit
+			SDL_Log("Alien2::HIT!");
+			Send(ALIEN2_HIT); // Send a message so that game can update the score and init new alien2
+			enabled = false;
+		}
+	}
+};
+
+class Alien2BehaviourComponent : public Component
 {
 	ObjectPool<Bomb>* bombs_pool;
-	
+
 	float time_laser_shot;	// time from the last time the laser was shot
 	float init_delay;       // time delay before alien start to move
 
+
 public:
-	virtual ~AlienBehaviourComponent() {}
+	virtual ~Alien2BehaviourComponent() {}
 
 	virtual void Create(AvancezLib* engine, GameObject* go, std::set<GameObject*>* game_objects, ObjectPool<Bomb>* bombs_pool)
 	{
@@ -35,7 +62,8 @@ public:
 		if (engine->getElapsedTime() < init_delay)
 			return;
 
-		Move(dt * ALIEN_SPEED );
+		Move(dt * ALIEN_SPEED);
+
 		if (go->horizontalPosition < -40) // When alian flew out of window to the left, it disappears, 40 is alien sprite width
 		{
 			go->Send(ALIEN_LEVEL_CLEAR);
@@ -78,35 +106,4 @@ public:
 	}
 
 
-};
-
-
-class Alien : public GameObject
-{
-public:
-
-	int lives;
-
-	virtual ~Alien() { SDL_Log("Alien::~Alien"); }
-
-	virtual void Init(float y)
-	{
-		SDL_Log("Alien::Init");
-		verticalPosition = y;
-		GameObject::Init();
-	}
-
-	virtual void Receive(Message m)
-	{
-		if (!enabled) {
-				return;
-		}
-		if (m == HIT) {
-			// Disabe alien when it's hit
-			SDL_Log("Alien::HIT!");
-			Send(ALIEN_HIT); // Send a message so that game can update the score
-			Send(ALIEN_LEVEL_CLEAR); // Send a message so that game can init new alien
-			enabled = false;
-		}
-	}
 };
