@@ -98,10 +98,10 @@
     <ClInclude Include="vector_2d.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="levels.h">
+    <ClInclude Include="alien2.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="alien2.h">
+    <ClInclude Include="levels.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -302,7 +302,6 @@ public:
 		boss_render->Create(engine, boss_alien, &game_objects, "data/boss_b.png", 110, 135);
 		CollideComponent* boss_bullet_collide = new CollideComponent();
 		boss_bullet_collide->Create(engine, boss_alien, &game_objects, (ObjectPool<GameObject>*)& rockets_pool);
-
 		BossObjectCollideComponent* boss_player_collide = new BossObjectCollideComponent();
 		boss_player_collide->Create(engine, boss_alien, &game_objects, player);
 
@@ -317,7 +316,6 @@ public:
 		boss_alien->AddComponent(boss_player_collide);
 
 	//	alien->AddComponent(alien_player_collide);
-
 		boss_alien->AddReceiver(this);
 		game_objects.insert(boss_alien);
 
@@ -365,10 +363,10 @@ public:
 			FIRE_TIME_INTERVAL = FIRE_TIME_INTERVAL / 10;
 		}
 
-		if (current_level < levels.size())
+		if (current_level < level1_spawns.size())
 		{
-			if (engine->getElapsedTime() > levels.at(current_level).delay) {
-				const Level level = levels.at(current_level);
+			if (engine->getElapsedTime() > level1_spawns.at(current_level).delay) {
+				const Sequence level = level1_spawns.at(current_level);
 				Spawn(level.type, level.pos_y);
 				current_level++;
 			}
@@ -583,23 +581,23 @@ public:
 	}
 
 private:
-	void Spawn(Level::ALIEN_TYPE type, float pos_y) {
+	void Spawn(Sequence::ALIEN_TYPE type, float pos_y) {
+
 		switch (type)
 		{
-		case Level::ALIEN_TYPE::ALIEN_S:
-			SDL_Log("Spwaning Level::ALIEN_TYPE::ALIEN_S");
+		case Sequence::ALIEN_TYPE::ALIEN_S:
+			SDL_Log("Spwaning ALIEN_S");
 			alien->Init(pos_y);
 			break;
 
-		case Level::ALIEN_TYPE::ALIEN_S_2:
-			SDL_Log("Spwaning Level::ALIEN_TYPE::ALIEN_S_2");
+		case Sequence::ALIEN_TYPE::ALIEN_S_2:
+			SDL_Log("Spwaning ALIEN_S_2");
 			alien2->Init(pos_y);
 			break;
 
-		case Level::ALIEN_TYPE::ALIEN_G:
+		case Sequence::ALIEN_TYPE::ALIEN_G:
 		{
-			SDL_Log("Spwaning Level::ALIEN_TYPE::ALIEN_G");
-
+			SDL_Log("Spwaning ALIEN_G");
 			std::vector<Vector2D> xys = MakeGShapeAlienPositions(pos_y, 6);
 			int index = 0;
 			float delay = 0.f;
@@ -620,9 +618,9 @@ private:
 			break;
 		}
 
-		case Level::ALIEN_TYPE::ALIEN_V:
-			SDL_Log("Spwaning Level::ALIEN_TYPE::ALIEN_V");
-
+		case Sequence::ALIEN_TYPE::ALIEN_V:
+		{
+			SDL_Log("Spwaning ALIEN_V");
 			std::vector<Vector2D> xys = MakeVShapeAlienPositions(pos_y, 7);
 			int index = 0;
 			for (auto it = alien_v_pool.pool.begin(); it != alien_v_pool.pool.end(); it++)
@@ -637,6 +635,12 @@ private:
 			break;
 		}
 
+		case Sequence::ALIEN_TYPE::BOSS:
+			SDL_Log("Spawning BOSS");
+			boss_alien->Init();
+		}
+
+		//case Sequence::ALIEN_TYPE::BOSS:
 		return;
 	}
 
