@@ -146,12 +146,14 @@
     <ClInclude Include="game.h" />
     <ClInclude Include="game_object.h" />
     <ClInclude Include="alien_g.h" />
+    <ClInclude Include="levels.h" />
     <ClInclude Include="mines.h" />
     <ClInclude Include="object_pool.h" />
     <ClInclude Include="pickup_life.h" />
     <ClInclude Include="player.h" />
     <ClInclude Include="rocket.h" />
     <ClInclude Include="sprite.h" />
+    <ClInclude Include="vector_2d.h" />
   </ItemGroup>
   <ItemGroup>
     <Media Include="data\audio\laser_sound.wav" />
