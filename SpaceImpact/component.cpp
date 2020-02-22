@@ -34,13 +34,11 @@ void RenderComponent::Destroy()
 }
 
 
-
-
-
-void CollideComponent::Create(AvancezLib* engine, GameObject * go, std::set<GameObject*> * game_objects, ObjectPool<GameObject> * coll_objects)
+void CollideComponent::Create(AvancezLib* engine, GameObject * go, std::set<GameObject*> * game_objects, ObjectPool<GameObject> * coll_objects, SDL_Rect coll_rect)
 {
 	Component::Create(engine, go, game_objects);
 	this->coll_objects = coll_objects;
+	this->coll_rect = coll_rect;
 }
 
 
@@ -51,10 +49,10 @@ void CollideComponent::Update(float dt)
 		GameObject * go0 = coll_objects->pool[i];
 		if (go0->enabled)
 		{
-			if ((go0->horizontalPosition > go->horizontalPosition - 20) &&  
-				(go0->horizontalPosition < go->horizontalPosition + 20) &&
-				(go0->verticalPosition   > go->verticalPosition - 25) &&
-				(go0->verticalPosition   < go->verticalPosition + 25))
+			if ((go0->horizontalPosition > go->horizontalPosition) &&  
+				(go0->horizontalPosition < go->horizontalPosition + coll_rect.w) &&
+				(go0->verticalPosition   > go->verticalPosition) &&
+				(go0->verticalPosition   < go->verticalPosition + coll_rect.h))
 			{
 				go->Receive(HIT);
 				go0->Receive(HIT);
@@ -150,7 +148,7 @@ void BossObjectCollideComponent::Create(AvancezLib* engine, GameObject* go, std:
 void BossObjectCollideComponent::Update(float dt)
 {
 	// For rendering collider
-	SDL_Rect rect = {go->horizontalPosition-110, go->verticalPosition - 135, 220, 270};
+	//SDL_Rect rect = {go->horizontalPosition-110, go->verticalPosition - 135, 220, 270};
 	//SDL_SetRenderDrawColor(engine->renderer, 255, 0, 0, 128);
 	//SDL_RenderFillRect(engine->renderer, &rect);
 
@@ -159,10 +157,10 @@ void BossObjectCollideComponent::Update(float dt)
 	if (go != NULL && go0 != NULL) {
 		if (go->enabled && go0->enabled)
 		{
-			if ((go0->horizontalPosition > go->horizontalPosition - 110) &&
-				(go0->horizontalPosition < go->horizontalPosition + 110) &&
-				(go0->verticalPosition > go->verticalPosition - 135) &&
-				(go0->verticalPosition < go->verticalPosition + 135))
+			if ((go0->horizontalPosition > go->horizontalPosition - 50) &&
+				(go0->horizontalPosition < go->horizontalPosition + 50) &&
+				(go0->verticalPosition > go->verticalPosition - 50) &&
+				(go0->verticalPosition < go->verticalPosition + 50))
 			{
 				go->Receive(HIT);
 				go0->Receive(HIT);

@@ -28,7 +28,7 @@ public:
 		time_mine_dropped = -10000.f;
 
 		go->verticalPosition = 210;
-		go->horizontalPosition = 550;
+		go->horizontalPosition = 600;
 	}
 
 	virtual void Update(float dt)
@@ -66,13 +66,6 @@ public:
 		}
 
 
-
-
-		
-		
-
-		
-
 	}
 
 
@@ -87,7 +80,7 @@ public:
 
 		time_mine_dropped = engine->getElapsedTime();
 
-		SDL_Log("bomb!");
+		SDL_Log("mine!");
 		return true;
 	}
 
@@ -106,19 +99,32 @@ public:
 	{
 		SDL_Log("BossAlien::Init");
 		GameObject::Init();
+		lives = BOSS1_LIVES;
 	}
 
 	virtual void Receive(Message m)
 	{
 		if (!enabled) {
-
 			return;
 		}
+
 		if (m == HIT) {
-			// Disabe alien when it's hit
-			SDL_Log("AlBossAlienien::HIT!");
-			Send(BOSS_HIT); // Send a message so that game can update the score
+			SDL_Log("BossAlien::HIT!");
+			Send(BOSS_HIT); 
+			RemoveLife();
+		}
+	}
+
+	void RemoveLife()
+	{
+		lives--;
+		
+		if (lives < 0) {
+			Send(BOSS_KILLED);
 			enabled = false;
 		}
+
+		SDL_Log("Boss - remaining lives %d", lives);
+
 	}
 };

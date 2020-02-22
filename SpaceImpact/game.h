@@ -158,10 +158,10 @@ public:
 		player_render->Create(engine, player, &game_objects, "data/player.png", 43, 43);
 		
 		CollideComponent * player_bomb_collide = new CollideComponent();			//Collide with enemy bullet
-		player_bomb_collide->Create(engine, player, &game_objects, (ObjectPool<GameObject>*) & bombs_pool);
+		player_bomb_collide->Create(engine, player, &game_objects, (ObjectPool<GameObject>*) & bombs_pool, { 0, 0, 43, 43 });
 
 		CollideComponent* player_laser_collide = new CollideComponent();
-		player_laser_collide->Create(engine, player, &game_objects, (ObjectPool<GameObject>*) & alienLaser_pool);
+		player_laser_collide->Create(engine, player, &game_objects, (ObjectPool<GameObject>*)& alienLaser_pool, { 0, 0, 43, 43 });
 
 		player->Create();
 		player->AddComponent(player_behaviour);
@@ -180,7 +180,7 @@ public:
 		RenderComponent* alien_render = new RenderComponent();
 		alien_render->Create(engine, alien, &game_objects, "data/alien_s.png", 53, 44);
 		CollideComponent* alien_bullet_collide = new CollideComponent();
-		alien_bullet_collide->Create(engine, alien, &game_objects, (ObjectPool<GameObject>*)& rockets_pool);
+		alien_bullet_collide->Create(engine, alien, &game_objects, (ObjectPool<GameObject>*)& rockets_pool, { 0, 0, 53, 44 });
 		SingleObjectCollideComponent* alien_player_collide = new SingleObjectCollideComponent();
 		alien_player_collide->Create(engine, alien, &game_objects, player);
 		alien->Create();
@@ -197,7 +197,7 @@ public:
 		RenderComponent* alien2_render = new RenderComponent();
 		alien2_render->Create(engine, alien2, &game_objects, "data/alien_s.png", 53, 44);
 		CollideComponent* alien2_bullet_collide = new CollideComponent();
-		alien2_bullet_collide->Create(engine, alien2, &game_objects, (ObjectPool<GameObject>*)& rockets_pool);
+		alien2_bullet_collide->Create(engine, alien2, &game_objects, (ObjectPool<GameObject>*)& rockets_pool, { 0, 0, 53, 44 });
 		SingleObjectCollideComponent* alien2_player_collide = new SingleObjectCollideComponent();
 		alien2_player_collide->Create(engine, alien2, &game_objects, player);
 		alien2->Create();
@@ -227,7 +227,7 @@ public:
 			AlienGBehaviourComponent* behaviour = new AlienGBehaviourComponent();
 			behaviour->Create(engine, *alien_g, &game_objects);
 			CollideComponent* alienG_rocket_collide = new CollideComponent();
-			alienG_rocket_collide->Create(engine, *alien_g, &game_objects, (ObjectPool<GameObject>*)& rockets_pool);
+			alienG_rocket_collide->Create(engine, *alien_g, &game_objects, (ObjectPool<GameObject>*) & rockets_pool, { 0, 0, 50, 38 });
 			SingleObjectCollideComponent* alienG_player_collide = new SingleObjectCollideComponent();
 			alienG_player_collide->Create(engine, * alien_g, & game_objects, player);
 			
@@ -258,7 +258,7 @@ public:
 			AlienVBehaviourComponent* behaviour = new AlienVBehaviourComponent();
 			behaviour->Create(engine, *alien_v, &game_objects, &alienLaser_pool);
 			CollideComponent* alienV_rocket_collide = new CollideComponent();
-			alienV_rocket_collide->Create(engine, *alien_v, &game_objects, (ObjectPool<GameObject>*) & rockets_pool);
+			alienV_rocket_collide->Create(engine, *alien_v, &game_objects, (ObjectPool<GameObject>*) & rockets_pool, { 0, 0, 33, 33 });
 			SingleObjectCollideComponent* alienV_player_collide = new SingleObjectCollideComponent();
 			alienV_player_collide->Create(engine, *alien_v, &game_objects, player);
 
@@ -296,9 +296,9 @@ public:
 		BossAlienBehaviourComponent* boss_behaviour = new BossAlienBehaviourComponent();
 		boss_behaviour->Create(engine, boss_alien, &game_objects, &mines_pool);
 		RenderComponent* boss_render = new RenderComponent();
-		boss_render->Create(engine, boss_alien, &game_objects, "data/boss_b.png", 110, 135);
+		boss_render->Create(engine, boss_alien, &game_objects, "data/boss_blue.png", 130, 212);
 		CollideComponent* boss_bullet_collide = new CollideComponent();
-		boss_bullet_collide->Create(engine, boss_alien, &game_objects, (ObjectPool<GameObject>*)& rockets_pool);
+		boss_bullet_collide->Create(engine, boss_alien, &game_objects, (ObjectPool<GameObject>*) & rockets_pool, { 0,0,130,212 });
 		BossObjectCollideComponent* boss_player_collide = new BossObjectCollideComponent();
 		boss_player_collide->Create(engine, boss_alien, &game_objects, player);
 
@@ -350,6 +350,8 @@ public:
 		current_level_sequence = level2_spawns;
 		seq_count = 0;
 		init_time = engine->getElapsedTime();
+
+		engine->PlaySFX("data/audio/win_level.wav", 0, -1);
 	}
 
 	virtual void Update(float dt)
@@ -439,12 +441,12 @@ public:
 			engine->PlaySFX("data/audio/game_over.wav", 0, -1);
 		}
 
-		if (m == BOSS_HIT)  
+		if (m == BOSS_KILLED)  // call this boss killed
 		//if boss alien dies
 		// New level, prepare aliens and new background
 		{
-			SDL_Log("GAME::BOSS_HIT");
-			engine->PlaySFX("data/audio/win_level.wav", 0, -1);
+			SDL_Log("GAME::BOSS_KILLED");   
+			engine->PlaySFX("data/audio/boss_die.wav", 0, -1);
 			if (current_level < 2) {
 				level_win = true;
 				level_finished = true;
@@ -468,6 +470,11 @@ public:
 		if (m == HIT) {
 			engine->PlaySFX("data/audio/player_hit.wav", 0, -1);
 		}
+
+		if (m == BOSS_HIT) {
+			engine->PlaySFX("data/audio/player_hit.wav", 0, -1);
+		}
+
 
 		if(m == LIFE_PICKED){
 		// If the +UP collected, add one life to the player
@@ -586,6 +593,7 @@ private:
 		case Sequence::ALIEN_TYPE::BOSS:
 			SDL_Log("Spawning BOSS");
 			boss_alien->Init();
+			//engine->PlaySFX("data/audio/boss_appear.wav", 0, -1);
 		}
 
 		//case Sequence::ALIEN_TYPE::BOSS:

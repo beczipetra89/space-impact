@@ -54,9 +54,10 @@ public:
 class CollideComponent : public Component
 {
 	ObjectPool<GameObject> * coll_objects; // collision will be tested with these objects
+	SDL_Rect coll_rect;
 
 public:
-	virtual void Create(AvancezLib* engine, GameObject * go, std::set<GameObject*> * game_objects, ObjectPool<GameObject> * coll_objects);
+	virtual void Create(AvancezLib* engine, GameObject* go, std::set<GameObject*>* game_objects, ObjectPool<GameObject>* coll_objects, SDL_Rect coll_rect);
 	virtual void Update(float dt);
 };
 
