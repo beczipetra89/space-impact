@@ -137,15 +137,14 @@ public:
 		}
 
 		if (m == LIFE_PICKED) {
+			SDL_Log("Player::LIFE_PICKED!");
 			AddLife();
 		}
 	}
 
 	void AddLife() {
-	if(lives<2)
-		lives++;
-	SDL_Log("Total lives: %d", lives);
-		
+		if(lives<3) lives++;
+		SDL_Log("Total lives: %d", lives);		
 	}
 
 

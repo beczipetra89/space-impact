@@ -93,7 +93,7 @@ void LifePickupCollisionComponent::Create(AvancezLib* engine, GameObject* go, st
 {
 	Component::Create(engine, go, game_objects);
 	this->coll_object = coll_object;
-	this->coll_object;
+	this->coll_rect = coll_rect;
 }
 
 void LifePickupCollisionComponent::Update(float dt)
@@ -108,7 +108,8 @@ void LifePickupCollisionComponent::Update(float dt)
 				(go0->verticalPosition > go->verticalPosition) &&
 				(go0->verticalPosition < go->verticalPosition + coll_rect.h))
 			{
-				go->Receive(LIFE_PICKED);
+				SDL_Log("Life picked up");
+				go->enabled = false;
 				go0->Receive(LIFE_PICKED);
 			}
 		}

@@ -16,19 +16,14 @@ public:
 
 	virtual void Init()
 	{
-		go->horizontalPosition = 600;
-
-	
+		go->horizontalPosition = 640;
 	}
 
 	virtual void Update(float dt)
 	{
-
 		Move(dt * PICKUP_SPEED);
 		if (go->horizontalPosition < -40) // When floats out of the window to the left, it disappears.
 			go->enabled = false;
-
-
 	}
 
 	// move the alien  to left
@@ -36,7 +31,6 @@ public:
 	void Move(float move)
 	{
 		go->horizontalPosition -= move;
-
 	}
 
 };
@@ -48,25 +42,13 @@ public:
 
 	virtual ~PickupLife() { SDL_Log("PickupLife::~PickupLife"); }
 
-	virtual void Init()
+	virtual void Init(float y)
 	{
-		SDL_Log("PickupLife::Init");
+		this->verticalPosition = y;
+		SDL_Log("PickupLife::Init y=%f", this->verticalPosition);
 		GameObject::Init();
 
 	}
 
-	virtual void Receive(Message m)
-	{
-		if (!enabled) {
-			return;
-		}
-		if (m == LIFE_PICKED ) { // life can be picked when player has full life, but will not add life
-			
-			SDL_Log("LifePickup::HIT!");
-			Send(LIFE_PICKED); // Send a message so that game can update the score
-			enabled = false;
-		}
-		
-
-	}
+	virtual void Receive(Message m) {}
 };

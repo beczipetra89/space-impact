@@ -284,13 +284,13 @@ public:
 		life_pickup_render->Create(engine, life_pickup, &game_objects, "data/life.png", 33, 33);
 
 		LifePickupCollisionComponent* life_pickup_collide = new LifePickupCollisionComponent();
-		life_pickup_collide->Create(engine, life_pickup, &game_objects, player, { 0, 0, 43, 33 });
+		life_pickup_collide->Create(engine, life_pickup, &game_objects, player, { 0, 0, 33, 33 });
 
 		life_pickup->Create();
 		life_pickup->AddComponent(life_pickup_behaviour);
 		life_pickup->AddComponent(life_pickup_render);
 		life_pickup->AddComponent(life_pickup_collide);
-		life_pickup->AddReceiver(this);
+		life_pickup->AddReceiver(player);
 		game_objects.insert(life_pickup);
 
 
@@ -426,11 +426,11 @@ public:
 		engine->drawText(500, 16, score_string);
 		
 		if (game_over) {
-			engine->drawText(250, 0, "***GAME OVER***");
+			engine->drawText(250, 250, "***GAME OVER***");
 		}
 
 		if (game_won) {
-			engine->drawText(250, 0, "***YOU WON***");
+			engine->drawText(250, 250, "***YOU WON***");
 		}
 
 		engine->swapBuffers();
@@ -542,21 +542,21 @@ public:
 	}
 
 private:
-	void Spawn(Sequence::ALIEN_TYPE type, float pos_y) {
+	void Spawn(Sequence::OBJECT_TYPE type, float pos_y) {
 
 		switch (type)
 		{
-		case Sequence::ALIEN_TYPE::ALIEN_S:
+		case Sequence::OBJECT_TYPE::ALIEN_S:
 			SDL_Log("Spwaning ALIEN_S");
 			alien->Init(pos_y);
 			break;
 
-		case Sequence::ALIEN_TYPE::ALIEN_S_2:
+		case Sequence::OBJECT_TYPE::ALIEN_S_2:
 			SDL_Log("Spwaning ALIEN_S_2");
 			alien2->Init(pos_y);
 			break;
 
-		case Sequence::ALIEN_TYPE::ALIEN_G:
+		case Sequence::OBJECT_TYPE::ALIEN_G:
 		{
 			SDL_Log("Spwaning ALIEN_G");
 			std::vector<Vector2D> xys = MakeGShapeAlienPositions(pos_y, 6);
@@ -579,7 +579,7 @@ private:
 			break;
 		}
 
-		case Sequence::ALIEN_TYPE::ALIEN_V:
+		case Sequence::OBJECT_TYPE::ALIEN_V:
 		{
 			SDL_Log("Spwaning ALIEN_V");
 			std::vector<Vector2D> xys = MakeVShapeAlienPositions(pos_y, 7);
@@ -596,10 +596,22 @@ private:
 			break;
 		}
 
-		case Sequence::ALIEN_TYPE::BOSS:
+		case Sequence::OBJECT_TYPE::LIFE_PICKUP:
+		{
+			SDL_Log("Spawning LIFE_PICKUP %f", pos_y);
+
+			life_pickup->Init(pos_y);
+			//	life_pickup->verticalPosition = pos_y;		
+				//life_pickup->Init((life_pickup->verticalPosition) = pos_y);
+			//	life_pickup->Init( pos_y);
+			break;
+		}
+
+		case Sequence::OBJECT_TYPE::BOSS:
 			SDL_Log("Spawning BOSS");
 			boss_alien->Init();
 			//engine->PlaySFX("data/audio/boss_appear.wav", 0, -1);
+			break;
 		}
 
 		//case Sequence::ALIEN_TYPE::BOSS:
