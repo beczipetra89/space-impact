@@ -28,7 +28,7 @@ const std::vector<Sequence> level1_spawns{
 	Sequence{Sequence::OBJECT_TYPE::ALIEN_S, 60.f, 9.f},
 	Sequence{Sequence::OBJECT_TYPE::ALIEN_G, 300.f, 12.f},  */
 
-	Sequence{Sequence::OBJECT_TYPE::BOSS, -1.f, 0.f} // postion Y is ignored for boss
+				//Sequence{Sequence::OBJECT_TYPE::BOSS, -1.f, 0.f} // postion Y is ignored for boss
 	/*
 	
 	Level{Level::ALIEN_TYPE::ALIEN_V, 240.f, 20.f},

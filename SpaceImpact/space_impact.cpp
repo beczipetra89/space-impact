@@ -12,6 +12,8 @@ const unsigned int	MAX_NUM_GAME_OBJECTS = 10000;
 const unsigned int	NUM_LIVES = 2;
 const unsigned int	BOSS1_LIVES = 80;
 
+const float			BACKGROUND_SPEED = 90.f;
+
 const unsigned int	MAX_NUM_ROCKETS = 100;
 const unsigned int	MAX_NUM_BOMBS = 32;
 const unsigned int	POINTS_PER_ALIEN = 10;
@@ -48,6 +50,9 @@ float game_speed = 1.f;		// speed of the game; it is increased each time all the
 
 #include "component.h"
 #include "game_object.h"
+
+#include "bg1.h"
+#include "bg2.h"
 
 #include "rocket.h"
 #include "player.h"

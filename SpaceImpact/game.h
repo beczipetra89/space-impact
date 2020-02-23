@@ -24,6 +24,9 @@ class Game : public GameObject
 	ObjectPool<AlienLaser> alienLaser_pool;
 	ObjectPool<Mine> mines_pool;
 
+	Bg1* background1;
+	Bg2* background2;
+
 	Player * player;
 	Alien* alien;
 	Alien2* alien2;
@@ -56,6 +59,33 @@ public:
 	{
 		SDL_Log("Game::Create");
 		this->engine = engine;
+
+
+		//***************** LEVEL 1 BACKGROUND IMAGE *******************
+		background1 = new Bg1();
+		Bg1_BehaviourComponent* bg1_behaviour = new Bg1_BehaviourComponent();
+		bg1_behaviour->Create(engine, background1, &game_objects);
+		RenderComponent* bg1_render = new RenderComponent();
+		bg1_render->Create(engine, background1, &game_objects, "data/bg.png", 640, 480);
+		background1->Create();
+		background1->AddComponent(bg1_behaviour);
+		background1->AddComponent(bg1_render);
+		background1->AddReceiver(this);
+		game_objects.insert(background1);
+
+		background2 = new Bg2();
+		Bg2_BehaviourComponent* bg2_behaviour = new Bg2_BehaviourComponent();
+		bg2_behaviour->Create(engine, background2, &game_objects);
+		RenderComponent* bg2_render = new RenderComponent();
+		bg2_render->Create(engine, background2, &game_objects, "data/bg2.png", 640, 480);
+		background2->Create();
+		background2->AddComponent(bg2_behaviour);
+		background2->AddComponent(bg2_render);
+		background2->AddReceiver(this);
+		game_objects.insert(background2);
+
+	
+
 
 		//*************CREATE ROCKETS POOL**************
 		rockets_pool.Create(100);
@@ -306,6 +336,10 @@ public:
 		init_time = engine->getElapsedTime();
 		current_level = 1;
 		current_level_sequence = level1_spawns;
+
+
+		background1->Init();
+		background2->Init();
 
 		// Set background to lila
 		AvancezLib::RGBColor LILA = { 99, 0, 191 };

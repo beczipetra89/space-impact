@@ -101,6 +101,12 @@
     <ClInclude Include="levels.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="bg1.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="bg2.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Media Include="data\audio\laser_sound.wav">
