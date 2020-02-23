@@ -66,7 +66,7 @@ public:
 		Bg1_BehaviourComponent* bg1_behaviour = new Bg1_BehaviourComponent();
 		bg1_behaviour->Create(engine, background1, &game_objects);
 		RenderComponent* bg1_render = new RenderComponent();
-		bg1_render->Create(engine, background1, &game_objects, "data/bg.png", 640, 480);
+		bg1_render->Create(engine, background1, &game_objects, "data/b_left.png", 640, 480);
 		background1->Create();
 		background1->AddComponent(bg1_behaviour);
 		background1->AddComponent(bg1_render);
@@ -77,7 +77,7 @@ public:
 		Bg2_BehaviourComponent* bg2_behaviour = new Bg2_BehaviourComponent();
 		bg2_behaviour->Create(engine, background2, &game_objects);
 		RenderComponent* bg2_render = new RenderComponent();
-		bg2_render->Create(engine, background2, &game_objects, "data/bg2.png", 640, 480);
+		bg2_render->Create(engine, background2, &game_objects, "data/b_right.png", 640, 480);
 		background2->Create();
 		background2->AddComponent(bg2_behaviour);
 		background2->AddComponent(bg2_render);

@@ -12,7 +12,7 @@ const unsigned int	MAX_NUM_GAME_OBJECTS = 10000;
 const unsigned int	NUM_LIVES = 2;
 const unsigned int	BOSS1_LIVES = 80;
 
-const float			BACKGROUND_SPEED = 90.f;
+const float			BACKGROUND_SPEED = 50.f;
 
 const unsigned int	MAX_NUM_ROCKETS = 100;
 const unsigned int	MAX_NUM_BOMBS = 32;
@@ -102,7 +102,7 @@ int main(int argc, char** argv)
 	engine.destroy();
 
 	return 0;
-		}
+ 		}
 
 
 
