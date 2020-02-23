@@ -10,7 +10,7 @@
 
 const unsigned int	MAX_NUM_GAME_OBJECTS = 10000;
 const unsigned int	NUM_LIVES = 2;
-const unsigned int	BOSS1_LIVES = 5;
+const unsigned int	BOSS1_LIVES = 80;
 
 const unsigned int	MAX_NUM_ROCKETS = 100;
 const unsigned int	MAX_NUM_BOMBS = 32;
@@ -37,7 +37,8 @@ const float			PICKUP_SPEED = 40.0f;
 const unsigned int	MAX_NUM_MINES = 32;
 const float			MINE_TIME_INTERVAL = 10.25f;
 const float			MINE_SPEED = 120.0f;
-const float			BOSS_SPEED = 80.0f;
+const float			BOSS_SPEED = 40.0f;
+const float         BOSS_V_SPEED = 80.0f;
 
 
 
@@ -96,7 +97,7 @@ int main(int argc, char** argv)
 	engine.destroy();
 
 	return 0;
-}
+		}
 
 
 
