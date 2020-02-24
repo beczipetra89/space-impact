@@ -17,19 +17,19 @@ const float			BACKGROUND_SPEED = 50.f;
 const unsigned int	MAX_NUM_ROCKETS = 100;
 const unsigned int	MAX_NUM_BOMBS = 32;
 const unsigned int	POINTS_PER_ALIEN = 10;
-float				FIRE_TIME_INTERVAL = .10f;		// use .05f for testing
+float				FIRE_TIME_INTERVAL = .10f;	
 const float			ALIEN_LASER_TIME_INTERVAL = 10.25f;
 const float			BOMB_SPEED = 120.0f;
-const float			PLAYER_SPEED = 100.0f;		// 160.0f
-float				ROCKET_SPEED = 140.0f;		 // 160.0f
+const float			PLAYER_SPEED = 100.0f;		
+float				ROCKET_SPEED = 140.0f;		 
 
 const unsigned int	MAX_NUM_ALIENLASER = 32;
 float				ALIENLASER_TIME_INTERVAL = 3.25f; 
 float				ALIENLASER_SPEED = 120.0f;
 
 
-const float			ALIEN_SPEED = 80.0f;		// 40.0f
-const float			ALIEN_V_SPEED = 70.0f;		// 40.0f
+const float			ALIEN_SPEED = 80.0f;		
+const float			ALIEN_V_SPEED = 70.0f;		
 const float			ALIEN_G_SPEED = 60.0f;
 const float			ALIEN_G_VERTICAL_SPEED = 20.0f;
 const float         ALIEN_G_VERTICAL_MOVE_TIME_INTERNAL = 1000.f;
@@ -53,10 +53,9 @@ float game_speed = 1.f;		// speed of the game; it is increased each time all the
 
 #include "bg1.h"
 #include "bg2.h"
-
 #include "rocket.h"
 #include "player.h"
-#include "bomb.h"
+#include "laserS.h"
 #include "alien.h"
 #include "alien2.h"
 #include "alien_g.h"
@@ -79,7 +78,7 @@ int main(int argc, char** argv)
 
 	AvancezLib engine;
 
-	engine.init(640, 480);
+	engine.init(840, 580); //640, 480
 	Game game;
 	game.Create(&engine);
 	game.Init();

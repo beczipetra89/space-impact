@@ -41,9 +41,6 @@
     <ClInclude Include="avancezlib.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="bomb.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="component.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -105,6 +102,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="bg2.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="laserS.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

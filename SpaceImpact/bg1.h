@@ -22,9 +22,9 @@ public:
 	{
 		
 		Move(dt * BACKGROUND_SPEED);
-		if (go->horizontalPosition < -640) 
+		if (go->horizontalPosition < -840) 
 		{
-			go->horizontalPosition = 640;
+			go->horizontalPosition = 840;
 		}
 
 	}

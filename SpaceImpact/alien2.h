@@ -28,7 +28,7 @@ public:
 
 class Alien2BehaviourComponent : public Component
 {
-	ObjectPool<Bomb>* bombs_pool;
+	ObjectPool<LaserS>* laser_s_pool;
 
 	float time_laser_shot;	// time from the last time the laser was shot
 	float init_delay;       // time delay before alien start to move
@@ -37,16 +37,16 @@ class Alien2BehaviourComponent : public Component
 public:
 	virtual ~Alien2BehaviourComponent() {}
 
-	virtual void Create(AvancezLib* engine, GameObject* go, std::set<GameObject*>* game_objects, ObjectPool<Bomb>* bombs_pool)
+	virtual void Create(AvancezLib* engine, GameObject* go, std::set<GameObject*>* game_objects, ObjectPool<LaserS>* laser_s_pool)
 	{
 		Component::Create(engine, go, game_objects);
-		this->bombs_pool = bombs_pool;
+		this->laser_s_pool = laser_s_pool;
 	}
 
 	virtual void Init()
 	{
 		time_laser_shot = -10000.f;
-		go->horizontalPosition = 640;
+		go->horizontalPosition = 850;
 		// TODO: remove me
 		init_delay = engine->getElapsedTime();
 	}
@@ -64,7 +64,7 @@ public:
 
 		Move(dt * ALIEN_SPEED);
 
-		if (go->horizontalPosition < -40) // When alian flew out of window to the left, it disappears, 40 is alien sprite width
+		if (go->horizontalPosition < -840) // When alien2 flew out of window to the left, it disappears
 		{
 			go->Send(ALIEN_LEVEL_CLEAR);
 			go->enabled = false;
@@ -72,15 +72,14 @@ public:
 
 		if (CanFire())
 		{
-			// fetches a rocket from the pool and use it in game_objects
-			Bomb* bomb = bombs_pool->FirstAvailable();
-			if (bomb != NULL)	// rocket is NULL is the object pool can not provide an object
+			// fetches a laser from the pool and use it in game_objects
+			LaserS* laser = laser_s_pool->FirstAvailable();
+			if (laser != NULL)	// laser is NULL is the object pool can not provide an object
 			{
-				//Alien* alien = aliens_pool->SelectRandom
-				bombs_pool->SelectRandom();
+				laser_s_pool->SelectRandom();
 				engine->PlaySFX("data/audio/laser_sound.wav", 0, -1);
-				bomb->Init(go->horizontalPosition, go->verticalPosition);
-				game_objects->insert(bomb);
+				laser->Init(go->horizontalPosition, go->verticalPosition);
+				game_objects->insert(laser);
 			}
 		}
 

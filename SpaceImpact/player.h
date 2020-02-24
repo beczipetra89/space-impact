@@ -16,8 +16,8 @@ public:
 
 	virtual void Init()	
 	{
-		go->horizontalPosition = 0 + 32;  // 320
-		go->verticalPosition = 250 - 32; //480- 32
+		go->horizontalPosition = 0 + 80; 
+		go->verticalPosition = 290-80; 
 
 		time_fire_pressed = -10000.f;
 	}
@@ -75,15 +75,15 @@ public:
 		//go->verticalPosition += move;
 
 		//Window boundaries to wrap player inside the window
-		if (go->verticalPosition > (480 - 32))
-			go->verticalPosition = 480 - 32;
+		if (go->verticalPosition > (580 - 80))
+			go->verticalPosition = 580 - 80;
 
 		if (go->verticalPosition < 0)
 			go->verticalPosition = 0;
 	
 
-		if (go->horizontalPosition > (640 - 32))
-			go->horizontalPosition = 640 - 32;
+		if (go->horizontalPosition > (840 - 80))
+			go->horizontalPosition = 840 - 80;
 
 		if (go->horizontalPosition < 0)
 			go->horizontalPosition = 0;

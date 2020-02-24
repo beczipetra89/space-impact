@@ -23,7 +23,7 @@ public:
 };
 
 class AlienVGridBehaviourComponent : public Component {
-	// needs access to the object pools: aliens, bombs
+	// needs access to the object pools: aliens, lasers
 	ObjectPool<AlienV>* alien_v_pool;
 	ObjectPool<AlienLaser>* alienLaser_pool;
 

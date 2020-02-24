@@ -10,7 +10,7 @@ public:
 
 		go->horizontalPosition += ROCKET_SPEED * dt; // rocket_speed * time. When testing we can add "* 5"
 		
-		if (go->horizontalPosition > 600) // When the rocket reaches the edge of the screen, it disappears.
+		if (go->horizontalPosition > 820) // When the rocket reaches the edge of the screen, it disappears.
 			go->enabled = false;
 
 	
@@ -29,11 +29,8 @@ public:
 		SDL_Log("Rocket::Init");
 		GameObject::Init();
 
-		horizontalPosition = xPos+40;  //considering player sprite and bullet sprite size
-		verticalPosition = yPos+20;
-
-		//horizontalPosition = 0+32;
-		//verticalPosition = 250 - 52; 
+		horizontalPosition = xPos+80;  
+		verticalPosition = yPos+38;
 	}
 
 

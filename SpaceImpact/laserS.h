@@ -1,31 +1,31 @@
 #pragma once
 
-class AlienLaserBehaviourComponent : public Component
+class LaserSBehaviourComponent : public Component
 {
 public:
 
 	void Update(float dt)
 	{
-		go->horizontalPosition -= ALIENLASER_SPEED * dt; 
+		go->horizontalPosition -= BOMB_SPEED * dt; 
 
-		if (go->horizontalPosition < 0 ) // When the laser reaches the screen, it disappears.
+		if (go->horizontalPosition < 0 - 12) // When the laser reaches the side of the screen, it disappears.
 			go->enabled = false;
 	}
 };
 
 
 // lasers are shot by the alien towards the player
-class AlienLaser : public GameObject
+class LaserS : public GameObject
 {
 public:
 
 	virtual void Init(double xPos, double yPos)
 	{
-		SDL_Log("AlienLaser::Init");
+		
 		GameObject::Init();
 
 		horizontalPosition = xPos;
-		verticalPosition = yPos+30;
+		verticalPosition = yPos+38;
 	}
 
 	virtual void Receive(Message m)
@@ -36,12 +36,12 @@ public:
 		if (m == HIT)
 		{
 			enabled = false;
-			SDL_Log("AlienLaser::Hit");
+			
 		}
 
 		if (m == BULLET_BULLET_HIT) {
 			enabled = false;
-			SDL_Log("AlienLaser::BULLET_BULLET_HIT");
+		
 		}
 	}
 };

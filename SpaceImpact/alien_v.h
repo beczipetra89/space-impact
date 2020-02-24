@@ -40,21 +40,18 @@ public:
 	{
 
 		Move(dt);
-		if (go->horizontalPosition < -40) // When alian G flew oout of window to the left, it disappears.
+		if (go->horizontalPosition < -840) // When alian V flew out of window to the left, it disappears.
 			go->enabled = false;
 
 	}
 
-	// move the alien  to left
-	// param move depends on the time, so the player moves always at the same speed on any computer
+	// move the alien to left
 	void Move(float dt)
 	{
 		
 		go->horizontalPosition -= dt * ALIEN_V_SPEED;
 
 	}
-
-	
 };
 
 class AlienV : public GameObject

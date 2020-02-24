@@ -39,7 +39,7 @@ public:
 	{
 		Move(dt);
 
-		if (go->horizontalPosition < -40) // When alian G flew out of window to the left, it disappears.
+		if (go->horizontalPosition < -80) // When alian G flew out of window to the left, it disappears.
 			go->enabled = false;
 	}
 

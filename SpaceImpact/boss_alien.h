@@ -27,8 +27,8 @@ public:
 	{
 		time_mine_dropped = -10000.f;
 		init_time = engine->getElapsedTime();
-		go->verticalPosition = 160;
-		go->horizontalPosition = 600;
+		go->verticalPosition = 120;
+		go->horizontalPosition = 840;
 	}
 
 	virtual void Update(float dt)
@@ -61,8 +61,8 @@ public:
 
 	void Move(float dt)
 	{
-		// move the boss alien to left until it reaches 450
-		if (go->horizontalPosition > 450) {
+		// move the boss alien to left until it reaches 600
+		if (go->horizontalPosition > 600) {
 			go->horizontalPosition -= dt * BOSS_SPEED;
 			delay = engine->getElapsedTime() + 2.f;
 		}
@@ -71,7 +71,7 @@ public:
 		{
 			go->verticalPosition += dt * BOSS_V_SPEED * vertical_direction;
 			// When it reaches top or bottom limit, switch move direction
-			if (go->verticalPosition > 160 || go->verticalPosition < 30) {
+			if (go->verticalPosition > 260 || go->verticalPosition < 30) {
 				vertical_direction = vertical_direction * -1;
 			}
 		}
