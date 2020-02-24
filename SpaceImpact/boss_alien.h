@@ -132,7 +132,7 @@ public:
 
 	void RemoveLife()
 	{
-		if (horizontalPosition > 450) {}
+		if (horizontalPosition > 600) {}
 		else 
 			lives--;
 		

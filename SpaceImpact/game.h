@@ -413,6 +413,7 @@ public:
 	} 
 
 	virtual void Draw()
+
 	{
 		//... Draw user interface elements here
 

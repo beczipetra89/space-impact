@@ -37,7 +37,7 @@ const float         ALIEN_G_VERTICAL_MOVE_TIME_INTERNAL = 1000.f;
 const float			PICKUP_SPEED = 40.0f;
 
 const unsigned int	MAX_NUM_MINES = 32;
-const float			MINE_TIME_INTERVAL = 10.25f;
+const float			MINE_TIME_INTERVAL = 60.f; //10.25
 const float			MINE_SPEED = 120.0f;
 const float			BOSS_SPEED = 40.0f;
 const float         BOSS_V_SPEED = 80.0f;
