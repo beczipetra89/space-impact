@@ -142,6 +142,8 @@
     <ClInclude Include="avancezlib.h" />
     <ClInclude Include="bg1.h" />
     <ClInclude Include="bg2.h" />
+    <ClInclude Include="boss_alien2.h" />
+    <ClInclude Include="cube.h" />
     <ClInclude Include="laserS.h" />
     <ClInclude Include="boss_alien.h" />
     <ClInclude Include="component.h" />

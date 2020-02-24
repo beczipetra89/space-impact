@@ -107,6 +107,12 @@
     <ClInclude Include="laserS.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="boss_alien2.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="cube.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Media Include="data\audio\laser_sound.wav">

@@ -11,6 +11,7 @@
 const unsigned int	MAX_NUM_GAME_OBJECTS = 10000;
 const unsigned int	NUM_LIVES = 2;
 const unsigned int	BOSS1_LIVES = 80;
+const unsigned int	BOSS2_LIVES = 160;
 
 const float			BACKGROUND_SPEED = 50.f;
 
@@ -50,24 +51,28 @@ float game_speed = 1.f;		// speed of the game; it is increased each time all the
 
 #include "component.h"
 #include "game_object.h"
+#include "vector_2d.h"
+
 
 #include "bg1.h"
 #include "bg2.h"
+#include "pickup_life.h"
+
 #include "rocket.h"
-#include "player.h"
+#include "mines.h"
+#include "cube.h"
 #include "laserS.h"
+#include "alienLaser.h"
+
+#include "player.h"
 #include "alien.h"
 #include "alien2.h"
 #include "alien_g.h"
 #include "alien_g_grid.h"
-#include "alienLaser.h"
 #include "alien_v.h"
 #include "alien_v_grid.h"
-#include "pickup_life.h"
-
-#include "mines.h"
 #include "boss_alien.h"
-#include "vector_2d.h"
+#include "boss_alien2.h"
 #include "game.h"
 
 

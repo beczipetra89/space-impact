@@ -23,21 +23,21 @@ class Game : public GameObject
 	ObjectPool<AlienV> alien_v_pool;
 	ObjectPool<AlienLaser> alienLaser_pool;
 	ObjectPool<Mine> mines_pool;
+	ObjectPool<Cube> cubes_pool;
 
 	Bg1* background1;
 	Bg2* background2;
+	PickupLife* life_pickup;
 
 	Player * player;
 	Alien* alien;
 	Alien2* alien2;
-
 	AlienG* alien_g;
 	AlienGGrid* alien_g_grid;
 	AlienV* alien_v;
 	AlienVGrid* alien_v_grid;
-	PickupLife* life_pickup;
-
 	BossAlien* boss_alien;
+	BossAlien2* boss_alien2;
 
 	Sprite * life_sprite;
 
@@ -102,6 +102,8 @@ public:
 			rocket_laser_V_collision->Create(engine, *rocket, &game_objects, (ObjectPool<GameObject>*) & alienLaser_pool, { 0, 0, 12, 10 });
 			CollideComponent* rocket_mine_collision = new CollideComponent();
 			rocket_mine_collision->Create(engine, *rocket, &game_objects, (ObjectPool<GameObject>*) & mines_pool, { 0, 0, 12, 10 });
+			CollideComponent* rocket_cube_collision = new CollideComponent();
+			rocket_cube_collision->Create(engine, *rocket, &game_objects, (ObjectPool<GameObject>*) & cubes_pool, { 0, 0, 12, 10 });
 
 			(*rocket)->Create();
 			(*rocket)->AddComponent(behaviour);
@@ -109,6 +111,7 @@ public:
 			(*rocket)->AddComponent(rocket_laser_S_collision);
 			(*rocket)->AddComponent(rocket_laser_V_collision);
 			(*rocket)->AddComponent(rocket_mine_collision);
+			(*rocket)->AddComponent(rocket_cube_collision);
 			(*rocket)->AddReceiver(this);
 		}
 
@@ -166,7 +169,23 @@ public:
 			(*mine)->AddComponent(render);
 		}
 
+		//**************CREATE CUBES POOL***************
+		cubes_pool.Create(30);
+		for (auto cube = cubes_pool.pool.begin(); cube != cubes_pool.pool.end(); cube++)
+		{
+			CubeBehaviourComponent* behaviour = new CubeBehaviourComponent();
+			behaviour->Create(engine, *cube, &game_objects);
+			RenderComponent* render = new RenderComponent();
+			render->Create(engine, *cube, &game_objects, "data/cube.png", 18, 17);
+			CollideComponent* cube_rocket_collision = new CollideComponent();
+			cube_rocket_collision->Create(engine, *cube, &game_objects, (ObjectPool<GameObject>*) & rockets_pool, { 0, 0, 18, 17 });
 
+			(*cube)->AddComponent(cube_rocket_collision);
+			(*cube)->AddReceiver(this);
+			(*cube)->Create();
+			(*cube)->AddComponent(behaviour);
+			(*cube)->AddComponent(render);
+		}
 
 		/// ---------------------------------------   PLAYER & ENEMIES  ----------------------------------------------////
 
@@ -307,7 +326,7 @@ public:
 		game_objects.insert(life_pickup);
 
 
-		// *******************BOSS ALIEN ************************
+		// *******************BOSS ALIEN (1) ************************
 		boss_alien = new BossAlien();
 		BossAlienBehaviourComponent* boss_behaviour = new BossAlienBehaviourComponent();
 		boss_behaviour->Create(engine, boss_alien, &game_objects, &mines_pool);
@@ -325,12 +344,26 @@ public:
 		boss_alien->AddComponent(boss_player_collide);
 		boss_alien->AddReceiver(this);
 		game_objects.insert(boss_alien);
-	}
+	
 
-	float randomDelay()
-	{
-		//generate random float between 0.0 and 10.0
-		return (rand() % 10);
+		// *******************BOSS ALIEN 2 ************************
+		boss_alien2 = new BossAlien2();
+		BossAlien2BehaviourComponent* boss2_behaviour = new BossAlien2BehaviourComponent();
+		boss2_behaviour->Create(engine, boss_alien2, &game_objects, &cubes_pool);
+		RenderComponent* boss2_render = new RenderComponent();
+		boss2_render->Create(engine, boss_alien2, &game_objects, "data/boss_lila.png", 193, 278);
+		CollideComponent* boss2_bullet_collide = new CollideComponent();
+		boss2_bullet_collide->Create(engine, boss_alien2, &game_objects, (ObjectPool<GameObject>*)& rockets_pool, { 0,0, 193, 278 });
+		SingleObjectCollideComponent* boss2_player_collide = new SingleObjectCollideComponent();
+		boss2_player_collide->Create(engine, boss_alien2, &game_objects, player, { 0,0, 193, 278 });
+
+		boss_alien2->Create();
+		boss_alien2->AddComponent(boss2_behaviour);
+		boss_alien2->AddComponent(boss2_render);
+		boss_alien2->AddComponent(boss2_bullet_collide);
+		boss_alien2->AddComponent(boss2_player_collide);
+		boss_alien2->AddReceiver(this);
+		game_objects.insert(boss_alien2);
 	}
 
 	virtual void Init()
@@ -468,20 +501,7 @@ public:
 			}
 			else game_won = true;
 		}
-
-		if (m == ALIEN_G_LEVEL_CLEAR) {
-			SDL_Log("GAME::ALIEN_G_LEVEL_CLEAR!");
-			if (!init_new_alien_g)
-				init_new_alien_g = true;
-		}
-
-		if (m == ALL_ALIENS_V_CLEAR) {
-			SDL_Log("GAME::ALL_ALIENS_V_CLEAR!");
-			if (!init_new_alien_v)
-				init_new_alien_v = true;
-		}
 		
-
 		if (m == HIT) {
 			engine->PlaySFX("data/audio/player_hit.wav", 0, -1);
 		}
@@ -529,6 +549,7 @@ public:
 		alien_v_pool.Destroy();
 		alienLaser_pool.Destroy();
 		mines_pool.Destroy();
+		cubes_pool.Destroy();
 
 		//life_pickup.Destroy();
 
@@ -538,13 +559,10 @@ public:
 		delete alien;
 		delete alien2;
 		delete alien_g_grid; 
-		/*
-		delete alien_v;
+		delete alien_v_grid;
 		delete life_pickup;
-		
-		*/
-
 		delete boss_alien;
+		delete boss_alien2;
 
 		// Mark game class as disabled
 		enabled = false;
@@ -617,28 +635,24 @@ private:
 		}
 
 		case Sequence::OBJECT_TYPE::BOSS:
+		{
 			SDL_Log("Spawning BOSS");
 			boss_alien->Init();
 			//engine->PlaySFX("data/audio/boss_appear.wav", 0, -1);
 			break;
 		}
 
-		//case Sequence::ALIEN_TYPE::BOSS:
+		case Sequence::OBJECT_TYPE::BOSS2:
+		{
+			SDL_Log("Spawning BOSS2");
+			boss_alien2->Init();
+			//engine->PlaySFX("data/audio/boss_appear.wav", 0, -1);
+			break;
+		}
+
+		}
 		return;
 	}
-
-	/*// TODO remove this
-	float AlienRandomHeight() {
-		return 30.f + rand() % 420; // generate random height between 30 to 450
-	}
-
-	float AlienGRandomHeight() {
-		return 50.f + rand() % 350; // generate random height between 50 and 400
-	}
-
-	float AlienVRandomHeight() {
-		return 120.f + rand() % 240; // generate random height between 120 and 360
-	} */
 
 	// Generate position x and y value to draw V shape aliens
 	// alien_num should be an odd number: 3, 5, 7
@@ -675,12 +689,12 @@ private:
 			int col_num = i / 2;
 			printf("col_num %d\n", col_num);
 
-			alien_pos.x = init_x + col_num * 160.f;  //100
+			alien_pos.x = init_x + col_num * 160.f;  
 
 			if (i % 2 == 0)
 				alien_pos.y = init_y;
 			else
-				alien_pos.y = init_y + 160.f;  //100
+				alien_pos.y = init_y + 160.f;  
 
 			pos.push_back(alien_pos);
 		}

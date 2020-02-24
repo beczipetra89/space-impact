@@ -29,10 +29,7 @@ public:
 class Alien2BehaviourComponent : public Component
 {
 	ObjectPool<LaserS>* laser_s_pool;
-
 	float time_laser_shot;	// time from the last time the laser was shot
-	float init_delay;       // time delay before alien start to move
-
 
 public:
 	virtual ~Alien2BehaviourComponent() {}
@@ -47,21 +44,10 @@ public:
 	{
 		time_laser_shot = -10000.f;
 		go->horizontalPosition = 850;
-		// TODO: remove me
-		init_delay = engine->getElapsedTime();
-	}
-
-	void setInitDelay(float delay)
-	{
-		init_delay = engine->getElapsedTime() + delay;
 	}
 
 	virtual void Update(float dt)
 	{
-		// If we haven't passed the delay time, skip update
-		if (engine->getElapsedTime() < init_delay)
-			return;
-
 		Move(dt * ALIEN_SPEED);
 
 		if (go->horizontalPosition < -840) // When alien2 flew out of window to the left, it disappears
