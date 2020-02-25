@@ -27,6 +27,9 @@ class Game : public GameObject
 
 	Bg1* background1;
 	Bg2* background2;
+	Bg3* background3;
+	Bg4* background4;
+
 	PickupLife* life_pickup;
 
 	Player * player;
@@ -61,7 +64,7 @@ public:
 		this->engine = engine;
 
 
-		//***************** LEVEL 1 BACKGROUND IMAGE *******************
+		//***************** LEVEL 1 BACKGROUND IMAGES *******************
 		background1 = new Bg1();
 		Bg1_BehaviourComponent* bg1_behaviour = new Bg1_BehaviourComponent();
 		bg1_behaviour->Create(engine, background1, &game_objects);
@@ -83,6 +86,29 @@ public:
 		background2->AddComponent(bg2_render);
 		background2->AddReceiver(this);
 		game_objects.insert(background2);
+
+		//***************** LEVEL 2 BACKGROUND IMAGES *******************
+		background3 = new Bg3();
+		Bg3_BehaviourComponent* bg3_behaviour = new Bg3_BehaviourComponent();
+		bg3_behaviour->Create(engine, background3, &game_objects);
+		RenderComponent* bg3_render = new RenderComponent();
+		bg3_render->Create(engine, background3, &game_objects, "data/b2_left.png", 840, 580);
+		background3->Create();
+		background3->AddComponent(bg3_behaviour);
+		background3->AddComponent(bg3_render);
+		background3->AddReceiver(this);
+		game_objects.insert(background3);
+
+		background4 = new Bg4();
+		Bg4_BehaviourComponent* bg4_behaviour = new Bg4_BehaviourComponent();
+		bg4_behaviour->Create(engine, background4, &game_objects);
+		RenderComponent* bg4_render = new RenderComponent();
+		bg4_render->Create(engine, background4, &game_objects, "data/b2_right.png", 840, 580);
+		background4->Create();
+		background4->AddComponent(bg4_behaviour);
+		background4->AddComponent(bg4_render);
+		background4->AddReceiver(this);
+		game_objects.insert(background4);
 
 	
 
@@ -382,6 +408,8 @@ public:
 		
 		player->Init();
 		enabled = true;
+
+		//engine->PlayMusic("data/audio/absolute_victory.wav", 1);
 	}
 
 	void InitNewLevel() {
@@ -391,6 +419,9 @@ public:
 		// Set background to soemthing
 		AvancezLib::RGBColor c = { 191, 0, 99 };
 		engine->SetBackgroundColor(c);
+
+		background3->Init();
+		background4->Init();
 
 		// Load spawn sequences for level 2 and 
 		// reset current sequence counter to 0

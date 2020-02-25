@@ -1,11 +1,11 @@
 #pragma once
 
 
-class Bg2_BehaviourComponent : public Component
+class Bg3_BehaviourComponent : public Component
 {
 
 public:
-	virtual ~Bg2_BehaviourComponent() {}
+	virtual ~Bg3_BehaviourComponent() {}
 
 	virtual void Create(AvancezLib* engine, GameObject* go, std::set<GameObject*>* game_objects)
 	{
@@ -14,7 +14,7 @@ public:
 
 	virtual void Init()
 	{
-		go->horizontalPosition = 840;
+		go->horizontalPosition = 0;
 		go->verticalPosition = 0;
 	}
 
@@ -29,22 +29,24 @@ public:
 
 	}
 
-		void Move(float move)
+	
+	void Move(float move)
 	{
 		go->horizontalPosition -= move;
 	}
 };
 
 
-class Bg2 : public GameObject
+class Bg3 : public GameObject
 {
 public:
 
-	virtual ~Bg2() {  }
+	virtual ~Bg3() { SDL_Log("Bg3::~Bg3"); }
 
 	virtual void Init()
 	{
-		
+		SDL_Log("Bg3::Bg3");
+
 		GameObject::Init();
 	}
 

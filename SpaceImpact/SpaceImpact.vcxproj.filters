@@ -113,6 +113,12 @@
     <ClInclude Include="cube.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="bg3.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="bg4.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Media Include="data\audio\laser_sound.wav">

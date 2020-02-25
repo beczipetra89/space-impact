@@ -56,6 +56,8 @@ float game_speed = 1.f;		// speed of the game; it is increased each time all the
 
 #include "bg1.h"
 #include "bg2.h"
+#include "bg3.h"
+#include "bg4.h"
 #include "pickup_life.h"
 
 #include "rocket.h"
