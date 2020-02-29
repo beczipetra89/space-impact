@@ -160,6 +160,7 @@
     <ClInclude Include="rocket.h" />
     <ClInclude Include="sprite.h" />
     <ClInclude Include="vector_2d.h" />
+    <ClInclude Include="laser_beam.h" />
   </ItemGroup>
   <ItemGroup>
     <Media Include="data\audio\laser_sound.wav" />

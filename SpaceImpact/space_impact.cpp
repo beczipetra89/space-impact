@@ -22,7 +22,8 @@ float				FIRE_TIME_INTERVAL = .10f;
 const float			ALIEN_LASER_TIME_INTERVAL = 10.25f;
 const float			BOMB_SPEED = 120.0f;
 const float			PLAYER_SPEED = 100.0f;		
-float				ROCKET_SPEED = 140.0f;		 
+float				ROCKET_SPEED = 140.0f;		
+float				LASERBEAM_SPEED = 80;
 
 const unsigned int	MAX_NUM_ALIENLASER = 32;
 float				ALIENLASER_TIME_INTERVAL = 3.25f; 
@@ -61,6 +62,7 @@ float game_speed = 1.f;		// speed of the game; it is increased each time all the
 #include "pickup_life.h"
 
 #include "rocket.h"
+#include "laser_beam.h"
 #include "mines.h"
 #include "cube.h"
 #include "laserS.h"

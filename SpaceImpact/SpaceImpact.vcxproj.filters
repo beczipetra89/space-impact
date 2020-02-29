@@ -119,6 +119,9 @@
     <ClInclude Include="bg4.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="laser_beam.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Media Include="data\audio\laser_sound.wav">

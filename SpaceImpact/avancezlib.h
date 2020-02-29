@@ -45,6 +45,7 @@ public:
 
 	struct KeyStatus
 	{
+		bool switch_weapon;	// "s" pressed
 		bool fire; // space
 		bool up; // uparrow
 		bool down; // down arrow

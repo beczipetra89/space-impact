@@ -135,6 +135,12 @@ void AvancezLib::getKeyStatus(KeyStatus& keys)
 				PlaySFX("data/audio/player_shoot.wav", 0, -1);
 				break;
 
+
+			case SDLK_s:
+				keys.switch_weapon = true;
+				SDL_Log("LASER BEAM ACTIVATED");
+				break;
+
 			case SDLK_p:
 				keys.cheat = true;
 				break;
@@ -164,6 +170,10 @@ void AvancezLib::getKeyStatus(KeyStatus& keys)
 
 			case SDLK_SPACE:
 				keys.fire = false;
+				break;
+
+			case SDLK_s:
+				keys.switch_weapon = false;
 				break;
 
 			case SDLK_p:

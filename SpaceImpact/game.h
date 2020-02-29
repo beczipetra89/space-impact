@@ -9,6 +9,7 @@ class Game : public GameObject
 	AvancezLib* engine;
 	AvancezLib::KeyStatus keys = { false, false, false, false, false};
 	bool cheat_mode = false;
+	bool switch_weapon = false;
 	float init_time; // the time when Game object init() is called
 	float relative_time;
 	bool init_new_alien_g = false; // whether to init new alien_g in alien_g_grid
@@ -17,13 +18,14 @@ class Game : public GameObject
 	int seq_count = 0; // Current game level in levels
 	std::vector<Sequence> current_level_sequence;
 
-	ObjectPool<Rocket> rockets_pool;	// used to instantiate rockets
-	ObjectPool<LaserS> laser_s_pool;
-	ObjectPool<AlienG> alien_g_pool;
-	ObjectPool<AlienV> alien_v_pool;
-	ObjectPool<AlienLaser> alienLaser_pool;
-	ObjectPool<Mine> mines_pool;
-	ObjectPool<Cube> cubes_pool;
+	ObjectPool<Rocket> rockets_pool;			// store rockets for the player
+	ObjectPool<LaserBeam> laser_beams_pool;		// store laser beams for the player
+	ObjectPool<LaserS> laser_s_pool;			// store laser weapon for Alien_S and AlienS_2
+	ObjectPool<AlienG> alien_g_pool;			// store AlienGs in a pool
+	ObjectPool<AlienV> alien_v_pool;			// store AlienVs in a pool
+	ObjectPool<AlienLaser> alienLaser_pool;		// store laser weapon for AlienVs
+	ObjectPool<Mine> mines_pool;				// store mines weapon for BossAlien1
+	ObjectPool<Cube> cubes_pool;				// store cubes weapon for BossAlien2
 
 	Bg1* background1;
 	Bg2* background2;
@@ -114,7 +116,7 @@ public:
 
 		/// ---------------------------------------   WEAPONS  ----------------------------------------------////
 
-		//*************CREATE ROCKETS POOL**************
+		//*************CREATE PLAYER`S ROCKETS POOL**************
 		rockets_pool.Create(100);
 		for (auto rocket = rockets_pool.pool.begin(); rocket != rockets_pool.pool.end(); rocket++)
 		{
@@ -139,6 +141,34 @@ public:
 			(*rocket)->AddComponent(rocket_mine_collision);
 			(*rocket)->AddComponent(rocket_cube_collision);
 			(*rocket)->AddReceiver(this);
+		}
+
+		//*************CREATE PLAYER`s LASER BEAMS POOL**************
+		laser_beams_pool.Create(3);
+		for (auto laserBeam = laser_beams_pool.pool.begin(); laserBeam != laser_beams_pool.pool.end(); laserBeam++)
+		{
+			LaserBeamBehaviourComponent* behaviour = new LaserBeamBehaviourComponent();
+			behaviour->Create(engine, *laserBeam, &game_objects);
+			RenderComponent* render = new RenderComponent();
+			render->Create(engine, *laserBeam, &game_objects, "data/verticalLaser.png", 13, 1093); 
+			
+			CollideComponent* laserBeam_laser_S_collision = new CollideComponent();
+			laserBeam_laser_S_collision->Create(engine, *laserBeam, &game_objects, (ObjectPool<GameObject>*) & laser_s_pool, { 0, 0,13, 1093 });
+			CollideComponent* laserBeam_laser_V_collision = new CollideComponent();
+			laserBeam_laser_V_collision->Create(engine, *laserBeam, &game_objects, (ObjectPool<GameObject>*) & alienLaser_pool, { 0, 0, 13, 1093 });
+			CollideComponent* laserBeam_mine_collision = new CollideComponent();
+			laserBeam_mine_collision->Create(engine, *laserBeam, &game_objects, (ObjectPool<GameObject>*) & mines_pool, { 0, 0, 13, 1093 });
+			CollideComponent* laserBeam_cube_collision = new CollideComponent();
+			laserBeam_cube_collision->Create(engine, *laserBeam, &game_objects, (ObjectPool<GameObject>*) & cubes_pool, { 0, 0, 13, 1093 });
+
+			(*laserBeam)->Create();
+			(*laserBeam)->AddComponent(behaviour);
+			(*laserBeam)->AddComponent(render);
+			(*laserBeam)->AddComponent(laserBeam_laser_S_collision);
+			(*laserBeam)->AddComponent(laserBeam_laser_V_collision);
+			(*laserBeam)->AddComponent(laserBeam_mine_collision);
+			(*laserBeam)->AddComponent(laserBeam_cube_collision);
+			(*laserBeam)->AddReceiver(this);
 		}
 
 		//**************CREATE LASER S POOL***************
@@ -218,7 +248,7 @@ public:
 		//***************** PLAYER *******************
 		player = new Player();
 		PlayerBehaviourComponent * player_behaviour = new PlayerBehaviourComponent();
-		player_behaviour->Create(engine, player, &game_objects, &rockets_pool);
+		player_behaviour->Create(engine, player, &game_objects, &rockets_pool, &laser_beams_pool);
 		player_behaviour->InitKeys(&keys);
 		RenderComponent * player_render = new RenderComponent();
 		player_render->Create(engine, player, &game_objects, "data/player.png", 80, 80);
@@ -442,6 +472,15 @@ public:
 			engine->quit();
 		}
 		
+		if (keys.switch_weapon) {
+			SDL_Log("Weapon switched to laser beam");
+
+			switch_weapon = true;
+		//	rockets_pool.Deallocate();
+
+			//---diable rocket pool...switch to laser beam pool
+		}
+
 		if (keys.cheat) {
 			SDL_Log("Cheat mode enabled");
 			cheat_mode = true;
@@ -574,6 +613,7 @@ public:
 		// Empty the game_objects set
 		game_objects.clear();
 		rockets_pool.Destroy();
+		laser_beams_pool.Destroy();
 		life_sprite->destroy();
 		laser_s_pool.Destroy();
 		alien_g_pool.Destroy();

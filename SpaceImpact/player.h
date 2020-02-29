@@ -1,17 +1,26 @@
 #pragma once
 
+enum class SHOOTING_TYPE {
+	SHOOTING_ROCKET,
+	SHOOTING_LASERBEAM
+};
+
 class PlayerBehaviourComponent : public Component
 {
 	float time_fire_pressed;	// time from the last time the fire button was pressed
+	SHOOTING_TYPE shoot_type = SHOOTING_TYPE::SHOOTING_ROCKET;
+	AvancezLib::KeyStatus* keys;
 	ObjectPool<Rocket> * rockets_pool;
+	ObjectPool<LaserBeam> * laser_beams_pool;
 
 public:
 	virtual ~PlayerBehaviourComponent() {}
 
-	virtual void Create(AvancezLib* engine, GameObject * go, std::set<GameObject*> * game_objects, ObjectPool<Rocket> * rockets_pool)
+	virtual void Create(AvancezLib* engine, GameObject * go, std::set<GameObject*> * game_objects, ObjectPool<Rocket> * rockets_pool, ObjectPool<LaserBeam> * laser_beams_pool)
 	{
 		Component::Create(engine, go, game_objects);
 		this->rockets_pool = rockets_pool;
+		this->laser_beams_pool = laser_beams_pool;
 	}
 
 	virtual void Init()	
@@ -28,7 +37,6 @@ public:
 
 	virtual void Update(float dt)
 	{
-		//AvancezLib::KeyStatus keys;
 		engine->getKeyStatus(*keys);
 
 		if (keys->up) {
@@ -53,7 +61,37 @@ public:
 
 		if (keys->fire)
 		{
-			if (CanFire())
+			switch (shoot_type) {
+			case SHOOTING_TYPE::SHOOTING_ROCKET:
+			{
+				if (FireRockets()) {
+					// fetches a rocket from the pool and use it in game_objects
+					Rocket* rocket = rockets_pool->FirstAvailable();
+					if (rocket != NULL)	// rocket is NULL is the object pool can not provide an object
+					{
+						rocket->Init(go->horizontalPosition, go->verticalPosition);
+						game_objects->insert(rocket);
+					}
+				}
+				break;
+			}
+
+			case SHOOTING_TYPE::SHOOTING_LASERBEAM:
+			{
+
+				// fetches a laser beam from the pool and use it in game_objects
+				LaserBeam* laserBeam = laser_beams_pool->FirstAvailable();
+				if (laserBeam != NULL)	// laser beam is NULL is the object pool can not provide an object
+				{
+					laserBeam->Init(go->horizontalPosition, go->verticalPosition);
+					game_objects->insert(laserBeam);
+				}
+				break;
+			}
+			}
+
+			/*
+			if (FireRockets())
 			{
 				// fetches a rocket from the pool and use it in game_objects
 				Rocket* rocket = rockets_pool->FirstAvailable();
@@ -63,8 +101,67 @@ public:
 					game_objects->insert(rocket);
 				}
 			}
-		} 
 
+			else if (keys->switch_weapon && ShootLaser())
+			{
+				// stop shooting rocket and switch to the deadly laser beam caster
+
+				// fetches a laser beam from the pool and use it in game_objects
+				LaserBeam* laserBeam = laser_beams_pool->FirstAvailable();
+				if (laserBeam != NULL)	// laser beam is NULL is the object pool can not provide an object
+				{
+					laserBeam->Init(go->horizontalPosition, go->verticalPosition);
+					game_objects->insert(laserBeam);
+				}
+			}
+			*/
+		}
+
+
+
+		if (keys->switch_weapon) {
+			if (shoot_type == SHOOTING_TYPE::SHOOTING_ROCKET)
+				shoot_type = SHOOTING_TYPE::SHOOTING_LASERBEAM;
+			else
+				shoot_type = SHOOTING_TYPE::SHOOTING_ROCKET;
+		}
+
+		/*
+
+		if (keys->switch_weapon) {
+
+			if (keys->fire) {
+
+				// stop shooting rocket and switch to the deadly laser beam caster
+
+					// fetches a laser beam from the pool and use it in game_objects
+				LaserBeam* laserBeam = laser_beams_pool->FirstAvailable();
+				if (laserBeam != NULL)	// laser beam is NULL is the object pool can not provide an object
+				{
+					laserBeam->Init(go->horizontalPosition, go->verticalPosition);
+					game_objects->insert(laserBeam);
+
+				}
+			}
+		}
+
+		if (keys->switch_weapon != true) {
+
+			if (keys->fire) {
+				if (FireRockets())
+				{
+					// fetches a rocket from the pool and use it in game_objects
+					Rocket* rocket = rockets_pool->FirstAvailable();
+					if (rocket != NULL)	// rocket is NULL is the object pool can not provide an object
+					{
+						rocket->Init(go->horizontalPosition, go->verticalPosition);
+						game_objects->insert(rocket);
+					}
+			}
+
+		}
+			
+	}*/
 	}
 
 
@@ -91,8 +188,9 @@ public:
 	}
 
 	// return true if enough time has passed from the previous rocket
-	bool CanFire()
+	bool FireRockets()
 	{
+
 		// shoot just if enough time passed by
 		if ((engine->getElapsedTime() - time_fire_pressed) < (FIRE_TIME_INTERVAL / game_speed))
 			return false;
@@ -102,8 +200,13 @@ public:
 		SDL_Log("fire!");
 		return true;
 	}
-private:
-	AvancezLib::KeyStatus* keys;
+
+	bool ShootLaser() {
+		
+		SDL_Log("LASER BEAM!");
+		return true;
+	}
+
 	
 };
 
@@ -113,7 +216,8 @@ class Player : public GameObject
 {
 public:
 
-	int lives;	// it's game over when goes below zero 
+	int lives;	// it's game over when goes below zero
+
 
 	virtual ~Player()	{SDL_Log("Player::~Player");}
 
@@ -140,6 +244,7 @@ public:
 			SDL_Log("Player::LIFE_PICKED!");
 			AddLife();
 		}
+
 	}
 
 	void AddLife() {
