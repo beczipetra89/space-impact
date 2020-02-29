@@ -38,7 +38,7 @@ public:
 	Sprite* createSprite(const char* name, int w, int h);
 
 	// Draws the given text.
-	void drawText(int x, int y, const char* msg);
+	void drawText(int x, int y, const char* msg, int fontSize);
 
 	// Return the total time spent in the game, in seconds.
 	float getElapsedTime();

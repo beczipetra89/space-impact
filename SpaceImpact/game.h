@@ -46,10 +46,12 @@ class Game : public GameObject
 
 	Sprite * life_sprite;
 
+	bool count_down = true;
 	bool level_finished = false;
 	bool level_win = false;
 	bool game_over = false;
 	bool game_won = false;
+	float kill_boss_delay_start_time;
 	int current_level = -1;
 	unsigned int score = 0;
 
@@ -470,7 +472,6 @@ public:
 		
 		player->Init();
 		enabled = true;
-
 		//engine->PlayMusic("data/audio/absolute_victory.wav", 1);
 	}
 
@@ -478,12 +479,22 @@ public:
 		level_finished = false;
 		level_win = false;
 		current_level = 2;
-		// Set background to soemthing
-		AvancezLib::RGBColor c = { 191, 0, 99 };
-		engine->SetBackgroundColor(c);
 
+		background1->enabled = false;
+		background2->enabled = false;
 		background3->Init();
 		background4->Init();
+
+		// Draw the first frame of the backgrounds since Update() will not be called for a while
+		for (auto go = backgrounds.begin(); go != backgrounds.end(); go++)
+			(*go)->Update(0);
+
+		engine->drawText(300, 300, "LEVEL 2", 32);
+		engine->swapBuffers();
+		SDL_Delay(2000);
+		engine->drawText(300, 340, "GO", 32);
+		engine->swapBuffers();
+		SDL_Delay(1000);
 
 		// Load spawn sequences for level 2 and 
 		// reset current sequence counter to 0
@@ -512,7 +523,14 @@ public:
 		}
 
 		if (level_finished && level_win) {
-			InitNewLevel();
+			if (kill_boss_delay_start_time != NULL)
+			{
+				// Add a delay after boss alien is killed
+				if (engine->getElapsedTime() > kill_boss_delay_start_time + 3.0f)
+					InitNewLevel();
+			}
+			else
+				kill_boss_delay_start_time = engine->getElapsedTime();
 		}
 
 		// Current_level counter should not exceed level total size
@@ -553,22 +571,22 @@ public:
 		//	life_sprite->draw(20 * i, 20); 
 		//}
 		sprintf(life_string, "Life: %d", player->lives);
-		engine->drawText(0, 16, life_string);
+		engine->drawText(0, 16, life_string, 12);
 
 		relative_time = engine->getElapsedTime() - init_time;
 		sprintf(debug_string, "T: %.2f R-T: %.2f Level: %d Seq: %d", engine->getElapsedTime(), relative_time, current_level, seq_count);
-		engine->drawText(230, 16, debug_string);
+		engine->drawText(230, 16, debug_string, 12);
 
 		//Score indicator
 		sprintf(score_string, "%07d", score);
-		engine->drawText(500, 16, score_string);
+		engine->drawText(500, 16, score_string, 12);
 		
 		if (game_over) {
-			engine->drawText(250, 250, "***GAME OVER***");
+			engine->drawText(250, 250, "***GAME OVER***", 12);
 		}
 
 		if (game_won) {
-			engine->drawText(250, 250, "***YOU WON***");
+			engine->drawText(250, 250, "***YOU WON***", 12);
 		}
 
 		engine->swapBuffers();

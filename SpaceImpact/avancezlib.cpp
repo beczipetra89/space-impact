@@ -69,11 +69,11 @@ Sprite* AvancezLib::createSprite(const char* name, int w, int h)
 }
 
 
-void AvancezLib::drawText(int x, int y, const char* msg)
+void AvancezLib::drawText(int x, int y, const char* msg, int fontSize = 12)
 {
 	// Create text texture with font, following tutorial http://gigi.nullneuron.net/gigilabs/displaying-text-in-sdl2-with-sdl_ttf/
 	
-	TTF_Font* font = TTF_OpenFont("data/space_invaders.ttf", 12);
+	TTF_Font* font = TTF_OpenFont("data/space_invaders.ttf", fontSize);
 	SDL_Color color = { 0, 255, 213 };
 	SDL_Surface* fontSurface = TTF_RenderText_Solid(font, msg, color);
 	SDL_Texture* fontTexture = SDL_CreateTextureFromSurface(renderer, fontSurface);

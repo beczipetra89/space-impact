@@ -10,7 +10,7 @@
 
 const unsigned int	MAX_NUM_GAME_OBJECTS = 10000;
 const unsigned int	NUM_LIVES = 2;
-const unsigned int	BOSS1_LIVES = 80;
+const unsigned int	BOSS1_LIVES = 10;
 const unsigned int	BOSS2_LIVES = 160;
 
 const float			BACKGROUND_SPEED = 50.f;
