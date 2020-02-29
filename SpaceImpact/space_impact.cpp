@@ -9,7 +9,7 @@
 
 
 const unsigned int	MAX_NUM_GAME_OBJECTS = 10000;
-const unsigned int	NUM_LIVES = 2;
+const unsigned int	NUM_LIVES = 3;
 const unsigned int	BOSS1_LIVES = 10;
 const unsigned int	BOSS2_LIVES = 160;
 
@@ -59,6 +59,9 @@ float game_speed = 1.f;		// speed of the game; it is increased each time all the
 #include "bg2.h"
 #include "bg3.h"
 #include "bg4.h"
+#include "banner.h"
+#include "life_icon.h"
+#include "life_icon_grid.h"
 #include "pickup_life.h"
 
 #include "rocket.h"

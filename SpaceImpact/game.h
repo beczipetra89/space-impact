@@ -26,11 +26,13 @@ class Game : public GameObject
 	ObjectPool<AlienLaser> alienLaser_pool;		// store laser weapon for AlienVs
 	ObjectPool<Mine> mines_pool;				// store mines weapon for BossAlien1
 	ObjectPool<Cube> cubes_pool;				// store cubes weapon for BossAlien2
+	ObjectPool<LifeIcon> lives_pool;
 
 	Bg1* background1;
 	Bg2* background2;
 	Bg3* background3;
 	Bg4* background4;
+	Banner* banner;
 
 	PickupLife* life_pickup;
 
@@ -43,8 +45,6 @@ class Game : public GameObject
 	AlienVGrid* alien_v_grid;
 	BossAlien* boss_alien;
 	BossAlien2* boss_alien2;
-
-	Sprite * life_sprite;
 
 	bool count_down = true;
 	bool level_finished = false;
@@ -67,6 +67,13 @@ public:
 		SDL_Log("Game::Create");
 		this->engine = engine;
 
+
+		banner = new Banner();
+	//	banner->Create();
+		RenderComponent* banner_render = new RenderComponent();
+		banner_render->Create(engine, banner, &game_objects, "data/banner.png", 840, 82);
+		banner->AddComponent(banner_render);
+		game_objects.insert(banner);
 
 		//***************** LEVEL 1 BACKGROUND IMAGES *******************
 		background1 = new Bg1();
@@ -454,15 +461,41 @@ public:
 		boss_alien2->AddComponent(boss2_player_collide);
 		boss_alien2->AddReceiver(this);
 		game_objects.insert(boss_alien2);
+
+		//////************** LIVES GRID ******************* 
+		//alien_v_grid = new AlienVGrid();
+		//AlienVGridBehaviourComponent* alien_v_grid_behaviour = new AlienVGridBehaviourComponent();
+		//alien_v_grid_behaviour->Create(engine, alien_v_grid, &game_objects, &alien_v_pool, &alienLaser_pool);
+
+		//alien_v_grid->Create();
+		//alien_v_grid->AddComponent(alien_v_grid_behaviour);
+		//alien_v_grid->AddReceiver(this); // alien_v_grid can send message to game
+		//game_objects.insert(alien_v_grid);
+
+		//************** CREATE LIVES POOL  ***************
+		lives_pool.Create(3);
+		int life_counter = 0;
+		for (auto life = lives_pool.pool.begin(); life != lives_pool.pool.end(); life++)
+		{
+			RenderComponent* render = new RenderComponent();
+			render->Create(engine, *life, &game_objects, "data/mini_me.png", 43, 48);
+			(*life)->AddComponent(render);
+			(*life)->Init(0 + 30.f * life_counter, 0);
+			game_objects.insert((*life));
+			(*life)->enabled = false;
+			life_counter++;
+		}
+
 	}
 
 	virtual void Init()
 	{
+		
 		init_time = engine->getElapsedTime();
 		current_level = 1;
 		current_level_sequence = level1_spawns;
 
-
+		banner->Init();
 		background1->Init();
 		background2->Init();
 
@@ -565,13 +598,17 @@ public:
 		//... Draw user interface elements here
 
 		//Draw current lives indicator
-		// memory leak here, create too many sprite objects but not destroying them
-		//for (int i = 0; i <= player->lives; i++) {
-		//	Sprite* life_sprite = engine->createSprite("data/heart.gif", 15, 12); 
-		//	life_sprite->draw(20 * i, 20); 
-		//}
-		sprintf(life_string, "Life: %d", player->lives);
-		engine->drawText(0, 16, life_string, 12);
+		int life_counter = 0;
+		bool life_icon_enabled = true;
+		for (auto life = lives_pool.pool.begin(); life != lives_pool.pool.end(); life++) {
+			if (life_counter == player->lives) {
+				life_icon_enabled = false;
+			}
+			(*life)->enabled = life_icon_enabled;
+			life_counter++;
+		}
+		//sprintf(life_string, "Life: %d", player->lives);
+		//engine->drawText(0, 16, life_string, 12);
 
 		relative_time = engine->getElapsedTime() - init_time;
 		sprintf(debug_string, "T: %.2f R-T: %.2f Level: %d Seq: %d", engine->getElapsedTime(), relative_time, current_level, seq_count);
@@ -660,7 +697,7 @@ public:
 		// Empty the game_objects set
 		rockets_pool.Destroy();
 		laser_beams_pool.Destroy();
-		life_sprite->destroy();
+		lives_pool.Destroy();
 		laser_s_pool.Destroy();
 		alien_g_pool.Destroy();
 		alien_v_pool.Destroy();

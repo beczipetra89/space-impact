@@ -140,6 +140,7 @@
     <ClInclude Include="alien_v.h" />
     <ClInclude Include="alien_v_grid.h" />
     <ClInclude Include="avancezlib.h" />
+    <ClInclude Include="banner.h" />
     <ClInclude Include="bg1.h" />
     <ClInclude Include="bg2.h" />
     <ClInclude Include="bg3.h" />
@@ -153,6 +154,8 @@
     <ClInclude Include="game_object.h" />
     <ClInclude Include="alien_g.h" />
     <ClInclude Include="levels.h" />
+    <ClInclude Include="life_icon.h" />
+    <ClInclude Include="life_icon_grid.h" />
     <ClInclude Include="mines.h" />
     <ClInclude Include="object_pool.h" />
     <ClInclude Include="pickup_life.h" />
