@@ -125,43 +125,6 @@ public:
 			else
 				shoot_type = SHOOTING_TYPE::SHOOTING_ROCKET;
 		}
-
-		/*
-
-		if (keys->switch_weapon) {
-
-			if (keys->fire) {
-
-				// stop shooting rocket and switch to the deadly laser beam caster
-
-					// fetches a laser beam from the pool and use it in game_objects
-				LaserBeam* laserBeam = laser_beams_pool->FirstAvailable();
-				if (laserBeam != NULL)	// laser beam is NULL is the object pool can not provide an object
-				{
-					laserBeam->Init(go->horizontalPosition, go->verticalPosition);
-					game_objects->insert(laserBeam);
-
-				}
-			}
-		}
-
-		if (keys->switch_weapon != true) {
-
-			if (keys->fire) {
-				if (FireRockets())
-				{
-					// fetches a rocket from the pool and use it in game_objects
-					Rocket* rocket = rockets_pool->FirstAvailable();
-					if (rocket != NULL)	// rocket is NULL is the object pool can not provide an object
-					{
-						rocket->Init(go->horizontalPosition, go->verticalPosition);
-						game_objects->insert(rocket);
-					}
-			}
-
-		}
-			
-	}*/
 	}
 
 

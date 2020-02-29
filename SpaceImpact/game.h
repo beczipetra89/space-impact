@@ -4,12 +4,12 @@
 
 class Game : public GameObject
 {
+	std::set<GameObject*> backgrounds;
 	std::set<GameObject*> game_objects;	// http://www.cplusplus.com/reference/set/set/
 	
 	AvancezLib* engine;
 	AvancezLib::KeyStatus keys = { false, false, false, false, false};
 	bool cheat_mode = false;
-	bool switch_weapon = false;
 	float init_time; // the time when Game object init() is called
 	float relative_time;
 	bool init_new_alien_g = false; // whether to init new alien_g in alien_g_grid
@@ -69,48 +69,48 @@ public:
 		//***************** LEVEL 1 BACKGROUND IMAGES *******************
 		background1 = new Bg1();
 		Bg1_BehaviourComponent* bg1_behaviour = new Bg1_BehaviourComponent();
-		bg1_behaviour->Create(engine, background1, &game_objects);
+		bg1_behaviour->Create(engine, background1, &backgrounds);
 		RenderComponent* bg1_render = new RenderComponent();
-		bg1_render->Create(engine, background1, &game_objects, "data/b_left.png", 840, 580);
+		bg1_render->Create(engine, background1, &backgrounds, "data/b_left.png", 840, 580);
 		background1->Create();
 		background1->AddComponent(bg1_behaviour);
 		background1->AddComponent(bg1_render);
 		background1->AddReceiver(this);
-		game_objects.insert(background1);
+		backgrounds.insert(background1);
 
 		background2 = new Bg2();
 		Bg2_BehaviourComponent* bg2_behaviour = new Bg2_BehaviourComponent();
-		bg2_behaviour->Create(engine, background2, &game_objects);
+		bg2_behaviour->Create(engine, background2, &backgrounds);
 		RenderComponent* bg2_render = new RenderComponent();
-		bg2_render->Create(engine, background2, &game_objects, "data/b_right.png", 840, 580);
+		bg2_render->Create(engine, background2, &backgrounds, "data/b_right.png", 840, 580);
 		background2->Create();
 		background2->AddComponent(bg2_behaviour);
 		background2->AddComponent(bg2_render);
 		background2->AddReceiver(this);
-		game_objects.insert(background2);
+		backgrounds.insert(background2);
 
 		//***************** LEVEL 2 BACKGROUND IMAGES *******************
 		background3 = new Bg3();
 		Bg3_BehaviourComponent* bg3_behaviour = new Bg3_BehaviourComponent();
-		bg3_behaviour->Create(engine, background3, &game_objects);
+		bg3_behaviour->Create(engine, background3, &backgrounds);
 		RenderComponent* bg3_render = new RenderComponent();
-		bg3_render->Create(engine, background3, &game_objects, "data/b2_left.png", 840, 580);
+		bg3_render->Create(engine, background3, &backgrounds, "data/b2_left.png", 840, 580);
 		background3->Create();
 		background3->AddComponent(bg3_behaviour);
 		background3->AddComponent(bg3_render);
 		background3->AddReceiver(this);
-		game_objects.insert(background3);
+		backgrounds.insert(background3);
 
 		background4 = new Bg4();
 		Bg4_BehaviourComponent* bg4_behaviour = new Bg4_BehaviourComponent();
-		bg4_behaviour->Create(engine, background4, &game_objects);
+		bg4_behaviour->Create(engine, background4, &backgrounds);
 		RenderComponent* bg4_render = new RenderComponent();
-		bg4_render->Create(engine, background4, &game_objects, "data/b2_right.png", 840, 580);
+		bg4_render->Create(engine, background4, &backgrounds, "data/b2_right.png", 840, 580);
 		background4->Create();
 		background4->AddComponent(bg4_behaviour);
 		background4->AddComponent(bg4_render);
 		background4->AddReceiver(this);
-		game_objects.insert(background4);
+		backgrounds.insert(background4);
 
 	
 
@@ -503,12 +503,6 @@ public:
 			Destroy();
 			engine->quit();
 		}
-		
-		if (keys.switch_weapon) {
-			SDL_Log("Weapon switched to laser beam");
-
-			switch_weapon = true;
-		}
 
 		if (keys.cheat) {
 			SDL_Log("Cheat mode enabled");
@@ -533,6 +527,9 @@ public:
 			}
 		}
 
+		// Always render backgrounds first
+		for (auto go = backgrounds.begin(); go != backgrounds.end(); go++)
+				(*go)->Update(dt);
 
 		for (auto go = game_objects.begin(); go != game_objects.end(); go++)
 		{
@@ -639,8 +636,10 @@ public:
 		for (auto go = game_objects.begin(); go != game_objects.end(); go++)
 			(*go)->Destroy();
 
+		for (auto bg = backgrounds.begin(); bg != backgrounds.end(); bg++)
+			(*bg)->Destroy();
+
 		// Empty the game_objects set
-		game_objects.clear();
 		rockets_pool.Destroy();
 		laser_beams_pool.Destroy();
 		life_sprite->destroy();
@@ -650,6 +649,8 @@ public:
 		alienLaser_pool.Destroy();
 		mines_pool.Destroy();
 		cubes_pool.Destroy();
+		game_objects.clear();
+		backgrounds.clear();
 
 		//life_pickup.Destroy();
 
