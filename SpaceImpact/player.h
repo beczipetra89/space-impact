@@ -64,7 +64,7 @@ public:
 			switch (shoot_type) {
 			case SHOOTING_TYPE::SHOOTING_ROCKET:
 			{
-				if (FireRockets()) {
+				if (CanFireRockets()) {
 					// fetches a rocket from the pool and use it in game_objects
 					Rocket* rocket = rockets_pool->FirstAvailable();
 					if (rocket != NULL)	// rocket is NULL is the object pool can not provide an object
@@ -188,7 +188,7 @@ public:
 	}
 
 	// return true if enough time has passed from the previous rocket
-	bool FireRockets()
+	bool CanFireRockets()
 	{
 
 		// shoot just if enough time passed by
