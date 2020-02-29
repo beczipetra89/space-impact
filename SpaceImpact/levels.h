@@ -66,7 +66,7 @@ const std::vector<Sequence> level2_spawns{
 	//Level 2: spawn aliens for 2:29 then spawn Boss 2
 	
 		Sequence{Sequence::OBJECT_TYPE::LIFE_PICKUP, 120.f, 0.f},
-	Sequence{Sequence::OBJECT_TYPE::ALIEN_S, 200.f, 0.f },
+	Sequence{Sequence::OBJECT_TYPE::ALIEN_S, 200.f, 1.f },
 	Sequence{Sequence::OBJECT_TYPE::ALIEN_S_2, 300.f, 6.f },
 	Sequence{Sequence::OBJECT_TYPE::ALIEN_S, 100.f, 12.f },
 	Sequence{Sequence::OBJECT_TYPE::ALIEN_G, 150.f, 18.f },

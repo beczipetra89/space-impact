@@ -196,6 +196,7 @@ public:
 		if (m == HIT)
 		{ 
 			SDL_Log("Player::Hit!");
+			Send(PLAYER_HIT);
 			RemoveLife();
 		
 		

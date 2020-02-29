@@ -616,7 +616,7 @@ public:
 			else game_won = true;
 		}
 		
-		if (m == HIT) {
+		if (m == PLAYER_HIT) {
 			engine->PlaySFX("data/audio/player_hit.wav", 0, -1);
 		}
 
