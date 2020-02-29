@@ -7,6 +7,8 @@ public:
 
 	virtual ~AlienVGrid() { SDL_Log("AlienVGrid::~AlienVGrid"); }
 
+	virtual void Create() {}
+
 	virtual void Init(float start_delay)
 	{
 		SDL_Log("AlienVGrid::Init initial delay %f", start_delay);

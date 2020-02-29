@@ -42,6 +42,8 @@ public:
 
 	virtual ~Bg4() {  }
 
+	virtual void Create() {}
+
 	virtual void Init()
 	{
 

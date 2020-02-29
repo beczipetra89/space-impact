@@ -135,7 +135,7 @@ public:
 			CollideComponent* rocket_cube_collision = new CollideComponent();
 			rocket_cube_collision->Create(engine, *rocket, &game_objects, (ObjectPool<GameObject>*) & cubes_pool, { 0, 0, 12, 10 });
 
-			(*rocket)->Create();
+			(*rocket)->Create(12, 10);
 			(*rocket)->AddComponent(behaviour);
 			(*rocket)->AddComponent(render);
 			(*rocket)->AddComponent(rocket_laser_S_collision);
@@ -162,7 +162,7 @@ public:
 			laserBeam_mine_collision->Create(engine, *laserBeam, &game_objects, (ObjectPool<GameObject>*) & mines_pool, { 0, 0, 13, 1093 });
 			CollideComponent* laserBeam_cube_collision = new CollideComponent();
 			laserBeam_cube_collision->Create(engine, *laserBeam, &game_objects, (ObjectPool<GameObject>*) & cubes_pool, { 0, 0, 13, 1093 });
-			(*laserBeam)->Create();
+			(*laserBeam)->Create(13, 1093);
 			(*laserBeam)->AddComponent(behaviour);
 			(*laserBeam)->AddComponent(render);
 			(*laserBeam)->AddComponent(laserBeam_laser_S_collision);
@@ -185,7 +185,7 @@ public:
 			CollideComponent* laserS_laserBeam_collision = new CollideComponent();
 			laserS_laserBeam_collision->Create(engine, *laser_s, &game_objects, (ObjectPool<GameObject>*) & laser_beams_pool, { 0, 0, 14, 12 });
 
-			(*laser_s)->Create();
+			(*laser_s)->Create(14, 12);
 			(*laser_s)->AddComponent(behaviour);
 			(*laser_s)->AddComponent(render);
 			(*laser_s)->AddComponent(laserS_rocket_collision);
@@ -230,7 +230,7 @@ public:
 			(*mine)->AddComponent(mine_rocket_collision);
 			(*mine)->AddComponent(mine_laserBeam_collision);
 			(*mine)->AddReceiver(this);
-			(*mine)->Create();
+			(*mine)->Create(18, 17);
 			(*mine)->AddComponent(behaviour);
 			(*mine)->AddComponent(render);
 		}
@@ -251,7 +251,7 @@ public:
 			(*cube)->AddComponent(cube_rocket_collision);
 			(*cube)->AddComponent(cube_laserBeam_collision);
 			(*cube)->AddReceiver(this);
-			(*cube)->Create();
+			(*cube)->Create(18, 17);
 			(*cube)->AddComponent(behaviour);
 			(*cube)->AddComponent(render);
 		}
@@ -272,7 +272,7 @@ public:
 		CollideComponent* player_mine_collide = new CollideComponent();
 		player_mine_collide->Create(engine, player, &game_objects, (ObjectPool<GameObject>*)& mines_pool, { 0, 0, 80, 80 });
 
-		player->Create();
+		player->Create(80, 80);
 		player->AddComponent(player_behaviour);
 		player->AddComponent(player_render);
 		player->AddComponent(player_bomb_collide);
@@ -296,7 +296,7 @@ public:
 		SingleObjectCollideComponent* alien_player_collide = new SingleObjectCollideComponent();
 		alien_player_collide->Create(engine, alien, &game_objects, player, { 0, 0, 90, 70 });
 	
-		alien->Create();
+		alien->Create(90, 70);
 		alien->AddComponent(alien_behaviour);
 		alien->AddComponent(alien_render);
 		alien->AddComponent(alien_bullet_collide);
@@ -317,7 +317,7 @@ public:
 		alien2_laserBeam_collide->Create(engine, alien2, &game_objects, (ObjectPool<GameObject>*)& laser_beams_pool);
 		SingleObjectCollideComponent* alien2_player_collide = new SingleObjectCollideComponent();
 		alien2_player_collide->Create(engine, alien2, &game_objects, player, { 0, 0, 90, 70 });
-		alien2->Create();
+		alien2->Create(90, 70);
 		alien2->AddComponent(alien2_behaviour);
 		alien2->AddComponent(alien2_render);
 		alien2->AddComponent(alien2_bullet_collide);
@@ -350,7 +350,7 @@ public:
 			alienG_laserBeams_collide->Create(engine, *alien_g, &game_objects, (ObjectPool<GameObject>*)& laser_beams_pool, { 0, 0, 90, 68 });
 			SingleObjectCollideComponent* alienG_player_collide = new SingleObjectCollideComponent();
 			alienG_player_collide->Create(engine, * alien_g, & game_objects, player, { 0, 0, 90, 68 });
-			(*alien_g)->Create();
+			(*alien_g)->Create(90, 68);
 			(*alien_g)->AddComponent(render); 
 			(*alien_g)->AddComponent(behaviour);
 			(*alien_g)->AddComponent(alienG_rocket_collide);
@@ -384,7 +384,7 @@ public:
 			SingleObjectCollideComponent* alienV_player_collide = new SingleObjectCollideComponent();
 			alienV_player_collide->Create(engine, *alien_v, &game_objects, player, { 0, 0, 66, 66 });
 
-			(*alien_v)->Create();
+			(*alien_v)->Create(66, 66);
 			(*alien_v)->AddComponent(render);
 			(*alien_v)->AddComponent(behaviour);
 			(*alien_v)->AddComponent(alienV_rocket_collide);
@@ -402,7 +402,7 @@ public:
 		LifePickupCollisionComponent* life_pickup_collide = new LifePickupCollisionComponent();
 		life_pickup_collide->Create(engine, life_pickup, &game_objects, player, { 0, 0, 50, 50 });
 
-		life_pickup->Create();
+		life_pickup->Create(50, 50);
 		life_pickup->AddComponent(life_pickup_behaviour);
 		life_pickup->AddComponent(life_pickup_render);
 		life_pickup->AddComponent(life_pickup_collide);
@@ -423,7 +423,7 @@ public:
 		SingleObjectCollideComponent* boss_player_collide = new SingleObjectCollideComponent();
 		boss_player_collide->Create(engine, boss_alien, &game_objects, player, { 0,0,187,304 });
 
-		boss_alien->Create();
+		boss_alien->Create(187, 304);
 		boss_alien->AddComponent(boss_behaviour);
 		boss_alien->AddComponent(boss_render);
 		boss_alien->AddComponent(boss_bullet_collide);
@@ -446,7 +446,7 @@ public:
 		SingleObjectCollideComponent* boss2_player_collide = new SingleObjectCollideComponent();
 		boss2_player_collide->Create(engine, boss_alien2, &game_objects, player, { 0,0, 193, 278 });
 
-		boss_alien2->Create();
+		boss_alien2->Create(193, 278);
 		boss_alien2->AddComponent(boss2_behaviour);
 		boss_alien2->AddComponent(boss2_render);
 		boss_alien2->AddComponent(boss2_bullet_collide);

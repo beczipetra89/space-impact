@@ -19,6 +19,8 @@ class AlienLaser : public GameObject
 {
 public:
 
+	virtual void Create() {}
+
 	virtual void Init(double xPos, double yPos)
 	{
 		SDL_Log("AlienLaser::Init");

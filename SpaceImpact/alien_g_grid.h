@@ -5,6 +5,8 @@ class AlienGGrid : public GameObject {
 public:
 	virtual ~AlienGGrid() { SDL_Log("AlienGGrid::~AlienGGrid"); }
 
+	virtual void Create() {}
+
 	virtual void Init()
 	{
 		SDL_Log("AlienGGrid::Init");

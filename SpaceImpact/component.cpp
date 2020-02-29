@@ -49,10 +49,19 @@ void CollideComponent::Update(float dt)
 		GameObject * go0 = coll_objects->pool[i];
 		if (go0->enabled)
 		{
-			if ((go0->horizontalPosition > go->horizontalPosition) &&  
-				(go0->horizontalPosition < go->horizontalPosition + coll_rect.w) &&
-				(go0->verticalPosition   > go->verticalPosition) &&
-				(go0->verticalPosition   < go->verticalPosition + coll_rect.h))
+			if (go0->horizontalPosition + go0->width <= go->horizontalPosition)
+				return;
+			if (go0->horizontalPosition >= go->horizontalPosition + coll_rect.w)
+				return;
+			if (go0->verticalPosition + go0->height <= go->verticalPosition)
+				return;
+			if (go0->verticalPosition >= go->verticalPosition + coll_rect.h)
+				return;
+
+			//if ((go0->horizontalPosition > go->horizontalPosition) &&  
+			//	(go0->horizontalPosition < go->horizontalPosition + coll_rect.w) &&
+			//	(go0->verticalPosition   > go->verticalPosition) &&
+			//	(go0->verticalPosition   < go->verticalPosition + coll_rect.h))
 			{
 				go->Receive(HIT);
 				go0->Receive(HIT);
@@ -72,17 +81,21 @@ void SingleObjectCollideComponent::Update(float dt)
 {
 	GameObject* go0 = this->coll_object;
 
-	if (go != NULL && go0 !=NULL ) {
+	if (go != NULL && go0 != NULL) {
 		if (go->enabled && go0->enabled)
 		{
-			if ((go0->horizontalPosition > go->horizontalPosition) &&
-				(go0->horizontalPosition < go->horizontalPosition + coll_rect.w) &&
-				(go0->verticalPosition > go->verticalPosition) &&
-				(go0->verticalPosition < go->verticalPosition + coll_rect.h))
-			{
-				go->Receive(HIT);
-				go0->Receive(HIT);
-			}
+
+			if (go0->horizontalPosition + go0->width <= go->horizontalPosition)
+				return;
+			if (go0->horizontalPosition >= go->horizontalPosition + coll_rect.w)
+				return;
+			if (go0->verticalPosition + go0->height <= go->verticalPosition)
+				return;
+			if (go0->verticalPosition >= go->verticalPosition + coll_rect.h)
+				return;
+
+			go->Receive(HIT);
+			go0->Receive(HIT);
 		}
 	}
 }

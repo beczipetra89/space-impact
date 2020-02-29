@@ -26,11 +26,13 @@ protected:
 public:
 	double horizontalPosition;
 	double verticalPosition;
+	int width, height;
 	bool enabled;
 
 	virtual ~GameObject();
 
-	virtual void Create();
+	virtual void Create(int w, int h);
+
 	virtual void AddComponent(Component * component);
 
 	template<typename T>

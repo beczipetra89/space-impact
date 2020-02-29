@@ -42,6 +42,8 @@ public:
 
 	virtual ~Bg1() { SDL_Log("Bg1::~Bg1"); }
 
+	virtual void Create() {}
+
 	virtual void Init()
 	{
 		SDL_Log("Bg1::Bg1");
