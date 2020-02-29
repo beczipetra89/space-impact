@@ -61,8 +61,6 @@ void CollideComponent::Update(float dt)
 	}
 }
 
-
-
 void SingleObjectCollideComponent::Create(AvancezLib* engine, GameObject* go, std::set<GameObject*>* game_objects, GameObject* coll_object, SDL_Rect coll_rect)
 {
 	Component::Create(engine, go, game_objects);
@@ -112,6 +110,26 @@ void LifePickupCollisionComponent::Update(float dt)
 				go->enabled = false;
 				go0->Receive(LIFE_PICKED);
 			}
+		}
+	}
+}
+
+void LaserBeamCollideComponent::Create(AvancezLib* engine, GameObject* go, std::set<GameObject*>* game_objects, ObjectPool<GameObject>* coll_objects)
+{
+	Component::Create(engine, go, game_objects);
+	this->coll_objects = coll_objects;
+}
+
+void LaserBeamCollideComponent::Update(float dt)
+{
+	for (auto i = 0; i < coll_objects->pool.size(); i++)
+	{
+		GameObject* go0 = coll_objects->pool[i];
+		if (go0->enabled)
+		{
+			if (go0->horizontalPosition > go->horizontalPosition)
+				// go0 is the laserbeam, it will not be disabled by collision, so only disable the other game_object
+				go->Receive(HIT);
 		}
 	}
 }

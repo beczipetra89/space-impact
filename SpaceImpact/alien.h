@@ -26,7 +26,6 @@ public:
 		Move(dt * ALIEN_SPEED );
 		if (go->horizontalPosition < -840) // When alian flew out of window to the left, it disappears
 		{
-			go->Send(ALIEN_LEVEL_CLEAR);
 			go->enabled = false;
 		}
 
@@ -92,7 +91,6 @@ public:
 			// Disabe alien when it's hit
 			SDL_Log("Alien::HIT!");
 			Send(ALIEN_HIT); // Send a message so that game can update the score
-			Send(ALIEN_LEVEL_CLEAR); // Send a message so that game can init new alien
 			enabled = false;
 		}
 	}

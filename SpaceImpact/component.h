@@ -73,6 +73,16 @@ public:
 	virtual void Update(float dt);
 };
 
+// For laser beam collision check
+class LaserBeamCollideComponent : public Component
+{
+	ObjectPool<GameObject>* coll_objects; // collision will be tested with these objects
+
+public:
+	virtual void Create(AvancezLib* engine, GameObject* go, std::set<GameObject*>* game_objects, ObjectPool<GameObject>* coll_objects);
+	virtual void Update(float dt);
+};
+
 //  Collision to PICKUPS
 class LifePickupCollisionComponent : public Component
 {

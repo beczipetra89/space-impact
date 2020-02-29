@@ -24,13 +24,12 @@ class LaserBeam : public GameObject
 
 public:
 
-	virtual void Init(double xPos, double yPos)
+	virtual void Init(double xPos)
 	{
 		SDL_Log("LaserBeam::Init");
 		GameObject::Init();
-
 		horizontalPosition = xPos + 80;
-		verticalPosition = yPos;
+		verticalPosition = 0;
 	}
 
 
@@ -38,11 +37,6 @@ public:
 	{
 		if (!enabled)
 			return;
-
-		if (m == HIT)
-		{
-			
-		}
 
 	//	if (m == BULLET_BULLET_HIT) {
 		//	

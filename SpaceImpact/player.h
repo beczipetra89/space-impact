@@ -83,7 +83,7 @@ public:
 				LaserBeam* laserBeam = laser_beams_pool->FirstAvailable();
 				if (laserBeam != NULL)	// laser beam is NULL is the object pool can not provide an object
 				{
-					laserBeam->Init(go->horizontalPosition, go->verticalPosition);
+					laserBeam->Init(go->horizontalPosition);
 					game_objects->insert(laserBeam);
 				}
 				break;

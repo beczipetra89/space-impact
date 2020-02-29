@@ -1,31 +1,5 @@
 #pragma once
 
-class Alien2 : public GameObject
-{
-public:
-	virtual ~Alien2() { SDL_Log("Alien2::~Alien2"); }
-
-	virtual void Init(float y)
-	{
-		SDL_Log("Alien2::Init");
-		verticalPosition = y;
-		GameObject::Init();
-	}
-
-	virtual void Receive(Message m)
-	{
-		if (!enabled) {
-			return;
-		}
-		if (m == HIT) {
-			// Disabe alien2 when it's hit
-			SDL_Log("Alien2::HIT!");
-			Send(ALIEN2_HIT); // Send a message so that game can update the score and init new alien2
-			enabled = false;
-		}
-	}
-};
-
 class Alien2BehaviourComponent : public Component
 {
 	ObjectPool<LaserS>* laser_s_pool;
@@ -51,10 +25,7 @@ public:
 		Move(dt * ALIEN_SPEED);
 
 		if (go->horizontalPosition < -840) // When alien2 flew out of window to the left, it disappears
-		{
-			go->Send(ALIEN_LEVEL_CLEAR);
 			go->enabled = false;
-		}
 
 		if (CanFire())
 		{
@@ -91,4 +62,30 @@ public:
 	}
 
 
+};
+
+class Alien2 : public GameObject
+{
+public:
+	virtual ~Alien2() { SDL_Log("Alien2::~Alien2"); }
+
+	virtual void Init(float y)
+	{
+		SDL_Log("Alien2::Init");
+		verticalPosition = y;
+		GameObject::Init();
+	}
+
+	virtual void Receive(Message m)
+	{
+		if (!enabled) {
+			return;
+		}
+		if (m == HIT) {
+			// Disabe alien2 when it's hit
+			SDL_Log("Alien2::HIT!");
+			Send(ALIEN2_HIT); // Send a message so that game can update the score and init new alien2
+			enabled = false;
+		}
+	}
 };
