@@ -353,8 +353,8 @@ public:
 			behaviour->Create(engine, *alien_g, &game_objects);
 			CollideComponent* alienG_rocket_collide = new CollideComponent();
 			alienG_rocket_collide->Create(engine, *alien_g, &game_objects, (ObjectPool<GameObject>*) & rockets_pool, { 0, 0, 90, 68 });
-			CollideComponent* alienG_laserBeams_collide = new CollideComponent();
-			alienG_laserBeams_collide->Create(engine, *alien_g, &game_objects, (ObjectPool<GameObject>*)& laser_beams_pool, { 0, 0, 90, 68 });
+			LaserBeamCollideComponent* alienG_laserBeams_collide = new LaserBeamCollideComponent();
+			alienG_laserBeams_collide->Create(engine, *alien_g, &game_objects, (ObjectPool<GameObject>*)& laser_beams_pool);
 			SingleObjectCollideComponent* alienG_player_collide = new SingleObjectCollideComponent();
 			alienG_player_collide->Create(engine, * alien_g, & game_objects, player, { 0, 0, 90, 68 });
 			(*alien_g)->Create(90, 68);
@@ -386,8 +386,8 @@ public:
 			behaviour->Create(engine, *alien_v, &game_objects, &alienLaser_pool);
 			CollideComponent* alienV_rocket_collide = new CollideComponent();
 			alienV_rocket_collide->Create(engine, *alien_v, &game_objects, (ObjectPool<GameObject>*) & rockets_pool, { 0, 0, 66, 66 });
-			CollideComponent* alienV_laserBeams_collide = new CollideComponent();
-			alienV_laserBeams_collide->Create(engine, *alien_v, &game_objects, (ObjectPool<GameObject>*) & laser_beams_pool, { 0, 0, 66, 66 });
+			LaserBeamCollideComponent* alienV_laserBeams_collide = new LaserBeamCollideComponent();
+			alienV_laserBeams_collide->Create(engine, *alien_v, &game_objects, (ObjectPool<GameObject>*) & laser_beams_pool);
 			SingleObjectCollideComponent* alienV_player_collide = new SingleObjectCollideComponent();
 			alienV_player_collide->Create(engine, *alien_v, &game_objects, player, { 0, 0, 66, 66 });
 
@@ -425,8 +425,8 @@ public:
 		boss_render->Create(engine, boss_alien, &game_objects, "data/boss_blue.png", 187, 304);  
 		CollideComponent* boss_bullet_collide = new CollideComponent();
 		boss_bullet_collide->Create(engine, boss_alien, &game_objects, (ObjectPool<GameObject>*) & rockets_pool, { 0,0, 187, 304 });
-		CollideComponent* boss_laserBeam_collide = new CollideComponent();
-		boss_laserBeam_collide->Create(engine, boss_alien, &game_objects, (ObjectPool<GameObject>*) & laser_beams_pool, { 0,0, 187, 304 });
+		LaserBeamCollideComponent* boss_laserBeam_collide = new LaserBeamCollideComponent();
+		boss_laserBeam_collide->Create(engine, boss_alien, &game_objects, (ObjectPool<GameObject>*) & laser_beams_pool);
 		SingleObjectCollideComponent* boss_player_collide = new SingleObjectCollideComponent();
 		boss_player_collide->Create(engine, boss_alien, &game_objects, player, { 0,0,187,304 });
 
@@ -448,8 +448,8 @@ public:
 		boss2_render->Create(engine, boss_alien2, &game_objects, "data/boss_lila.png", 193, 278);
 		CollideComponent* boss2_bullet_collide = new CollideComponent();
 		boss2_bullet_collide->Create(engine, boss_alien2, &game_objects, (ObjectPool<GameObject>*)& rockets_pool, { 0,0, 193, 278 });
-		CollideComponent* boss2_laserBeams_collide = new CollideComponent();
-		boss2_laserBeams_collide->Create(engine, boss_alien2, &game_objects, (ObjectPool<GameObject>*)& laser_beams_pool, { 0,0, 193, 278 });
+		LaserBeamCollideComponent* boss2_laserBeams_collide = new LaserBeamCollideComponent();
+		boss2_laserBeams_collide->Create(engine, boss_alien2, &game_objects, (ObjectPool<GameObject>*)& laser_beams_pool);
 		SingleObjectCollideComponent* boss2_player_collide = new SingleObjectCollideComponent();
 		boss2_player_collide->Create(engine, boss_alien2, &game_objects, player, { 0,0, 193, 278 });
 
