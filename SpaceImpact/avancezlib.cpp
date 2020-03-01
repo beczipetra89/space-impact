@@ -21,6 +21,7 @@ void AvancezLib::quit()
 bool AvancezLib::init(int width, int height)
 {
 	SDL_Init(SDL_INIT_EVERYTHING);
+	IMG_Init(IMG_INIT_PNG);
 	TTF_Init();
 	window = SDL_CreateWindow("Space Impact", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, SDL_WINDOW_RESIZABLE);
 	if (window == NULL) {
@@ -65,11 +66,12 @@ Sprite* AvancezLib::createSprite(const char* name, int w, int h)
 {
 	SDL_Surface* surface = IMG_Load(name);
 	SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
-	SDL_FreeSurface(surface);
 	Sprite* sprite = new Sprite(renderer, texture, w, h);
+
+	SDL_FreeSurface(surface);
+
 	return sprite;
 }
-
 
 void AvancezLib::drawText(int x, int y, const char* msg, int fontSize = 12)
 {

@@ -22,4 +22,5 @@ public:
 	// Valid coordinates are between (0,0) (upper left) and (width-32, height-32) (lower right).
 	// (All sprites are 32*32 pixels, clipping is not supported)
 	void draw(int x, int y);
+	void partialDraw(SDL_Rect* src_rect, SDL_Rect* dst_rect);
 };

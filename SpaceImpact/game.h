@@ -270,8 +270,10 @@ public:
 		PlayerBehaviourComponent * player_behaviour = new PlayerBehaviourComponent();
 		player_behaviour->Create(engine, player, &game_objects, &rockets_pool, &laser_beams_pool);
 		player_behaviour->InitKeys(&keys);
-		RenderComponent * player_render = new RenderComponent();
-		player_render->Create(engine, player, &game_objects, "data/player.png", 80, 80);
+		AnimRenderComponent* player_render = new AnimRenderComponent();
+		player_render->Create(engine, player, &game_objects, "data/player_sprites.png", 320, 80, 4, 6);
+		//RenderComponent * player_render = new RenderComponent();
+		//player_render->Create(engine, player, &game_objects, "data/player.png", 80, 80);
 		CollideComponent * player_bomb_collide = new CollideComponent();
 		player_bomb_collide->Create(engine, player, &game_objects, (ObjectPool<GameObject>*) & laser_s_pool, { 0, 0, 80, 80 });
 		CollideComponent* player_laser_collide = new CollideComponent();

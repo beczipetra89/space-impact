@@ -40,15 +40,17 @@ public:
 };
 
 
-//class RectRenderComponent : public Component
-//{
-//
-//public:
-//
-//	virtual void Create(AvancezLib* engine, GameObject* go, std::set<GameObject*>* game_objects, const char* sprite_name, int w, int h);
-//	virtual void Update(float dt);
-//	virtual void Destroy();
-//};
+class AnimRenderComponent : public Component
+{
+	Sprite* sprite;
+	int total_frame, frame_w, frame_h;
+	float frame_time, init_time;
+public:
+
+	virtual void Create(AvancezLib* engine, GameObject* go, std::set<GameObject*>* game_objects, const char* sprite_name, int w, int h, int total_frame, int animation_speed);
+	virtual void Update(float dt);
+	virtual void Destroy();
+};
 
 
 class CollideComponent : public Component

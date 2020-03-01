@@ -33,7 +33,6 @@ void RenderComponent::Destroy()
 	sprite = NULL;
 }
 
-
 void CollideComponent::Create(AvancezLib* engine, GameObject * go, std::set<GameObject*> * game_objects, ObjectPool<GameObject> * coll_objects, SDL_Rect coll_rect)
 {
 	Component::Create(engine, go, game_objects);
@@ -136,4 +135,43 @@ void LaserBeamCollideComponent::Update(float dt)
 				go->Receive(HIT);
 		}
 	}
+}
+
+/* w and h is the total width and height of the image 
+animation_speed, the higher the faster, default to 1 */
+void AnimRenderComponent::Create(AvancezLib* engine, GameObject* go, std::set<GameObject*>* game_objects, const char* sprite_name, int w, int h, int total_frame, int animation_speed = 1)
+{
+	Component::Create(engine, go, game_objects);
+	sprite = engine->createSprite(sprite_name, w, h);
+	frame_w = w / total_frame;
+	frame_h = h;
+	this->total_frame = total_frame;
+	frame_time = 1.0 / (total_frame * animation_speed);
+	init_time = engine->getElapsedTime();
+}
+
+void AnimRenderComponent::Update(float dt)
+{
+	SDL_Rect src_rect;
+	SDL_Rect dst_rect;
+
+	if (!go->enabled)
+		return;
+
+	if (sprite != NULL) {
+		float t =  engine->getElapsedTime() - init_time;
+		int frame_index = int(t / frame_time);
+		frame_index = frame_index % total_frame; // use modulous to make sure the index number is always smaller than boundary
+		// see http://gigi.nullneuron.net/gigilabs/animations-with-sprite-sheets-in-sdl2/
+		src_rect = { frame_w * frame_index, 0, frame_w, frame_h };
+		dst_rect = { int(go->horizontalPosition), int(go->verticalPosition), frame_w, frame_h };
+		sprite->partialDraw(&src_rect, &dst_rect);
+	}
+}
+
+void AnimRenderComponent::Destroy()
+{
+	if (sprite != NULL)
+		sprite->destroy();
+	sprite = NULL;
 }
