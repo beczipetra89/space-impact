@@ -4,7 +4,8 @@ class Alien2BehaviourComponent : public Component
 {
 	ObjectPool<LaserS>* laser_s_pool;
 	float time_laser_shot;	// time from the last time the laser was shot
-
+	int direction = 1; // 1 = move up, -1 = move down
+	float init_y;
 public:
 	virtual ~Alien2BehaviourComponent() {}
 
@@ -18,13 +19,15 @@ public:
 	{
 		time_laser_shot = -10000.f;
 		go->horizontalPosition = 850;
+		init_y = go->verticalPosition;
 	}
 
 	virtual void Update(float dt)
 	{
-		Move(dt * ALIEN_SPEED);
+		Move_x(dt);
+		Move_y(dt);
 
-		if (go->horizontalPosition < -840) // When alien2 flew out of window to the left, it disappears
+		if (go->horizontalPosition < -80) // When alien2 flew out of window to the left, it disappears
 			go->enabled = false;
 
 		if (CanFire())
@@ -44,15 +47,22 @@ public:
 
 	// move the alien to left
 	// param move depends on the time, so the player moves always at the same speed on any computer
-	void Move(float move)
+	void Move_x(float dt)
 	{
-		go->horizontalPosition -= move;
+		go->horizontalPosition -= dt * ALIEN_SPEED;
+	}
+
+	void Move_y(float dt) {
+		go->verticalPosition = go->verticalPosition + dt * ALIEN_SPEED * direction;
+		if ((go->verticalPosition - init_y) > 40 || (init_y - go->verticalPosition) > 40) {
+			direction = direction * -1;
+		}
 	}
 
 	bool CanFire()
 	{
 		// shoot just if enough time passed by
-		if ((engine->getElapsedTime() - time_laser_shot) < (ALIEN_LASER_TIME_INTERVAL / game_speed))
+		if ((engine->getElapsedTime() - time_laser_shot) < (ALIEN_2_LASER_TIME_INTERVAL / game_speed))
 			return false;
 
 		time_laser_shot = engine->getElapsedTime();

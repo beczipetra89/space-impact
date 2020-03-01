@@ -53,7 +53,7 @@ const std::vector<Sequence> level1_spawns{
 	Sequence{Sequence::OBJECT_TYPE::ALIEN_S, 300.f, 140.f},
 	Sequence{Sequence::OBJECT_TYPE::ALIEN_G, 200.f, 144.f},
 	Sequence{Sequence::OBJECT_TYPE::ALIEN_V, 250.f, 150.f},
-	Sequence{Sequence::OBJECT_TYPE::ALIEN_S_2, 480.f, 156.f},
+	Sequence{Sequence::OBJECT_TYPE::ALIEN_S_2, 430.f, 156.f},
 	Sequence{Sequence::OBJECT_TYPE::ALIEN_S, 300.f, 159.f},
 	Sequence{Sequence::OBJECT_TYPE::ALIEN_S_2, 300.f, 162.f},
 	Sequence{Sequence::OBJECT_TYPE::BOSS, -1.f, 169.f},		// postion Y is ignored for boss
@@ -84,12 +84,12 @@ const std::vector<Sequence> level2_spawns{
 	Sequence{Sequence::OBJECT_TYPE::ALIEN_S_2, 200.f, 88.f},
 		Sequence{Sequence::OBJECT_TYPE::LIFE_PICKUP, 250.f, 90.f},
 	Sequence{Sequence::OBJECT_TYPE::ALIEN_S, 300.f, 92.f},
-	Sequence{Sequence::OBJECT_TYPE::ALIEN_G, 380.f, 98.f},
+	Sequence{Sequence::OBJECT_TYPE::ALIEN_G, 280.f, 98.f},
 	Sequence{Sequence::OBJECT_TYPE::ALIEN_V, 250.f, 105.f},
 	Sequence{Sequence::OBJECT_TYPE::ALIEN_S, 120.f, 111.f},
 	Sequence{Sequence::OBJECT_TYPE::ALIEN_S_2, 350.f, 115.f},
 	Sequence{Sequence::OBJECT_TYPE::ALIEN_G, 150.f, 121.f},
-	Sequence{Sequence::OBJECT_TYPE::ALIEN_S, 450.f, 127.f},  
+	Sequence{Sequence::OBJECT_TYPE::ALIEN_S, 440.f, 127.f},  
 	Sequence{Sequence::OBJECT_TYPE::BOSS2, -1.f, 133.f},		// postion Y is ignored for boss
 		Sequence{Sequence::OBJECT_TYPE::LIFE_PICKUP, 250.f, 139.f}
 		

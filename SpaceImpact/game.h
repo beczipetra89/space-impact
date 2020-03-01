@@ -132,15 +132,15 @@ public:
 			RocketBehaviourComponent* behaviour = new RocketBehaviourComponent();
 			behaviour->Create(engine, *rocket, &game_objects);
 			RenderComponent* render = new RenderComponent();
-			render->Create(engine, *rocket, &game_objects, "data/bullet.png", 12, 10); //k7,5
+			render->Create(engine, *rocket, &game_objects, "data/bullet.png", 12, 11);
 			CollideComponent* rocket_laser_S_collision = new CollideComponent();
-			rocket_laser_S_collision->Create(engine, *rocket, &game_objects, (ObjectPool<GameObject>*) & laser_s_pool, { 0, 0, 12, 10 });
+			rocket_laser_S_collision->Create(engine, *rocket, &game_objects, (ObjectPool<GameObject>*) & laser_s_pool, { 0, 0, 12, 11 });
 			CollideComponent* rocket_laser_V_collision = new CollideComponent();
-			rocket_laser_V_collision->Create(engine, *rocket, &game_objects, (ObjectPool<GameObject>*) & alienLaser_pool, { 0, 0, 12, 10 });
+			rocket_laser_V_collision->Create(engine, *rocket, &game_objects, (ObjectPool<GameObject>*) & alienLaser_pool, { 0, 0, 12, 11 });
 			CollideComponent* rocket_mine_collision = new CollideComponent();
-			rocket_mine_collision->Create(engine, *rocket, &game_objects, (ObjectPool<GameObject>*) & mines_pool, { 0, 0, 12, 10 });
+			rocket_mine_collision->Create(engine, *rocket, &game_objects, (ObjectPool<GameObject>*) & mines_pool, { 0, 0, 12, 11 });
 			CollideComponent* rocket_cube_collision = new CollideComponent();
-			rocket_cube_collision->Create(engine, *rocket, &game_objects, (ObjectPool<GameObject>*) & cubes_pool, { 0, 0, 12, 10 });
+			rocket_cube_collision->Create(engine, *rocket, &game_objects, (ObjectPool<GameObject>*) & cubes_pool, { 0, 0, 12, 11 });
 
 			(*rocket)->Create(12, 10);
 			(*rocket)->AddComponent(behaviour);
@@ -180,7 +180,7 @@ public:
 		}
 
 		//**************CREATE LASER S POOL***************
-		laser_s_pool.Create(2);
+		laser_s_pool.Create(10);
 		for (auto laser_s = laser_s_pool.pool.begin(); laser_s != laser_s_pool.pool.end(); laser_s++)
 		{
 			LaserSBehaviourComponent* behaviour = new LaserSBehaviourComponent();
@@ -271,7 +271,7 @@ public:
 		player_behaviour->Create(engine, player, &game_objects, &rockets_pool, &laser_beams_pool);
 		player_behaviour->InitKeys(&keys);
 		AnimRenderComponent* player_render = new AnimRenderComponent();
-		player_render->Create(engine, player, &game_objects, "data/player_sprites.png", 320, 80, 4, 6);
+		player_render->Create(engine, player, &game_objects, "data/player_sprites.png", 320, 80, 4, 3);
 		//RenderComponent * player_render = new RenderComponent();
 		//player_render->Create(engine, player, &game_objects, "data/player.png", 80, 80);
 		CollideComponent * player_bomb_collide = new CollideComponent();
@@ -295,9 +295,12 @@ public:
 		alien = new Alien();
 		AlienBehaviourComponent* alien_behaviour = new AlienBehaviourComponent();
 		alien_behaviour->Create(engine, alien, &game_objects, &laser_s_pool);
-		RenderComponent* alien_render = new RenderComponent();
-		alien_render->Create(engine, alien, &game_objects, "data/alien_s.png", 90, 70);
+	//	RenderComponent* alien_render = new RenderComponent();
+	//	alien_render->Create(engine, alien, &game_objects, "data/alien_s.png", 90, 70);
 		
+		AnimRenderComponent* alien_render = new AnimRenderComponent();
+		alien_render->Create(engine, alien, &game_objects, "data/alienS_sprites.png", 360, 70, 4, 3);
+
 		CollideComponent* alien_bullet_collide = new CollideComponent();
 		alien_bullet_collide->Create(engine, alien, &game_objects, (ObjectPool<GameObject>*)& rockets_pool, { 0, 0, 90, 70 });
 		LaserBeamCollideComponent* alien_laserBeam_collide = new LaserBeamCollideComponent();
@@ -315,10 +318,13 @@ public:
 		game_objects.insert(alien);
 
 		alien2 = new Alien2();
-		AlienBehaviourComponent* alien2_behaviour = new AlienBehaviourComponent();
+		Alien2BehaviourComponent* alien2_behaviour = new Alien2BehaviourComponent();
 		alien2_behaviour->Create(engine, alien2, &game_objects, &laser_s_pool);
-		RenderComponent* alien2_render = new RenderComponent();
-		alien2_render->Create(engine, alien2, &game_objects, "data/alien_s.png", 90, 70);
+		//RenderComponent* alien2_render = new RenderComponent();
+		//alien2_render->Create(engine, alien2, &game_objects, "data/alien_s.png", 90, 70);
+		
+		AnimRenderComponent* alien2_render = new AnimRenderComponent();
+		alien2_render->Create(engine, alien2, &game_objects, "data/alienS_sprites.png", 360, 70, 4, 3);
 	
 		CollideComponent* alien2_bullet_collide = new CollideComponent();
 		alien2_bullet_collide->Create(engine, alien2, &game_objects, (ObjectPool<GameObject>*)& rockets_pool, { 0, 0, 90, 70 });
@@ -349,8 +355,12 @@ public:
 		alien_g_pool.Create(6); // create alien g pool of 6 aliens
 		for (auto alien_g = alien_g_pool.pool.begin(); alien_g != alien_g_pool.pool.end(); alien_g++)
 		{
-			RenderComponent* render = new RenderComponent();
-			render->Create(engine, *alien_g, &game_objects, "data/alien_g.png", 90,68 ); 
+		//	RenderComponent* render = new RenderComponent();
+		 //render->Create(engine, *alien_g, &game_objects, "data/alien_g.png", 90,68 ); 
+			
+			AnimRenderComponent* render = new AnimRenderComponent();
+			render->Create(engine, *alien_g, &game_objects, "data/alienG_sprites.png", 360, 68, 4, 3);
+			
 			AlienGBehaviourComponent* behaviour = new AlienGBehaviourComponent();
 			behaviour->Create(engine, *alien_g, &game_objects);
 			CollideComponent* alienG_rocket_collide = new CollideComponent();
@@ -502,13 +512,8 @@ public:
 		background1->Init();
 		background2->Init();
 
-		// Set background to lila
-		AvancezLib::RGBColor LILA = { 99, 0, 191 };
-		engine->SetBackgroundColor(LILA);
-		
 		player->Init();
 		enabled = true;
-		
 	
 		engine->PlayMusic("data/audio/absolute_victory.wav", -1);  
 	}

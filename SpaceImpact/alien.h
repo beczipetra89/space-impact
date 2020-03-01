@@ -24,7 +24,7 @@ public:
 	virtual void Update(float dt)
 	{
 		Move(dt * ALIEN_SPEED );
-		if (go->horizontalPosition < -840) // When alian flew out of window to the left, it disappears
+		if (go->horizontalPosition < -80) // When alian flew out of window to the left, it disappears
 		{
 			go->enabled = false;
 		}
