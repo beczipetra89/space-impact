@@ -138,8 +138,8 @@ public:
 		if (go->verticalPosition > (580 - 80))
 			go->verticalPosition = 580 - 80;
 
-		if (go->verticalPosition < 0)
-			go->verticalPosition = 0;
+		if (go->verticalPosition < 60)  
+			go->verticalPosition = 60;
 	
 
 		if (go->horizontalPosition > (840 - 80))
