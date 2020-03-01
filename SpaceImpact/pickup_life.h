@@ -16,7 +16,7 @@ public:
 
 	virtual void Init()
 	{
-		go->horizontalPosition = 640;
+		go->horizontalPosition = 840;
 	}
 
 	virtual void Update(float dt)

@@ -71,7 +71,7 @@ public:
 		banner = new Banner();
 	//	banner->Create();
 		RenderComponent* banner_render = new RenderComponent();
-		banner_render->Create(engine, banner, &game_objects, "data/banner.png", 840, 82);
+		banner_render->Create(engine, banner, &game_objects, "data/banner.png", 840, 67);
 		banner->AddComponent(banner_render);
 		game_objects.insert(banner);
 
@@ -405,15 +405,16 @@ public:
 		PickupLifeBehaviourComponent* life_pickup_behaviour = new PickupLifeBehaviourComponent();
 		life_pickup_behaviour->Create(engine, life_pickup, &game_objects);
 		RenderComponent* life_pickup_render = new RenderComponent();
-		life_pickup_render->Create(engine, life_pickup, &game_objects, "data/life.png", 33, 33);
+		life_pickup_render->Create(engine, life_pickup, &game_objects, "data/life.png", 109, 109);
 		LifePickupCollisionComponent* life_pickup_collide = new LifePickupCollisionComponent();
-		life_pickup_collide->Create(engine, life_pickup, &game_objects, player, { 0, 0, 50, 50 });
+		life_pickup_collide->Create(engine, life_pickup, &game_objects, player, { 0, 0, 57, 57 });
 
 		life_pickup->Create(50, 50);
 		life_pickup->AddComponent(life_pickup_behaviour);
 		life_pickup->AddComponent(life_pickup_render);
 		life_pickup->AddComponent(life_pickup_collide);
 		life_pickup->AddReceiver(player);
+		life_pickup->AddReceiver(this);
 		game_objects.insert(life_pickup);
 
 
@@ -478,7 +479,7 @@ public:
 		for (auto life = lives_pool.pool.begin(); life != lives_pool.pool.end(); life++)
 		{
 			RenderComponent* render = new RenderComponent();
-			render->Create(engine, *life, &game_objects, "data/mini_me.png", 43, 48);
+			render->Create(engine, *life, &game_objects, "data/mini_me.png", 33, 38);
 			(*life)->AddComponent(render);
 			(*life)->Init(0 + 30.f * life_counter, 0);
 			game_objects.insert((*life));
@@ -505,7 +506,9 @@ public:
 		
 		player->Init();
 		enabled = true;
-		//engine->PlayMusic("data/audio/absolute_victory.wav", 1);
+		
+	
+		engine->PlayMusic("data/audio/absolute_victory.wav", -1);  
 	}
 
 	void InitNewLevel() {
@@ -522,20 +525,22 @@ public:
 		for (auto go = backgrounds.begin(); go != backgrounds.end(); go++)
 			(*go)->Update(0);
 
-		engine->drawText(300, 300, "LEVEL 2", 32);
+		engine->PlaySFX("data/audio/win_level.wav", 0, -1);
+		engine->drawText(350, 300, "LEVEL 2", 32);
 		engine->swapBuffers();
 		SDL_Delay(2000);
-		engine->drawText(300, 340, "GO", 32);
+		engine->drawText(400, 340, "GO", 32);
+		engine->PlaySFX("data/audio/time_tick.wav", 3, -1);
 		engine->swapBuffers();
-		SDL_Delay(1000);
-
+		SDL_Delay(2500);
+		engine->PlaySFX("data/audio/recharge.wav", 0, -1);
+	
 		// Load spawn sequences for level 2 and 
 		// reset current sequence counter to 0
 		current_level_sequence = level2_spawns;
 		seq_count = 0;
 		init_time = engine->getElapsedTime();
-
-		engine->PlaySFX("data/audio/win_level.wav", 0, -1);
+		engine->PlayMusic("data/audio/troubleshoot.wav", -1);
 	}
 
 	virtual void Update(float dt)
@@ -548,13 +553,13 @@ public:
 			engine->quit();
 		}
 
-		if (keys.cheat) {
+	/*	if (keys.cheat) {
 			SDL_Log("Cheat mode enabled");
 			cheat_mode = true;
 			ROCKET_SPEED = ROCKET_SPEED * 1.15f;
 			FIRE_TIME_INTERVAL = FIRE_TIME_INTERVAL / 10;
 		}
-
+*/
 		if (level_finished && level_win) {
 			if (kill_boss_delay_start_time != NULL)
 			{
@@ -607,23 +612,23 @@ public:
 			(*life)->enabled = life_icon_enabled;
 			life_counter++;
 		}
-		//sprintf(life_string, "Life: %d", player->lives);
-		//engine->drawText(0, 16, life_string, 12);
-
+		
+		
 		relative_time = engine->getElapsedTime() - init_time;
 		sprintf(debug_string, "T: %.2f R-T: %.2f Level: %d Seq: %d", engine->getElapsedTime(), relative_time, current_level, seq_count);
-		engine->drawText(230, 16, debug_string, 12);
+		engine->drawText(300, 10, debug_string, 12);
+		
 
 		//Score indicator
 		sprintf(score_string, "%07d", score);
-		engine->drawText(500, 16, score_string, 12);
+		engine->drawText(680, 12, score_string, 25); 
 		
 		if (game_over) {
-			engine->drawText(250, 250, "***GAME OVER***", 12);
+			engine->drawText(250, 250, "*** GAME OVER ***", 32);
 		}
 
 		if (game_won) {
-			engine->drawText(250, 250, "***YOU WON***", 12);
+			engine->drawText(250, 250, "*** YOU WON ***", 32);
 		}
 
 		engine->swapBuffers();
@@ -645,6 +650,7 @@ public:
 		// New level, prepare aliens and new background
 		{
 			SDL_Log("GAME::BOSS_KILLED");   
+			engine->PauseMusic();
 			engine->PlaySFX("data/audio/boss_die.wav", 0, -1);
 			if (current_level < 2) {
 				level_win = true;
@@ -663,8 +669,7 @@ public:
 
 
 		if(m == LIFE_PICKED){
-		// If the +UP collected, add one life to the player
-			//player->AddLife();
+			SDL_Log("GAME::LIFE_PICKED!");
 			engine->PlaySFX("data/audio/pickup_sound.wav", 0, -1);
 		}
 
@@ -794,7 +799,8 @@ private:
 		{
 			SDL_Log("Spawning BOSS");
 			boss_alien->Init();
-			//engine->PlaySFX("data/audio/boss_appear.wav", 0, -1);
+			engine->PlaySFX("data/audio/boss_appear.wav", 0, -1);
+			engine->PlayMusic("data/audio/hovering_boss.wav", 10);
 			break;
 		}
 
@@ -802,7 +808,8 @@ private:
 		{
 			SDL_Log("Spawning BOSS2");
 			boss_alien2->Init();
-			//engine->PlaySFX("data/audio/boss_appear.wav", 0, -1);
+			engine->PlaySFX("data/audio/boss_appear.wav", 0, -1);
+			engine->PlayMusic("data/audio/hovering_boss.wav", 10);
 			break;
 		}
 

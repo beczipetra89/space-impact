@@ -112,7 +112,7 @@ void LifePickupCollisionComponent::Update(float dt)
 			{
 				SDL_Log("Life picked up");
 				go->enabled = false;
-				go0->Receive(LIFE_PICKED);
+				go->Send(LIFE_PICKED);
 			}
 		}
 	}

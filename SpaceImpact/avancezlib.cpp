@@ -42,6 +42,8 @@ bool AvancezLib::init(int width, int height)
 		return false;
 	}
 
+	Mix_VolumeMusic(MIX_MAX_VOLUME / 3);
+
 	return true;
 }
 
@@ -74,7 +76,7 @@ void AvancezLib::drawText(int x, int y, const char* msg, int fontSize = 12)
 	// Create text texture with font, following tutorial http://gigi.nullneuron.net/gigilabs/displaying-text-in-sdl2-with-sdl_ttf/
 	
 	TTF_Font* font = TTF_OpenFont("data/space_invaders.ttf", fontSize);
-	SDL_Color color = { 0, 255, 213 };
+	SDL_Color color = { 0, 85, 255 };
 	SDL_Surface* fontSurface = TTF_RenderText_Solid(font, msg, color);
 	SDL_Texture* fontTexture = SDL_CreateTextureFromSurface(renderer, fontSurface);
 
@@ -201,18 +203,18 @@ void AvancezLib::SetBackgroundColor(RGBColor& color)
 // AudioManager will be using these 
 Mix_Music* AvancezLib::GetMusic(std::string filename) {
 	
-	std::string fullPath = SDL_GetBasePath();
-	fullPath.append("data/audio/" + filename);
+	//std::string fullPath = SDL_GetBasePath();
+	//fullPath.append("data/audio/" + filename);
 
 	//check if we already loaded the file or not
-	if (mMusic[fullPath] == nullptr) {
-		mMusic[fullPath] = Mix_LoadMUS(fullPath.c_str());
+	if (mMusic[filename] == nullptr) {
+		mMusic[filename] = Mix_LoadMUS(filename.c_str());
 
-		if (mMusic[fullPath] == NULL)
+		if (mMusic[filename] == NULL)
 			printf("Music Loading Error: File -%s Error -%s", filename.c_str(), Mix_GetError());		
 	}
 
-	return mMusic[fullPath];
+	return mMusic[filename];
 	
 }
 
@@ -232,7 +234,9 @@ Mix_Chunk* AvancezLib::GetSFX(std::string filename) {
 
 void AvancezLib::PlayMusic(std::string filename, int loops)
 {
-	Mix_PlayMusic(GetMusic(filename), loops);
+	if (Mix_PlayMusic(GetMusic(filename), loops == -1)) {
+		printf("Mix_PlayMusic: %s\n", Mix_GetError());
+	}
 }
 
 void AvancezLib::PauseMusic()

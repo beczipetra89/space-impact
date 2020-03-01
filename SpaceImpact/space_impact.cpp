@@ -10,7 +10,7 @@
 
 const unsigned int	MAX_NUM_GAME_OBJECTS = 10000;
 const unsigned int	NUM_LIVES = 3;
-const unsigned int	BOSS1_LIVES = 10;
+const unsigned int	BOSS1_LIVES = 80;
 const unsigned int	BOSS2_LIVES = 160;
 
 const float			BACKGROUND_SPEED = 50.f;
@@ -21,7 +21,7 @@ const unsigned int	POINTS_PER_ALIEN = 10;
 float				FIRE_TIME_INTERVAL = .10f;	
 const float			ALIEN_LASER_TIME_INTERVAL = 10.25f;
 const float			BOMB_SPEED = 120.0f;
-const float			PLAYER_SPEED = 100.0f;		
+const float			PLAYER_SPEED = 140.0f;		
 float				ROCKET_SPEED = 140.0f;		
 float				LASERBEAM_SPEED = 80;
 
@@ -61,7 +61,6 @@ float game_speed = 1.f;		// speed of the game; it is increased each time all the
 #include "bg4.h"
 #include "banner.h"
 #include "life_icon.h"
-#include "life_icon_grid.h"
 #include "pickup_life.h"
 
 #include "rocket.h"

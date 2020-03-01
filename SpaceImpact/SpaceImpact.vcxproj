@@ -155,7 +155,6 @@
     <ClInclude Include="alien_g.h" />
     <ClInclude Include="levels.h" />
     <ClInclude Include="life_icon.h" />
-    <ClInclude Include="life_icon_grid.h" />
     <ClInclude Include="mines.h" />
     <ClInclude Include="object_pool.h" />
     <ClInclude Include="pickup_life.h" />
