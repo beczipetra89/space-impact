@@ -271,7 +271,7 @@ public:
 		player_behaviour->Create(engine, player, &game_objects, &rockets_pool, &laser_beams_pool);
 		player_behaviour->InitKeys(&keys);
 		AnimRenderComponent* player_render = new AnimRenderComponent();
-		player_render->Create(engine, player, &game_objects, "data/player_sprites.png", 320, 80, 4, 3);
+		player_render->Create(engine, player, &game_objects, "data/player_sprites.png", 1080, 90, 12, 2);
 		//RenderComponent * player_render = new RenderComponent();
 		//player_render->Create(engine, player, &game_objects, "data/player.png", 80, 80);
 		CollideComponent * player_bomb_collide = new CollideComponent();
@@ -281,7 +281,7 @@ public:
 		CollideComponent* player_mine_collide = new CollideComponent();
 		player_mine_collide->Create(engine, player, &game_objects, (ObjectPool<GameObject>*)& mines_pool, { 0, 0, 80, 80 });
 
-		player->Create(80, 80);
+		player->Create(90, 90);
 		player->AddComponent(player_behaviour);
 		player->AddComponent(player_render);
 		player->AddComponent(player_bomb_collide);
