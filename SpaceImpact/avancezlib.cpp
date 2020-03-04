@@ -202,12 +202,8 @@ void AvancezLib::SetBackgroundColor(RGBColor& color)
 }
 
 
-// AudioManager will be using these 
 Mix_Music* AvancezLib::GetMusic(std::string filename) {
 	
-	//std::string fullPath = SDL_GetBasePath();
-	//fullPath.append("data/audio/" + filename);
-
 	//check if we already loaded the file or not
 	if (mMusic[filename] == nullptr) {
 		mMusic[filename] = Mix_LoadMUS(filename.c_str());
@@ -215,16 +211,11 @@ Mix_Music* AvancezLib::GetMusic(std::string filename) {
 		if (mMusic[filename] == NULL)
 			printf("Music Loading Error: File -%s Error -%s", filename.c_str(), Mix_GetError());		
 	}
-
 	return mMusic[filename];
-	
 }
 
 Mix_Chunk* AvancezLib::GetSFX(std::string filename) {
-	//std::string filepath = SDL_GetBasePath();
-	//fullPath.append("data/audio/" + filename);
-	//SDL_Log("Loading SFX sound file from %s", filepath.c_str());
-
+	
 	if(mSFX[filename] == nullptr){
 		mSFX[filename] = Mix_LoadWAV(filename.c_str());
 

@@ -40,7 +40,9 @@ void CollideComponent::Create(AvancezLib* engine, GameObject * go, std::set<Game
 	this->coll_rect = coll_rect;
 }
 
-
+// Mostly used in big obj vs a pool of small obj collision detection
+// We only check if the x, y value for object from pool is inside go object's rectangle
+// Both objects will receive HIT message
 void CollideComponent::Update(float dt)  
 {
 	for (auto i = 0; i < coll_objects->pool.size(); i++)
@@ -67,6 +69,7 @@ void SingleObjectCollideComponent::Create(AvancezLib* engine, GameObject* go, st
 	this->coll_rect = coll_rect;
 }
 
+// Box collision detection between two objects
 void SingleObjectCollideComponent::Update(float dt)
 {
 	GameObject* go0 = this->coll_object;
@@ -97,6 +100,8 @@ void LifePickupCollisionComponent::Create(AvancezLib* engine, GameObject* go, st
 	this->coll_rect = coll_rect;
 }
 
+// Single object vs single object collision detection
+// Only check if player x, y is inside lifepickup sprite rectangle
 void LifePickupCollisionComponent::Update(float dt)
 {
 	GameObject* go0 = this->coll_object;
@@ -123,6 +128,8 @@ void LaserBeamCollideComponent::Create(AvancezLib* engine, GameObject* go, std::
 	this->coll_objects = coll_objects;
 }
 
+// For laser beam collsion only
+// Laser beam is never destoryed
 void LaserBeamCollideComponent::Update(float dt)
 {
 	for (auto i = 0; i < coll_objects->pool.size(); i++)
@@ -161,7 +168,7 @@ void AnimRenderComponent::Update(float dt)
 	if (sprite != NULL) {
 		float t =  engine->getElapsedTime() - init_time;
 		int frame_index = int(t / frame_time);
-		frame_index = frame_index % total_frame; // use modulous to make sure the index number is always smaller than boundary
+		frame_index = frame_index % total_frame;	// use modulous to make sure the index number is always smaller than boundary
 		// see http://gigi.nullneuron.net/gigilabs/animations-with-sprite-sheets-in-sdl2/
 		src_rect = { frame_w * frame_index, 0, frame_w, frame_h };
 		dst_rect = { int(go->horizontalPosition), int(go->verticalPosition), frame_w, frame_h };

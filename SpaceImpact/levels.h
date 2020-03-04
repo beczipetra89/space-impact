@@ -13,9 +13,6 @@ struct Sequence {
 	OBJECT_TYPE type;
 	float pos_y;
 	float delay;
-
-	bool enabled = false;
-	bool finished = false;
 };
 
 const std::vector<Sequence> level1_spawns{
@@ -91,6 +88,5 @@ const std::vector<Sequence> level2_spawns{
 	Sequence{Sequence::OBJECT_TYPE::ALIEN_G, 150.f, 121.f},
 	Sequence{Sequence::OBJECT_TYPE::ALIEN_S, 440.f, 127.f},  
 	Sequence{Sequence::OBJECT_TYPE::BOSS2, -1.f, 133.f},		// postion Y is ignored for boss
-		Sequence{Sequence::OBJECT_TYPE::LIFE_PICKUP, 250.f, 139.f}
-		
+		Sequence{Sequence::OBJECT_TYPE::LIFE_PICKUP, 250.f, 139.f}	
 };

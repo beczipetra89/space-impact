@@ -299,7 +299,7 @@ public:
 	//	alien_render->Create(engine, alien, &game_objects, "data/alien_s.png", 90, 70);
 		
 		AnimRenderComponent* alien_render = new AnimRenderComponent();
-		alien_render->Create(engine, alien, &game_objects, "data/alienS_sprites.png", 360, 70, 4, 3);
+		alien_render->Create(engine, alien, &game_objects, "data/alienS_sprites.png", 361, 71, 4, 3);
 
 		CollideComponent* alien_bullet_collide = new CollideComponent();
 		alien_bullet_collide->Create(engine, alien, &game_objects, (ObjectPool<GameObject>*)& rockets_pool, { 0, 0, 90, 70 });
@@ -324,7 +324,7 @@ public:
 		//alien2_render->Create(engine, alien2, &game_objects, "data/alien_s.png", 90, 70);
 		
 		AnimRenderComponent* alien2_render = new AnimRenderComponent();
-		alien2_render->Create(engine, alien2, &game_objects, "data/alienS_sprites.png", 360, 70, 4, 3);
+		alien2_render->Create(engine, alien2, &game_objects, "data/alienS_sprites.png", 361, 71, 4, 3);
 	
 		CollideComponent* alien2_bullet_collide = new CollideComponent();
 		alien2_bullet_collide->Create(engine, alien2, &game_objects, (ObjectPool<GameObject>*)& rockets_pool, { 0, 0, 90, 70 });
@@ -359,7 +359,7 @@ public:
 		 //render->Create(engine, *alien_g, &game_objects, "data/alien_g.png", 90,68 ); 
 			
 			AnimRenderComponent* render = new AnimRenderComponent();
-			render->Create(engine, *alien_g, &game_objects, "data/alienG_sprites.png", 360, 68, 4, 3);
+			render->Create(engine, *alien_g, &game_objects, "data/alienG_sprites.png", 359, 68, 4, 2);
 			
 			AlienGBehaviourComponent* behaviour = new AlienGBehaviourComponent();
 			behaviour->Create(engine, *alien_g, &game_objects);
@@ -560,13 +560,7 @@ public:
 			engine->quit();
 		}
 
-	/*	if (keys.cheat) {
-			SDL_Log("Cheat mode enabled");
-			cheat_mode = true;
-			ROCKET_SPEED = ROCKET_SPEED * 1.15f;
-			FIRE_TIME_INTERVAL = FIRE_TIME_INTERVAL / 10;
-		}
-*/
+
 		if (level_finished && level_win) {
 			if (kill_boss_delay_start_time != NULL)
 			{
@@ -796,9 +790,6 @@ private:
 			SDL_Log("Spawning LIFE_PICKUP %f", pos_y);
 
 			life_pickup->Init(pos_y);
-			//	life_pickup->verticalPosition = pos_y;		
-				//life_pickup->Init((life_pickup->verticalPosition) = pos_y);
-			//	life_pickup->Init( pos_y);
 			break;
 		}
 
