@@ -643,6 +643,7 @@ public:
 		{
 			SDL_Log("GAME::GAME_OVER!");
 			game_over = true;
+			engine->PauseMusic();
 			engine->PlaySFX("data/audio/game_over.wav", 0, -1);
 		}
 
