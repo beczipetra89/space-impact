@@ -15,6 +15,32 @@ struct Sequence {
 	float delay;
 };
 
+// quick testing
+const std::vector<Sequence> level1_spawns{
+	Sequence{Sequence::OBJECT_TYPE::ALIEN_S, 200.f, 0.f },
+	Sequence{Sequence::OBJECT_TYPE::ALIEN_S_2, 240.f, 4.f },
+	Sequence{Sequence::OBJECT_TYPE::LIFE_PICKUP, 120.f, 7.f},
+	Sequence{Sequence::OBJECT_TYPE::ALIEN_G, 150.f, 10.f },
+	Sequence{Sequence::OBJECT_TYPE::ALIEN_S, 200.f, 16.f },
+	Sequence{Sequence::OBJECT_TYPE::ALIEN_S_2, 350.f, 20.f },
+	Sequence{Sequence::OBJECT_TYPE::ALIEN_V, 250.f, 26.f},
+	Sequence{Sequence::OBJECT_TYPE::BOSS, -1.f, 40.f}
+
+};
+
+const std::vector<Sequence> level2_spawns{
+	Sequence{Sequence::OBJECT_TYPE::LIFE_PICKUP, 400.f, 3.f},
+	Sequence{Sequence::OBJECT_TYPE::ALIEN_V, 250.f, 0.f},
+	Sequence{Sequence::OBJECT_TYPE::ALIEN_S_2, 300.f, 6.f },
+	Sequence{Sequence::OBJECT_TYPE::ALIEN_S, 100.f, 12.f },
+	Sequence{Sequence::OBJECT_TYPE::ALIEN_G, 150.f, 18.f },
+	Sequence{Sequence::OBJECT_TYPE::LIFE_PICKUP, 250.f, 26.f},
+	Sequence{Sequence::OBJECT_TYPE::BOSS2, -1.f, 26.f}
+};
+
+/*
+
+// full version
 const std::vector<Sequence> level1_spawns{
 	
 	// Level 1 spawn aliens for 02:43, then spawn the Boss 1
@@ -90,3 +116,6 @@ const std::vector<Sequence> level2_spawns{
 	Sequence{Sequence::OBJECT_TYPE::BOSS2, -1.f, 133.f},		// postion Y is ignored for boss
 		Sequence{Sequence::OBJECT_TYPE::LIFE_PICKUP, 250.f, 139.f}	
 };
+
+*/
+

@@ -295,12 +295,10 @@ public:
 		alien = new Alien();
 		AlienBehaviourComponent* alien_behaviour = new AlienBehaviourComponent();
 		alien_behaviour->Create(engine, alien, &game_objects, &laser_s_pool);
-	//	RenderComponent* alien_render = new RenderComponent();
+		//	RenderComponent* alien_render = new RenderComponent();
 	//	alien_render->Create(engine, alien, &game_objects, "data/alien_s.png", 90, 70);
-		
 		AnimRenderComponent* alien_render = new AnimRenderComponent();
 		alien_render->Create(engine, alien, &game_objects, "data/alienS_sprites.png", 361, 71, 4, 3);
-
 		CollideComponent* alien_bullet_collide = new CollideComponent();
 		alien_bullet_collide->Create(engine, alien, &game_objects, (ObjectPool<GameObject>*)& rockets_pool, { 0, 0, 90, 70 });
 		LaserBeamCollideComponent* alien_laserBeam_collide = new LaserBeamCollideComponent();
@@ -352,23 +350,28 @@ public:
 		game_objects.insert(alien_g_grid);
 
 		//************** CREATE ALIEN G POOL ***************
-		alien_g_pool.Create(6); // create alien g pool of 6 aliens
+		alien_g_pool.Create(6); 
 		for (auto alien_g = alien_g_pool.pool.begin(); alien_g != alien_g_pool.pool.end(); alien_g++)
 		{
-		//	RenderComponent* render = new RenderComponent();
-		 //render->Create(engine, *alien_g, &game_objects, "data/alien_g.png", 90,68 ); 
+		
+		 // RenderComponent* render = new RenderComponent();
+		 // render->Create(engine, *alien_g, &game_objects, "data/alien_g.png", 90,68 ); 
 			
 			AnimRenderComponent* render = new AnimRenderComponent();
 			render->Create(engine, *alien_g, &game_objects, "data/alienG_sprites.png", 359, 68, 4, 2);
 			
 			AlienGBehaviourComponent* behaviour = new AlienGBehaviourComponent();
 			behaviour->Create(engine, *alien_g, &game_objects);
+		
 			CollideComponent* alienG_rocket_collide = new CollideComponent();
 			alienG_rocket_collide->Create(engine, *alien_g, &game_objects, (ObjectPool<GameObject>*) & rockets_pool, { 0, 0, 90, 68 });
+			
 			LaserBeamCollideComponent* alienG_laserBeams_collide = new LaserBeamCollideComponent();
 			alienG_laserBeams_collide->Create(engine, *alien_g, &game_objects, (ObjectPool<GameObject>*)& laser_beams_pool);
+			
 			SingleObjectCollideComponent* alienG_player_collide = new SingleObjectCollideComponent();
 			alienG_player_collide->Create(engine, * alien_g, & game_objects, player, { 0, 0, 90, 68 });
+			
 			(*alien_g)->Create(90, 68);
 			(*alien_g)->AddComponent(render); 
 			(*alien_g)->AddComponent(behaviour);
@@ -519,6 +522,7 @@ public:
 	}
 
 	void InitNewLevel() {
+		engine->PauseMusic();
 		level_finished = false;
 		level_win = false;
 		current_level = 2;
@@ -652,8 +656,9 @@ public:
 		// New level, prepare aliens and new background
 		{
 			SDL_Log("GAME::BOSS_KILLED");   
-			engine->PauseMusic();
 			engine->PlaySFX("data/audio/boss_die.wav", 0, -1);
+			
+			
 			if (current_level < 2) {
 				level_win = true;
 				level_finished = true;
