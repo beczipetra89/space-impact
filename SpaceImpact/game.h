@@ -477,16 +477,6 @@ public:
 		boss_alien2->AddReceiver(this);
 		game_objects.insert(boss_alien2);
 
-		//////************** LIVES GRID ******************* 
-		//alien_v_grid = new AlienVGrid();
-		//AlienVGridBehaviourComponent* alien_v_grid_behaviour = new AlienVGridBehaviourComponent();
-		//alien_v_grid_behaviour->Create(engine, alien_v_grid, &game_objects, &alien_v_pool, &alienLaser_pool);
-
-		//alien_v_grid->Create();
-		//alien_v_grid->AddComponent(alien_v_grid_behaviour);
-		//alien_v_grid->AddReceiver(this); // alien_v_grid can send message to game
-		//game_objects.insert(alien_v_grid);
-
 		//************** CREATE LIVES POOL  ***************
 		lives_pool.Create(3);
 		int life_counter = 0;

@@ -24,10 +24,10 @@ const unsigned int	MAX_NUM_ALIENLASER = 32;
 float				ALIENLASER_TIME_INTERVAL = 3.25f; 
 float				ALIENLASER_SPEED = 160.0f;
 const float			ALIEN_SPEED = 80.0f;			
-const float			ALIEN_V_SPEED = 80.0f;		//70.0
-const float			ALIEN_G_SPEED = 80.0f;		// 60.0
-const float			ALIEN_G_VERTICAL_SPEED = 80.0f;  //20.0
-const float         ALIEN_G_VERTICAL_MOVE_TIME_INTERNAL = 1000.f; //1000.f
+const float			ALIEN_V_SPEED = 80.0f;	
+const float			ALIEN_G_SPEED = 80.0f;	
+const float			ALIEN_G_VERTICAL_SPEED = 80.0f;  
+const float         ALIEN_G_VERTICAL_MOVE_TIME_INTERNAL = 1000.f; 
 const float			PICKUP_SPEED = 40.0f;
 const unsigned int	MAX_NUM_MINES = 32;
 const float			MINE_TIME_INTERVAL = 60.f; 
@@ -100,6 +100,4 @@ int main(int argc, char** argv)
 
 	return 0;
  }
-
-
 
