@@ -9,7 +9,6 @@ class Game : public GameObject
 	
 	AvancezLib* engine;
 	AvancezLib::KeyStatus keys = { false, false, false, false, false};
-	bool cheat_mode = false;
 	float init_time; // the time when Game object init() is called
 	float relative_time;
 	bool init_new_alien_g = false; // whether to init new alien_g in alien_g_grid

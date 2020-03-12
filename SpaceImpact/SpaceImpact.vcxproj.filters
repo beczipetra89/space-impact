@@ -137,7 +137,4 @@
       <Filter>Resource Files\data\audio</Filter>
     </Media>
   </ItemGroup>
-  <ItemGroup>
-    <None Include="ClassDiagram.cd" />
-  </ItemGroup>
 </Project>
